@@ -162,4 +162,7 @@ export function Exercise(container) {
             </div>
         `;
     }
+    
+    // Return the exercise element for external access
+    return exercise;
 }

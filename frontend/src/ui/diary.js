@@ -187,4 +187,7 @@ export function Diary(container) {
             </div>
         `;
     }
+    
+    // Return the diary element for external access
+    return diary;
 }

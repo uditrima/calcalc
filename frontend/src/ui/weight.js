@@ -245,4 +245,7 @@ export function Weight(container) {
             existingError.remove();
         }
     }
+    
+    // Return the weight element for external access
+    return weight;
 }

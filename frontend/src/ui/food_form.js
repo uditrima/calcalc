@@ -138,4 +138,7 @@ export function FoodForm(container) {
             existingError.remove();
         }
     }
+    
+    // Return the form element for external access
+    return form;
 }
