@@ -6,6 +6,8 @@
     grid-template-columns: 1fr;
     gap: var(--space-lg);
     padding: var(--space-lg);
+    min-height: 200px;
+    border: 2px solid red; /* Debug border */
 }
 
 .calories-gauge {
@@ -94,6 +96,8 @@
     -webkit-backdrop-filter: var(--blur-glass);
     box-shadow: var(--shadow-glass);
     margin-bottom: var(--space-lg);
+    min-height: 100px;
+    border: 2px solid blue; /* Debug border */
 }
 
 .section h2 {

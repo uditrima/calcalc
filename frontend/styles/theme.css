@@ -1,4 +1,21 @@
 /* Blackmagic Design Fusion Dark Theme */
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    min-height: 100vh;
+}
+
 :root {
     /* Core Colors */
     --color-bg: #0f0f0f;
