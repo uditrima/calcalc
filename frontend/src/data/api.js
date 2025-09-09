@@ -1,92 +1,148 @@
-// API service for backend communication
-export class ApiService {
-    constructor() {
-        this.baseUrl = 'http://localhost:5000/api';
-        this.init();
+// API client for backend communication
+export class ApiClient {
+    constructor(baseUrl = 'http://localhost:5000/api') {
+        this.baseUrl = baseUrl;
     }
     
-    init() {
-        // TODO: Initialize API service
+    // Helper method for making HTTP requests
+    async _request(endpoint, options = {}) {
+        const url = `${this.baseUrl}${endpoint}`;
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        };
+        
+        try {
+            const response = await fetch(url, config);
+            return await response.json();
+        } catch (error) {
+            throw new Error(`API request failed: ${error.message}`);
+        }
     }
     
     // Food API methods
     async getFoods() {
-        // TODO: implement get all foods
+        return await this._request('/foods');
     }
     
-    async getFood(id) {
-        // TODO: implement get single food
+    async getFoodById(id) {
+        return await this._request(`/foods/${id}`);
     }
     
-    async searchFoods(query) {
-        // TODO: implement search foods
+    async createFood(data) {
+        return await this._request('/foods', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
     
-    async createFood(foodData) {
-        // TODO: implement create food
+    async updateFood(id, data) {
+        return await this._request(`/foods/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
+    }
+    
+    async deleteFood(id) {
+        return await this._request(`/foods/${id}`, {
+            method: 'DELETE'
+        });
     }
     
     // Diary API methods
-    async getDiaryEntries(date) {
-        // TODO: implement get diary entries
+    async getDiary(date) {
+        return await this._request(`/diary/${date}`);
     }
     
-    async addDiaryEntry(entryData) {
-        // TODO: implement add diary entry
+    async addDiaryEntry(data) {
+        return await this._request('/diary', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
     
-    async updateDiaryEntry(id, entryData) {
-        // TODO: implement update diary entry
+    async updateDiaryEntry(id, data) {
+        return await this._request(`/diary/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
     }
     
     async deleteDiaryEntry(id) {
-        // TODO: implement delete diary entry
+        return await this._request(`/diary/${id}`, {
+            method: 'DELETE'
+        });
     }
     
     // Exercise API methods
     async getExercises(date) {
-        // TODO: implement get exercises
+        return await this._request(`/exercises/${date}`);
     }
     
-    async addExercise(exerciseData) {
-        // TODO: implement add exercise
+    async addExercise(data) {
+        return await this._request('/exercises', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
     
-    async updateExercise(id, exerciseData) {
-        // TODO: implement update exercise
+    async updateExercise(id, data) {
+        return await this._request(`/exercises/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
     }
     
     async deleteExercise(id) {
-        // TODO: implement delete exercise
+        return await this._request(`/exercises/${id}`, {
+            method: 'DELETE'
+        });
     }
     
     // Weight API methods
-    async getWeightHistory() {
-        // TODO: implement get weight history
+    async getWeights() {
+        return await this._request('/weights');
     }
     
-    async addWeightEntry(weightData) {
-        // TODO: implement add weight entry
+    async addWeight(data) {
+        return await this._request('/weights', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
     
-    async updateWeightEntry(id, weightData) {
-        // TODO: implement update weight entry
+    async updateWeight(id, data) {
+        return await this._request(`/weights/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
     }
     
-    async deleteWeightEntry(id) {
-        // TODO: implement delete weight entry
+    async deleteWeight(id) {
+        return await this._request(`/weights/${id}`, {
+            method: 'DELETE'
+        });
     }
     
     // Goals API methods
     async getGoals() {
-        // TODO: implement get goals
+        return await this._request('/goals');
     }
     
-    async createGoals(goalsData) {
-        // TODO: implement create goals
+    async setGoals(data) {
+        return await this._request('/goals', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
     
-    async updateGoals(id, goalsData) {
-        // TODO: implement update goals
+    async updateGoals(id, data) {
+        return await this._request(`/goals/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
     }
 }
