@@ -25,6 +25,8 @@ class CalorieTrackerApp {
     }
     
     setupApp() {
+        console.log('Setting up app...');
+        
         // Find app container
         this.appContainer = document.getElementById('app');
         if (!this.appContainer) {
@@ -32,17 +34,23 @@ class CalorieTrackerApp {
             return;
         }
         
+        console.log('App container found:', this.appContainer);
+        
         // Create app structure
         this.createAppStructure();
+        console.log('App structure created');
         
         // Mount components
         this.mountComponents();
+        console.log('Components mounted');
         
         // Setup event listeners
         this.setupEventListeners();
+        console.log('Event listeners setup');
         
         // Load initial data
         this.loadInitialData();
+        console.log('Initial data loaded');
     }
     
     createAppStructure() {
@@ -97,25 +105,47 @@ class CalorieTrackerApp {
     }
     
     mountComponents() {
+        console.log('Mounting components...');
+        
         // Mount Dashboard
         const dashboardContainer = document.getElementById('dashboard-section');
-        this.components.dashboard = Dashboard(dashboardContainer);
+        console.log('Dashboard container:', dashboardContainer);
+        if (dashboardContainer) {
+            this.components.dashboard = Dashboard(dashboardContainer);
+            console.log('Dashboard mounted:', this.components.dashboard);
+        }
         
         // Mount FoodForm
         const foodContainer = document.getElementById('food-section');
-        this.components.foodForm = FoodForm(foodContainer);
+        console.log('Food container:', foodContainer);
+        if (foodContainer) {
+            this.components.foodForm = FoodForm(foodContainer);
+            console.log('FoodForm mounted:', this.components.foodForm);
+        }
         
         // Mount Diary
         const diaryContainer = document.getElementById('diary-section');
-        this.components.diary = Diary(diaryContainer);
+        console.log('Diary container:', diaryContainer);
+        if (diaryContainer) {
+            this.components.diary = Diary(diaryContainer);
+            console.log('Diary mounted:', this.components.diary);
+        }
         
         // Mount Exercise
         const exerciseContainer = document.getElementById('exercise-section');
-        this.components.exercise = Exercise(exerciseContainer);
+        console.log('Exercise container:', exerciseContainer);
+        if (exerciseContainer) {
+            this.components.exercise = Exercise(exerciseContainer);
+            console.log('Exercise mounted:', this.components.exercise);
+        }
         
         // Mount Weight
         const weightContainer = document.getElementById('weight-section');
-        this.components.weight = Weight(weightContainer);
+        console.log('Weight container:', weightContainer);
+        if (weightContainer) {
+            this.components.weight = Weight(weightContainer);
+            console.log('Weight mounted:', this.components.weight);
+        }
     }
     
     setupEventListeners() {

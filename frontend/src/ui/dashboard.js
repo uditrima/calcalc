@@ -2,6 +2,8 @@
 import { AppState } from '../state/app_state.js';
 
 export function Dashboard(container) {
+    console.log('Dashboard component called with container:', container);
+    
     if (!container) {
         throw new Error('Dashboard requires a container element');
     }
@@ -12,6 +14,7 @@ export function Dashboard(container) {
     // Create dashboard structure
     const dashboard = document.createElement('div');
     dashboard.className = 'dashboard';
+    console.log('Dashboard element created:', dashboard);
     
     // Main calories gauge
     const caloriesSection = createCaloriesGauge();
@@ -31,18 +34,22 @@ export function Dashboard(container) {
     
     // Add to container
     container.appendChild(dashboard);
+    console.log('Dashboard added to container');
     
     // Subscribe to state changes
     AppState.subscribe('diary', updateDashboard);
     AppState.subscribe('exercises', updateDashboard);
     AppState.subscribe('weights', updateDashboard);
     AppState.subscribe('goals', updateDashboard);
+    console.log('Dashboard subscribed to state changes');
     
     // Initial update
     updateDashboard();
+    console.log('Dashboard initial update completed');
     
     function updateDashboard() {
         const state = AppState.getState();
+        console.log('Dashboard updating with state:', state);
         updateCaloriesGauge(state);
         updateMacrosGauges(state);
         updateExerciseDisplay(state);
@@ -50,6 +57,7 @@ export function Dashboard(container) {
     }
     
     // Return the dashboard element for external access
+    console.log('Dashboard returning element:', dashboard);
     return dashboard;
 }
 
