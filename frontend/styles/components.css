@@ -1,5 +1,146 @@
 /* UI Components - Blackmagic Fusion Dark Style */
 
+/* Dashboard */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+}
+
+.calories-gauge {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+    text-align: center;
+}
+
+.calories-gauge h2 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-heading);
+}
+
+.gauge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--space-md) 0;
+}
+
+.macros-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.macros-section h3 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    grid-column: 1 / -1;
+    text-align: center;
+}
+
+.macro-gauge {
+    text-align: center;
+}
+
+.macro-gauge h4 {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    font-size: 14px;
+}
+
+.exercise-section,
+.weight-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.exercise-section h3,
+.weight-section h3 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+}
+
+.exercise-display,
+.weight-display {
+    color: var(--color-text-muted);
+}
+
+/* Section Styling */
+.section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+    margin-bottom: var(--space-lg);
+}
+
+.section h2 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-heading);
+}
+
+.section h3 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: 18px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-group label {
+    display: block;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(0, 255, 200, 0.2);
+}
+
 /* Buttons */
 .btn {
     display: inline-flex;

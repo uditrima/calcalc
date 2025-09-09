@@ -48,6 +48,9 @@ export function Dashboard(container) {
         updateExerciseDisplay(state);
         updateWeightDisplay(state);
     }
+    
+    // Return the dashboard element for external access
+    return dashboard;
 }
 
 function createCaloriesGauge() {

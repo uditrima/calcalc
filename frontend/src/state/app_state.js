@@ -7,11 +7,33 @@ const api = new ApiClient('http://localhost:5000/api');
 export const AppState = {
     // Initial state
     state: {
-        foods: [],
-        diary: { date: null, entries: [] },
-        exercises: [],
-        weights: [],
-        goals: {}
+        foods: [
+            { id: 1, name: 'Æble', calories: 52, protein: 0.3, carbohydrates: 14, fat: 0.2 },
+            { id: 2, name: 'Banan', calories: 89, protein: 1.1, carbohydrates: 23, fat: 0.3 },
+            { id: 3, name: 'Havregryn', calories: 389, protein: 16.9, carbohydrates: 66, fat: 6.9 }
+        ],
+        diary: { 
+            date: new Date().toISOString().split('T')[0], 
+            entries: [
+                { id: 1, food_id: 1, food_name: 'Æble', calories: 52, protein: 0.3, carbohydrates: 14, fat: 0.2, meal_type: 'morgenmad' },
+                { id: 2, food_id: 2, food_name: 'Banan', calories: 89, protein: 1.1, carbohydrates: 23, fat: 0.3, meal_type: 'snack' }
+            ] 
+        },
+        exercises: [
+            { id: 1, name: 'Løb', duration: 30, calories_burned: 300, exercise_type: 'cardio' },
+            { id: 2, name: 'Vægtløftning', duration: 45, calories_burned: 200, exercise_type: 'styrke' }
+        ],
+        weights: [
+            { id: 1, weight: 75.5, date: '2024-01-01' },
+            { id: 2, weight: 75.2, date: '2024-01-02' },
+            { id: 3, weight: 74.8, date: '2024-01-03' }
+        ],
+        goals: {
+            daily_calories: 2000,
+            protein_target: 150,
+            carbs_target: 250,
+            fat_target: 70
+        }
     },
     
     // Event system

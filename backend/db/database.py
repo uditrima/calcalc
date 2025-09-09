@@ -4,6 +4,9 @@ import os
 # Global database instance
 db = SQLAlchemy()
 
+# Base class for models
+Base = db.Model
+
 def init_db(app):
     """
     Initialize database with Flask app.
