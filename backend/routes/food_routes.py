@@ -37,6 +37,7 @@ def get_foods():
         return jsonify({'error': str(e)}), 500
 
 @food_bp.route('/<int:food_id>', methods=['GET'])
+@food_bp.route('/<int:food_id>/', methods=['GET'])
 def get_food(food_id):
     """Get a single food by ID."""
     try:
@@ -111,6 +112,7 @@ def create_food():
         return jsonify({'error': str(e)}), 500
 
 @food_bp.route('/<int:food_id>', methods=['PUT'])
+@food_bp.route('/<int:food_id>/', methods=['PUT'])
 def update_food(food_id):
     """Update an existing food."""
     try:
@@ -150,6 +152,7 @@ def update_food(food_id):
         return jsonify({'error': str(e)}), 500
 
 @food_bp.route('/<int:food_id>', methods=['DELETE'])
+@food_bp.route('/<int:food_id>/', methods=['DELETE'])
 def delete_food(food_id):
     """Delete a food."""
     try:

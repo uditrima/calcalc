@@ -6,6 +6,7 @@ exercise_bp = Blueprint('exercise', __name__, url_prefix='/api/exercises')
 exercise_service = ExerciseService()
 
 @exercise_bp.route('/<date>', methods=['GET'])
+@exercise_bp.route('/<date>/', methods=['GET'])
 def get_exercises_by_date(date):
     """Get all exercises for a specific date."""
     try:
@@ -100,6 +101,7 @@ def add_exercise():
         }), 500
 
 @exercise_bp.route('/<int:exercise_id>', methods=['PUT'])
+@exercise_bp.route('/<int:exercise_id>/', methods=['PUT'])
 def update_exercise(exercise_id):
     """Update an existing exercise entry."""
     try:
@@ -147,6 +149,7 @@ def update_exercise(exercise_id):
         }), 500
 
 @exercise_bp.route('/<int:exercise_id>', methods=['DELETE'])
+@exercise_bp.route('/<int:exercise_id>/', methods=['DELETE'])
 def delete_exercise(exercise_id):
     """Delete an exercise entry."""
     try:

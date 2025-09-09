@@ -6,6 +6,7 @@ diary_bp = Blueprint('diary', __name__, url_prefix='/api/diary')
 diary_service = DiaryService()
 
 @diary_bp.route('/<date>', methods=['GET'])
+@diary_bp.route('/<date>/', methods=['GET'])
 def get_diary_entries(date):
     """Get diary entries for a specific date."""
     try:
@@ -69,6 +70,7 @@ def add_diary_entry():
         return jsonify({'error': str(e)}), 500
 
 @diary_bp.route('/<int:entry_id>', methods=['PUT'])
+@diary_bp.route('/<int:entry_id>/', methods=['PUT'])
 def update_diary_entry(entry_id):
     """Update an existing diary entry."""
     try:
@@ -100,6 +102,7 @@ def update_diary_entry(entry_id):
         return jsonify({'error': str(e)}), 500
 
 @diary_bp.route('/<int:entry_id>', methods=['DELETE'])
+@diary_bp.route('/<int:entry_id>/', methods=['DELETE'])
 def delete_diary_entry(entry_id):
     """Delete a diary entry."""
     try:

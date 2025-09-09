@@ -83,6 +83,7 @@ def add_weight_entry():
         }), 500
 
 @weight_bp.route('/<int:weight_id>', methods=['PUT'])
+@weight_bp.route('/<int:weight_id>/', methods=['PUT'])
 def update_weight_entry(weight_id):
     """Update an existing weight measurement entry."""
     try:
@@ -128,6 +129,7 @@ def update_weight_entry(weight_id):
         }), 500
 
 @weight_bp.route('/<int:weight_id>', methods=['DELETE'])
+@weight_bp.route('/<int:weight_id>/', methods=['DELETE'])
 def delete_weight_entry(weight_id):
     """Delete a weight measurement entry."""
     try:

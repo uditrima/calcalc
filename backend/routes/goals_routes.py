@@ -86,6 +86,7 @@ def create_goals():
         }), 500
 
 @goals_bp.route('/<int:goals_id>', methods=['PUT'])
+@goals_bp.route('/<int:goals_id>/', methods=['PUT'])
 def update_goals(goals_id):
     """Update existing user goals."""
     try:
