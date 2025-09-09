@@ -1,0 +1,16 @@
+{
+  "name": "calorie-tracker-frontend",
+  "version": "1.0.0",
+  "description": "Kalorie Tracker Frontend - Modulær ES6 applikation",
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build step needed for vanilla JS'",
+    "start": "python -m http.server 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": ["calorie", "tracker", "nutrition", "fitness"],
+  "author": "Systemarkitekt",
+  "license": "MIT"
+}
