@@ -1,126 +1,168 @@
 // Application state management
-export class AppState {
-    constructor() {
-        this.state = {
-            // User data
-            user: null,
-            currentDate: new Date(),
-            
-            // Food data
-            foods: [],
-            selectedFood: null,
-            
-            // Diary data
-            diaryEntries: [],
-            dailyNutrition: {
-                calories: 0,
-                protein: 0,
-                carbs: 0,
-                fat: 0,
-                fiber: 0,
-                sugar: 0,
-                sodium: 0,
-                potassium: 0,
-                calcium: 0,
-                iron: 0,
-                vitamin_a: 0,
-                vitamin_c: 0,
-                vitamin_d: 0,
-                vitamin_e: 0,
-                vitamin_k: 0,
-                thiamine: 0,
-                riboflavin: 0,
-                niacin: 0,
-                folate: 0
-            },
-            
-            // Exercise data
-            exercises: [],
-            dailyCaloriesBurned: 0,
-            
-            // Weight data
-            weightHistory: [],
-            currentWeight: null,
-            
-            // Goals data
-            goals: null,
-            goalProgress: {
-                calories: 0,
-                protein: 0,
-                carbs: 0,
-                fat: 0,
-                weight: 0
-            },
-            
-            // UI state
-            activeView: 'dashboard',
-            isLoading: false,
-            error: null
-        };
-        
-        this.listeners = new Map();
-        this.init();
-    }
+import { ApiClient } from '../data/api.js';
+
+// Initialize API client
+const api = new ApiClient('http://localhost:5000/api');
+
+export const AppState = {
+    // Initial state
+    state: {
+        foods: [],
+        diary: { date: null, entries: [] },
+        exercises: [],
+        weights: [],
+        goals: {}
+    },
     
-    init() {
-        // TODO: Initialize state management
-    }
+    // Event system
+    observers: {},
     
-    // State management methods
-    getState() {
-        return this.state;
-    }
-    
-    setState(newState) {
-        this.state = { ...this.state, ...newState };
-        this.notifyListeners();
-    }
-    
+    // Subscribe to state changes
     subscribe(key, callback) {
-        if (!this.listeners.has(key)) {
-            this.listeners.set(key, []);
+        if (!this.observers[key]) {
+            this.observers[key] = [];
         }
-        this.listeners.get(key).push(callback);
-    }
+        this.observers[key].push(callback);
+    },
     
+    // Unsubscribe from state changes
     unsubscribe(key, callback) {
-        if (this.listeners.has(key)) {
-            const callbacks = this.listeners.get(key);
-            const index = callbacks.indexOf(callback);
+        if (this.observers[key]) {
+            const index = this.observers[key].indexOf(callback);
             if (index > -1) {
-                callbacks.splice(index, 1);
+                this.observers[key].splice(index, 1);
             }
         }
-    }
+    },
     
-    notifyListeners() {
-        this.listeners.forEach(callbacks => {
-            callbacks.forEach(callback => callback(this.state));
+    // Notify all observers of a specific key
+    notify(key) {
+        if (this.observers[key]) {
+            this.observers[key].forEach(callback => {
+                try {
+                    callback(this.state);
+                } catch (error) {
+                    console.error(`Error in observer for ${key}:`, error);
+                }
+            });
+        }
+    },
+    
+    // Notify all observers
+    notifyAll() {
+        Object.keys(this.observers).forEach(key => {
+            this.notify(key);
         });
-    }
+    },
     
-    // Action methods
-    setActiveView(view) {
-        this.setState({ activeView: view });
-    }
+    // State update methods
+    setFoods(data) {
+        this.state.foods = Array.isArray(data) ? data : [];
+        this.notify('foods');
+    },
     
-    setCurrentDate(date) {
-        this.setState({ currentDate: date });
-    }
+    setDiary(data) {
+        this.state.diary = {
+            date: data.date || null,
+            entries: Array.isArray(data.entries) ? data.entries : []
+        };
+        this.notify('diary');
+    },
     
-    addDiaryEntry(entry) {
-        const diaryEntries = [...this.state.diaryEntries, entry];
-        this.setState({ diaryEntries });
-        this.calculateDailyNutrition();
-    }
+    setExercises(data) {
+        this.state.exercises = Array.isArray(data) ? data : [];
+        this.notify('exercises');
+    },
     
-    removeDiaryEntry(entryId) {
-        const diaryEntries = this.state.diaryEntries.filter(entry => entry.id !== entryId);
-        this.setState({ diaryEntries });
-        this.calculateDailyNutrition();
-    }
+    setWeights(data) {
+        this.state.weights = Array.isArray(data) ? data : [];
+        this.notify('weights');
+    },
     
-    calculateDailyNutrition() {
-        // TODO: Calculate daily nutrition from diary entries
+    setGoals(data) {
+        this.state.goals = data || {};
+        this.notify('goals');
+    },
+    
+    // API integration methods
+    async loadFoods() {
+        try {
+            const response = await api.getFoods();
+            if (response.success) {
+                this.setFoods(response.data);
+            }
+        } catch (error) {
+            console.error('Failed to load foods:', error);
+        }
+    },
+    
+    async loadDiary(date) {
+        try {
+            const response = await api.getDiary(date);
+            if (response.success) {
+                this.setDiary({ date, entries: response.data });
+            }
+        } catch (error) {
+            console.error('Failed to load diary:', error);
+        }
+    },
+    
+    async loadExercises(date) {
+        try {
+            const response = await api.getExercises(date);
+            if (response.success) {
+                this.setExercises(response.data);
+            }
+        } catch (error) {
+            console.error('Failed to load exercises:', error);
+        }
+    },
+    
+    async loadWeights() {
+        try {
+            const response = await api.getWeights();
+            if (response.success) {
+                this.setWeights(response.data);
+            }
+        } catch (error) {
+            console.error('Failed to load weights:', error);
+        }
+    },
+    
+    async loadGoals() {
+        try {
+            const response = await api.getGoals();
+            if (response.success) {
+                this.setGoals(response.data);
+            }
+        } catch (error) {
+            console.error('Failed to load goals:', error);
+        }
+    },
+    
+    // Get current state
+    getState() {
+        return { ...this.state };
+    },
+    
+    // Get specific state slice
+    getFoods() {
+        return [...this.state.foods];
+    },
+    
+    getDiary() {
+        return { ...this.state.diary };
+    },
+    
+    getExercises() {
+        return [...this.state.exercises];
+    },
+    
+    getWeights() {
+        return [...this.state.weights];
+    },
+    
+    getGoals() {
+        return { ...this.state.goals };
     }
-}
+};
