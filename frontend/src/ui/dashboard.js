@@ -99,7 +99,7 @@ function createCaloriesGauge() {
     progressCircle.setAttribute('stroke-dashoffset', '502.4');
     progressCircle.setAttribute('stroke-linecap', 'round');
     progressCircle.setAttribute('transform', 'rotate(-90 100 100)');
-    progressCircle.className = 'calories-progress';
+    progressCircle.setAttribute('class', 'calories-progress');
     svg.appendChild(progressCircle);
     
     // Center text
@@ -111,7 +111,7 @@ function createCaloriesGauge() {
     currentText.setAttribute('y', '90');
     currentText.setAttribute('font-size', '24');
     currentText.setAttribute('fill', '#fff');
-    currentText.className = 'calories-current';
+    currentText.setAttribute('class', 'calories-current');
     currentText.textContent = '0';
     textGroup.appendChild(currentText);
     
@@ -120,7 +120,7 @@ function createCaloriesGauge() {
     targetText.setAttribute('y', '115');
     targetText.setAttribute('font-size', '16');
     targetText.setAttribute('fill', '#888');
-    targetText.className = 'calories-target';
+    targetText.setAttribute('class', 'calories-target');
     targetText.textContent = 'af 2000';
     textGroup.appendChild(targetText);
     
@@ -194,7 +194,7 @@ function createSmallGauge(name, color) {
     progressCircle.setAttribute('stroke-dashoffset', '188.4');
     progressCircle.setAttribute('stroke-linecap', 'round');
     progressCircle.setAttribute('transform', 'rotate(-90 40 40)');
-    progressCircle.className = `${name.toLowerCase()}-progress`;
+    progressCircle.setAttribute('class', `${name.toLowerCase()}-progress`);
     svg.appendChild(progressCircle);
     
     // Center text
@@ -204,7 +204,7 @@ function createSmallGauge(name, color) {
     text.setAttribute('font-size', '12');
     text.setAttribute('fill', '#fff');
     text.setAttribute('text-anchor', 'middle');
-    text.className = `${name.toLowerCase()}-text`;
+    text.setAttribute('class', `${name.toLowerCase()}-text`);
     text.textContent = '0g';
     svg.appendChild(text);
     
