@@ -7,6 +7,13 @@ from db.models.exercise import Exercise
 from db.models.weight import Weight
 from db.models.user_goals import UserGoals
 
+# Import Blueprints
+from routes.food_routes import food_bp
+from routes.diary_routes import diary_bp
+from routes.exercise_routes import exercise_bp
+from routes.weight_routes import weight_bp
+from routes.goals_routes import goals_bp
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
@@ -14,7 +21,13 @@ def create_app():
     # Initialize database
     init_db(app)
     
-    # TODO: register blueprints
+    # Register Blueprints
+    app.register_blueprint(food_bp)
+    app.register_blueprint(diary_bp)
+    app.register_blueprint(exercise_bp)
+    app.register_blueprint(weight_bp)
+    app.register_blueprint(goals_bp)
+    
     # TODO: configure error handlers
     
     return app
