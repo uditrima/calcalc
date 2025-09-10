@@ -105,7 +105,7 @@ function createCaloriesGauge() {
     bgCircle.setAttribute('stroke-width', '20');
     svg.appendChild(bgCircle);
     
-    // Progress circle (lysblå for brugte kalorier)
+    // Progress circle (lysblå for brugte kalorier) - starter fra 12 o'clock
     const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     progressCircle.setAttribute('cx', '100');
     progressCircle.setAttribute('cy', '100');
@@ -120,7 +120,7 @@ function createCaloriesGauge() {
     progressCircle.setAttribute('class', 'calories-progress');
     svg.appendChild(progressCircle);
     
-    // Remaining circle (gul for resterende kalorier)
+    // Remaining circle (gul for resterende kalorier) - starter fra 12 o'clock
     const remainingCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     remainingCircle.setAttribute('cx', '100');
     remainingCircle.setAttribute('cy', '100');
@@ -411,7 +411,8 @@ function updateCaloriesGauge(state) {
     const current = state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
     const target = state.goals.daily_calories || 2000;
     const remaining = target - current;
-    const percentage = Math.min((current / target) * 100, 100);
+    const usedPercentage = Math.min((current / target) * 100, 100);
+    const remainingPercentage = Math.max(0, (remaining / target) * 100);
     
     const progressCircle = document.querySelector('.calories-progress');
     const remainingCircle = document.querySelector('.calories-remaining');
@@ -419,14 +420,15 @@ function updateCaloriesGauge(state) {
     
     if (progressCircle) {
         const circumference = 502.4;
-        const offset = circumference - (percentage / 100) * circumference;
-        progressCircle.setAttribute('stroke-dashoffset', offset);
+        const usedOffset = circumference - (usedPercentage / 100) * circumference;
+        progressCircle.setAttribute('stroke-dashoffset', usedOffset);
     }
     
     if (remainingCircle) {
         const circumference = 502.4;
-        const remainingPercentage = Math.max(0, (remaining / target) * 100);
-        const remainingOffset = circumference - (remainingPercentage / 100) * circumference;
+        // Remaining circle starter efter used circle
+        const usedArcLength = (usedPercentage / 100) * circumference;
+        const remainingOffset = circumference - (remainingPercentage / 100) * circumference - usedArcLength;
         remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
     }
     
