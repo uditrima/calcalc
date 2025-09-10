@@ -201,6 +201,12 @@ class CalorieTrackerApp {
             this.showView('dashboard');
         });
         
+        // Add food events
+        this.appContainer.addEventListener('onAddFood', (event) => {
+            console.log('Add food clicked:', event.detail);
+            this.showView('food');
+        });
+        
         // Diary events
         this.appContainer.addEventListener('onAddEntry', (event) => {
             console.log('Add diary entry clicked');
