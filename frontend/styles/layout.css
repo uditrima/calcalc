@@ -34,8 +34,8 @@ body {
     -webkit-backdrop-filter: var(--blur-glass);
     border-bottom: 1px solid var(--color-border);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding: var(--space-md);
-    margin: var(--space-lg) var(--space-lg) var(--space-lg) var(--space-lg);
+    padding: 0 var(--space-md); /* Only left and right padding */
+    margin: var(--space-lg) var(--space-lg) 0 var(--space-lg); /* No bottom margin */
 }
 
 .app-header h1 {
