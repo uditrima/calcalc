@@ -262,7 +262,7 @@ body {
     }
     
     .app-main {
-        padding: var(--space-xl);
+        padding: 0;
     }
     
     .section {
@@ -309,7 +309,7 @@ body {
     
     .app-main {
         grid-area: content;
-        padding: var(--space-xl);
+        padding: 0;
     }
 }
 
@@ -320,7 +320,7 @@ body {
     }
     
     .app-main {
-        padding: var(--space-2xl);
+        padding: 0;
     }
 }
 
