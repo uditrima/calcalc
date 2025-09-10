@@ -297,9 +297,13 @@
 /* Diary Container */
 .diary {
     height: 100%;
-    overflow: visible; /* No scrolling here, HTML handles it */
+    overflow-y: auto; /* Diary handles its own scrolling */
+    overflow-x: hidden;
     padding: 0;
     position: relative;
+    /* Hide native scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
 }
 
 .diary::-webkit-scrollbar {
@@ -308,10 +312,10 @@
 
 /* Custom Scrollbar */
 .custom-scrollbar {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    bottom: 20px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
     width: 12px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 6px;

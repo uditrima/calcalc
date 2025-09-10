@@ -226,8 +226,8 @@ export function Diary(container) {
     // Add to container
     container.appendChild(diary);
     
-    // Create custom scrollbar for the HTML body
-    createCustomScrollbar(document.body);
+    // Create custom scrollbar for the diary container
+    createCustomScrollbar(diary);
     
     // Subscribe to state changes for meal sections
     AppState.subscribe('diary', updateMealSections);
