@@ -406,7 +406,7 @@
     margin-bottom: 0;
     box-shadow: var(--shadow-glass);
     position: sticky;
-    top: 0;
+    top: 80px;
     z-index: var(--z-sticky);
 }
 
@@ -451,7 +451,7 @@
     margin-bottom: var(--space-lg);
     box-shadow: var(--shadow-glass);
     position: sticky;
-    top: 66px;
+    top: 146px;
     z-index: var(--z-dropdown);
 }
 
