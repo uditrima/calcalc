@@ -50,6 +50,10 @@ export function Diary(container) {
     
     diary.appendChild(header);
     
+    // Sticky Container for Date Navigation and Summary
+    const stickyContainer = document.createElement('div');
+    stickyContainer.className = 'sticky-container';
+    
     // Date Navigation Section
     const dateNav = document.createElement('div');
     dateNav.className = 'date-navigation';
@@ -71,7 +75,7 @@ export function Diary(container) {
     nextButton.title = 'Næste dag';
     dateNav.appendChild(nextButton);
     
-    diary.appendChild(dateNav);
+    stickyContainer.appendChild(dateNav);
     
     // Summary Section
     const summarySection = document.createElement('div');
@@ -164,7 +168,8 @@ export function Diary(container) {
     
     summarySection.appendChild(summaryDetails);
     
-    diary.appendChild(summarySection);
+    stickyContainer.appendChild(summarySection);
+    diary.appendChild(stickyContainer);
     
     // Meal Sections
     const mealsContainer = document.createElement('div');
