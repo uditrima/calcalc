@@ -56,6 +56,49 @@ export function Dashboard(container) {
         updateWeightDisplay(state);
     }
     
+    function updateCaloriesGauge(state) {
+        const current = state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
+        const target = state.goals.daily_calories || 2000;
+        const remaining = target - current;
+        const usedPercentage = Math.min((current / target) * 100, 100);
+        const remainingPercentage = Math.max(0, (remaining / target) * 100);
+        
+        const progressCircle = document.querySelector('.calories-progress');
+        const remainingCircle = document.querySelector('.calories-remaining');
+        const remainingText = document.querySelector('.calories-remaining-text');
+        
+        if (progressCircle) {
+            const circumference = 502.4;
+            const usedOffset = circumference - (usedPercentage / 100) * circumference;
+            progressCircle.setAttribute('stroke-dashoffset', usedOffset);
+        }
+        
+        if (remainingCircle) {
+            const circumference = 502.4; // Samme omkreds som blå cirkel
+            // Gul cirkel: 0 når blå er 502.4, går mod 502.4 når blå går mod 0
+            // Men altid 125 enheder foran
+            const blueOffset = circumference - (usedPercentage / 100) * circumference;
+            const remainingOffset = blueOffset - 125;
+            remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
+        }
+        
+        if (remainingText) {
+            remainingText.textContent = Math.max(0, Math.round(remaining));
+        }
+        
+        // Update stats
+        const statItems = document.querySelectorAll('.stat-text');
+        if (statItems.length >= 3) {
+            // Update base goal
+            statItems[0].innerHTML = `<strong>${target}</strong><br>Base Mål`;
+            // Update food
+            statItems[1].innerHTML = `<strong>${Math.round(current)}</strong><br>Mad`;
+            // Update exercise
+            const exerciseCalories = state.exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
+            statItems[2].innerHTML = `<strong>${Math.round(exerciseCalories)}</strong><br>Motion`;
+        }
+    }
+    
     // Return the dashboard element for external access
     console.log('Dashboard returning element:', dashboard);
     return dashboard;
@@ -407,48 +450,6 @@ function createWeightSection() {
     return section;
 }
 
-function updateCaloriesGauge(state) {
-    const current = state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
-    const target = state.goals.daily_calories || 2000;
-    const remaining = target - current;
-    const usedPercentage = Math.min((current / target) * 100, 100);
-    const remainingPercentage = Math.max(0, (remaining / target) * 100);
-    
-    const progressCircle = document.querySelector('.calories-progress');
-    const remainingCircle = document.querySelector('.calories-remaining');
-    const remainingText = document.querySelector('.calories-remaining-text');
-    
-    if (progressCircle) {
-        const circumference = 502.4;
-        const usedOffset = circumference - (usedPercentage / 100) * circumference;
-        progressCircle.setAttribute('stroke-dashoffset', usedOffset);
-    }
-    
-    if (remainingCircle) {
-        const circumference = 502.4; // Samme omkreds som blå cirkel
-        // Gul cirkel: 0 når blå er 502.4, går mod 502.4 når blå går mod 0
-        // Men altid 125 enheder foran
-        const blueOffset = circumference - (usedPercentage / 100) * circumference;
-        const remainingOffset = blueOffset - 125;
-        remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
-    }
-    
-    if (remainingText) {
-        remainingText.textContent = Math.max(0, Math.round(remaining));
-    }
-    
-    // Update stats
-    const statItems = document.querySelectorAll('.stat-text');
-    if (statItems.length >= 3) {
-        // Update base goal
-        statItems[0].innerHTML = `<strong>${target}</strong><br>Base Mål`;
-        // Update food
-        statItems[1].innerHTML = `<strong>${Math.round(current)}</strong><br>Mad`;
-        // Update exercise
-        const exerciseCalories = state.exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
-        statItems[2].innerHTML = `<strong>${Math.round(exerciseCalories)}</strong><br>Motion`;
-    }
-}
 
 function updateMacrosGauges(state) {
     // This function is no longer needed as we removed the macros section
