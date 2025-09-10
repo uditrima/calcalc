@@ -26,7 +26,7 @@ body {
     --color-text-muted: #a0b0c0;
     
     /* Gauge Colors */
-    --color-gauge-used: #87CEEB; /* Lysblå for brugte kalorier */
+    --color-gauge-used: rgb(122, 188, 251); /* Lysblå for brugte kalorier */
     --color-gauge-remaining: rgb(236, 145, 45); /* Gul for resterende kalorier */
     
     /* Typography */
