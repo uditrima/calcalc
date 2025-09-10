@@ -426,9 +426,10 @@ function updateCaloriesGauge(state) {
     
     if (remainingCircle) {
         const circumference = 502.4; // Samme omkreds som blå cirkel
-        // Remaining circle starter lige foran hvor blå cirkel slutter
-        const usedArcLength = (usedPercentage / 100) * circumference;
-        const remainingOffset = -(usedArcLength + (remainingPercentage / 100) * circumference);
+        // Gul cirkel: 0 når blå er 502.4, går mod 502.4 når blå går mod 0
+        // Men altid 125 enheder foran
+        const blueOffset = circumference - (usedPercentage / 100) * circumference;
+        const remainingOffset = blueOffset - 125;
         remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
     }
     
