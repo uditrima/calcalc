@@ -302,6 +302,39 @@
     padding: 0;
     position: relative;
     margin-right: var(--space-md);
+    /* Hide native scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.diary::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+    position: absolute;
+    right: var(--space-sm);
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    z-index: 1000;
+}
+
+.custom-scrollbar-thumb {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    background: var(--color-accent);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.custom-scrollbar-thumb:hover {
+    background: var(--color-accent-hover, #00ff88);
 }
 
 /* Diary Header Styling */

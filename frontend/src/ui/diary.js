@@ -208,6 +208,9 @@ export function Diary(container) {
     // Add to container
     container.appendChild(diary);
     
+    // Create custom scrollbar
+    createCustomScrollbar(diary);
+    
     // Subscribe to state changes for meal sections
     AppState.subscribe('diary', updateMealSections);
     AppState.subscribe('foods', updateMealSections);
@@ -461,6 +464,58 @@ export function Diary(container) {
         section.appendChild(line3);
         
         return section;
+    }
+    
+    function createCustomScrollbar(container) {
+        // Create scrollbar track
+        const scrollbar = document.createElement('div');
+        scrollbar.className = 'custom-scrollbar';
+        
+        // Create scrollbar thumb
+        const thumb = document.createElement('div');
+        thumb.className = 'custom-scrollbar-thumb';
+        scrollbar.appendChild(thumb);
+        
+        // Add scrollbar to container
+        container.appendChild(scrollbar);
+        
+        // Update scrollbar on scroll
+        function updateScrollbar() {
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+            
+            if (scrollHeight <= clientHeight) {
+                scrollbar.style.display = 'none';
+                return;
+            }
+            
+            scrollbar.style.display = 'block';
+            
+            const thumbHeight = (clientHeight / scrollHeight) * clientHeight;
+            const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - thumbHeight);
+            
+            thumb.style.height = `${thumbHeight}px`;
+            thumb.style.top = `${thumbTop}px`;
+        }
+        
+        // Add scroll listener
+        container.addEventListener('scroll', updateScrollbar);
+        
+        // Initial update
+        updateScrollbar();
+        
+        // Update on resize
+        window.addEventListener('resize', updateScrollbar);
+        
+        // Click to scroll
+        scrollbar.addEventListener('click', (e) => {
+            const rect = scrollbar.getBoundingClientRect();
+            const clickY = e.clientY - rect.top;
+            const percentage = clickY / rect.height;
+            const scrollTop = percentage * (container.scrollHeight - container.clientHeight);
+            container.scrollTop = scrollTop;
+        });
     }
     
     // Return the diary element for external access
