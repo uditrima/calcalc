@@ -314,8 +314,8 @@
 .custom-scrollbar {
     position: fixed;
     right: 10px;
-    top: 10px;
-    bottom: 90px; /* Leave space for bottom navigation */
+    top: 80px; /* Start below header */
+    bottom: 80px; /* Stop at top of navigation bar */
     width: 12px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 6px;
