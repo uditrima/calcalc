@@ -529,9 +529,8 @@ export function Diary(container) {
             }
             
             const scrollbarHeight = scrollbar.getBoundingClientRect().height;
-            const baseThumbHeight = 60; // Base height from CSS
             const scrollRatio = clientHeight / scrollHeight;
-            const thumbHeight = Math.max(baseThumbHeight * scrollRatio, 60); // Scale based on content, min 60px
+            const thumbHeight = scrollbarHeight * scrollRatio; // Dynamic height based on scroll ratio
             const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (scrollbarHeight - thumbHeight);
             
             thumb.style.height = `${thumbHeight}px`;
