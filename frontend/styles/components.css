@@ -448,10 +448,10 @@
     border: 1px solid var(--color-border);
     border-top: none;
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    margin-bottom: var(--space-lg);
+    margin-bottom: 0;
     box-shadow: var(--shadow-glass);
     position: sticky;
-    top: 50px;
+    top: 0;
     z-index: var(--z-dropdown);
 }
 
