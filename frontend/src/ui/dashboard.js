@@ -426,8 +426,7 @@ function updateCaloriesGauge(state) {
     
     if (remainingCircle) {
         const circumference = 502.4; // Samme omkreds som blå cirkel
-        // Remaining circle starter efter used circle
-        const usedArcLength = (usedPercentage / 100) * circumference;
+        // Remaining circle fylder hele cirklen (360 grader)
         const remainingOffset = circumference - (remainingPercentage / 100) * circumference;
         remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
     }
