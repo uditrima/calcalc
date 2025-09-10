@@ -315,7 +315,7 @@
     position: fixed;
     right: 10px;
     top: 100px; /* Start below header and date navigation */
-    bottom: 100px; /* Stop above navigation bar */
+    bottom: 80px; /* Stop exactly at top of navigation bar */
     width: 12px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 6px;
