@@ -327,11 +327,11 @@
     position: absolute;
     right: 0;
     width: 100%;
+    height: 60px;
     background: var(--color-accent);
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s ease;
-    min-height: 20px;
 }
 
 .custom-scrollbar-thumb:hover {
