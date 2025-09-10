@@ -241,12 +241,6 @@
     font-size: var(--font-size-heading);
 }
 
-.gauge-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: var(--space-md) 0;
-}
 
 .macros-section {
     display: grid;
@@ -486,10 +480,6 @@
 }
 
 /* Gauges - SVG Styling */
-.gauge-container {
-    position: relative;
-    display: inline-block;
-}
 
 .gauge-container svg {
     filter: drop-shadow(0 0 10px rgba(0, 255, 200, 0.3));
