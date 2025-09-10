@@ -16,7 +16,8 @@ export const AppState = {
             date: new Date().toISOString().split('T')[0], 
             entries: [
                 { id: 1, food_id: 1, food_name: 'Æble', calories: 52, protein: 0.3, carbohydrates: 14, fat: 0.2, meal_type: 'morgenmad' },
-                { id: 2, food_id: 2, food_name: 'Banan', calories: 89, protein: 1.1, carbohydrates: 23, fat: 0.3, meal_type: 'snack' }
+                { id: 2, food_id: 2, food_name: 'Banan', calories: 89, protein: 1.1, carbohydrates: 23, fat: 0.3, meal_type: 'snack' },
+                { id: 3, food_id: 3, food_name: 'Test Mad', calories: 1271, protein: 50, carbohydrates: 100, fat: 30, meal_type: 'aftensmad' }
             ] 
         },
         exercises: [
