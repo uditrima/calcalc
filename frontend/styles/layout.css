@@ -5,9 +5,10 @@
     min-height: 100vh;
     background-color: var(--color-bg);
     position: relative;
-    max-width: 50%;
+    max-width: 50% !important;
     min-width: 320px;
-    margin: 0 auto;
+    margin: 0 auto !important;
+    width: 50% !important;
 }
 
 .app-header {
@@ -247,9 +248,10 @@
             "sidebar content";
         grid-template-columns: 280px 1fr;
         grid-template-rows: auto 1fr;
-        max-width: 50%;
+        max-width: 50% !important;
         min-width: 320px;
-        margin: 0 auto;
+        margin: 0 auto !important;
+        width: 50% !important;
     }
     
     .app-header {
