@@ -5,6 +5,9 @@
     min-height: 100vh;
     background-color: var(--color-bg);
     position: relative;
+    max-width: 50%;
+    min-width: 320px;
+    margin: 0 auto;
 }
 
 .app-header {
