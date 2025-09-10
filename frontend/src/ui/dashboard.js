@@ -43,9 +43,11 @@ export function Dashboard(container) {
     AppState.subscribe('goals', updateDashboard);
     console.log('Dashboard subscribed to state changes');
     
-    // Initial update
-    updateDashboard();
-    console.log('Dashboard initial update completed');
+    // Initial update - kald efter DOM elementer er tilføjet
+    setTimeout(() => {
+        updateDashboard();
+        console.log('Dashboard initial update completed');
+    }, 0);
     
     function updateDashboard() {
         const state = AppState.getState();
@@ -63,13 +65,18 @@ export function Dashboard(container) {
         const usedPercentage = Math.min((current / target) * 100, 100);
         const remainingPercentage = Math.max(0, (remaining / target) * 100);
         
+        console.log('updateCaloriesGauge - current:', current, 'target:', target, 'usedPercentage:', usedPercentage);
+        
         const progressCircle = document.querySelector('.calories-progress');
         const remainingCircle = document.querySelector('.calories-remaining');
         const remainingText = document.querySelector('.calories-remaining-text');
         
+        console.log('Found elements - progressCircle:', progressCircle, 'remainingCircle:', remainingCircle);
+        
         if (progressCircle) {
             const circumference = 502.4;
             const usedOffset = circumference - (usedPercentage / 100) * circumference;
+            console.log('Setting progressCircle stroke-dashoffset to:', usedOffset);
             progressCircle.setAttribute('stroke-dashoffset', usedOffset);
         }
         
@@ -79,6 +86,7 @@ export function Dashboard(container) {
             // Men altid 125 enheder foran
             const blueOffset = circumference - (usedPercentage / 100) * circumference;
             const remainingOffset = Math.max(0, blueOffset - 125);
+            console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueOffset:', blueOffset);
             remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
         }
         
