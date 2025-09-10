@@ -62,7 +62,7 @@
     transition: all 0.3s ease-in-out;
     background: var(--color-bg);
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .slide-view.active {

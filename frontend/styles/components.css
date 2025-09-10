@@ -451,7 +451,7 @@
     margin: 0 var(--space-lg) var(--space-lg) var(--space-lg);
     box-shadow: var(--shadow-glass);
     position: sticky;
-    top: -72px;
+    top: 0;
     z-index: var(--z-sticky);
 }
 
