@@ -86,7 +86,7 @@ export function Dashboard(container) {
             // Men altid 125 enheder foran
             const blueOffset = circumference - (usedPercentage / 100) * circumference;
             const remainingOffset = Math.max(0, blueOffset - 125);
-            console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueOffset:', blueOffset);
+            console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueOffset:', blueOffset, 'usedPercentage:', usedPercentage, 'remainingPercentage:', remainingPercentage);
             remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
         }
         
