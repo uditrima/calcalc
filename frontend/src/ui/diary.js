@@ -205,24 +205,6 @@ export function Diary(container) {
     
     diary.appendChild(mealsContainer);
     
-    // Add test content to make diary scrollable
-    const testContent = document.createElement('div');
-    testContent.style.padding = '20px';
-    testContent.style.margin = '20px';
-    testContent.style.background = 'rgba(255,255,255,0.1)';
-    testContent.style.borderRadius = '10px';
-    testContent.innerHTML = `
-        <h3>Test Content for Scrolling</h3>
-        <p>This is test content to make the diary scrollable.</p>
-        <p>Line 1</p><p>Line 2</p><p>Line 3</p><p>Line 4</p><p>Line 5</p>
-        <p>Line 6</p><p>Line 7</p><p>Line 8</p><p>Line 9</p><p>Line 10</p>
-        <p>Line 11</p><p>Line 12</p><p>Line 13</p><p>Line 14</p><p>Line 15</p>
-        <p>Line 16</p><p>Line 17</p><p>Line 18</p><p>Line 19</p><p>Line 20</p>
-        <p>Line 21</p><p>Line 22</p><p>Line 23</p><p>Line 24</p><p>Line 25</p>
-        <p>Line 26</p><p>Line 27</p><p>Line 28</p><p>Line 29</p><p>Line 30</p>
-    `;
-    mealsContainer.appendChild(testContent);
-    
     // Add to container
     container.appendChild(diary);
     
