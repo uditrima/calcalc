@@ -312,7 +312,7 @@
 
 /* Custom Scrollbar */
 .custom-scrollbar {
-    position: absolute;
+    position: fixed;
     right: 10px;
     top: 10px;
     bottom: 10px;
