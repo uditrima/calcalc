@@ -527,6 +527,52 @@ export function Diary(container) {
         // Add scroll listener
         container.addEventListener('scroll', updateScrollbar);
         
+        // Add click event listener to scrollbar track
+        scrollbar.addEventListener('click', (e) => {
+            console.log('Scrollbar track clicked');
+            const rect = scrollbar.getBoundingClientRect();
+            const clickY = e.clientY - rect.top;
+            const percentage = clickY / rect.height;
+            const scrollTop = percentage * (container.scrollHeight - container.clientHeight);
+            console.log('Scrolling to:', scrollTop);
+            container.scrollTop = scrollTop;
+        });
+        
+        // Add click event listener to scrollbar thumb
+        thumb.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent track click
+        });
+        
+        // Add drag functionality to thumb
+        let isDragging = false;
+        let startY = 0;
+        let startScrollTop = 0;
+        
+        thumb.addEventListener('mousedown', (e) => {
+            console.log('Thumb mousedown');
+            isDragging = true;
+            startY = e.clientY;
+            startScrollTop = container.scrollTop;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaY = e.clientY - startY;
+            const scrollbarHeight = scrollbar.getBoundingClientRect().height;
+            const thumbHeight = thumb.getBoundingClientRect().height;
+            const maxScrollTop = container.scrollHeight - container.clientHeight;
+            const scrollbarTrackHeight = scrollbarHeight - thumbHeight;
+            
+            const deltaScroll = (deltaY / scrollbarTrackHeight) * maxScrollTop;
+            container.scrollTop = startScrollTop + deltaScroll;
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
         // Initial update
         updateScrollbar();
         
