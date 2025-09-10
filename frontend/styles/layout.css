@@ -33,8 +33,7 @@
 .app-main {
     flex: 1;
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: visible;
     padding: var(--space-xl) var(--space-lg) calc(var(--space-xl) + 80px) var(--space-lg); /* Account for bottom nav height */
 }
 
@@ -63,7 +62,7 @@
     transition: all 0.3s ease-in-out;
     background: var(--color-bg);
     padding: var(--space-lg);
-    overflow-y: auto;
+    overflow-y: visible;
 }
 
 .slide-view.active {

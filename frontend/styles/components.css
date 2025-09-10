@@ -294,6 +294,13 @@
     color: var(--color-text-muted);
 }
 
+/* Diary Container */
+.diary {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 /* Diary Header Styling */
 .diary-header {
     display: flex;
