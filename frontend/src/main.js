@@ -34,6 +34,9 @@ class CalorieTrackerApp {
             return;
         }
         
+        // Add app-container class to #app element
+        this.appContainer.className = 'app-container';
+        
         console.log('App container found:', this.appContainer);
         
         // Create app structure
