@@ -297,18 +297,9 @@
 /* Diary Container */
 .diary {
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: visible;
     padding: 0;
     position: relative;
-    margin-right: var(--space-md);
-    /* Hide native scrollbar */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-.diary::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
 }
 
 /* Custom Scrollbar */

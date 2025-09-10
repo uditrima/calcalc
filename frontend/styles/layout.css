@@ -62,7 +62,14 @@
     transition: all 0.3s ease-in-out;
     background: var(--color-bg);
     padding: 0;
-    overflow: hidden;
+    overflow: auto;
+    /* Hide native scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.slide-view::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .slide-view.active {
