@@ -19,7 +19,9 @@
     backdrop-filter: var(--blur-glass);
     -webkit-backdrop-filter: var(--blur-glass);
     border-bottom: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     padding: var(--space-md);
+    margin: var(--space-lg) var(--space-lg) 0 var(--space-lg);
 }
 
 .app-header h1 {
@@ -32,6 +34,7 @@
     flex: 1;
     position: relative;
     overflow: hidden;
+    padding: 0 var(--space-lg) calc(var(--space-lg) + 80px) var(--space-lg); /* Account for bottom nav height */
 }
 
 /* View Management */
