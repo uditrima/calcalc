@@ -528,8 +528,9 @@ export function Diary(container) {
                 return;
             }
             
-            const thumbHeight = (clientHeight / scrollHeight) * clientHeight;
-            const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - thumbHeight);
+            const scrollbarHeight = scrollbar.getBoundingClientRect().height;
+            const thumbHeight = (clientHeight / scrollHeight) * scrollbarHeight;
+            const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (scrollbarHeight - thumbHeight);
             
             thumb.style.height = `${thumbHeight}px`;
             thumb.style.top = `${thumbTop}px`;
