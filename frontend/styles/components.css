@@ -8,6 +8,16 @@
     padding: var(--space-lg);
     margin-bottom: var(--space-2xl);
     background: var(--color-bg);
+    height: calc(100vh - 160px); /* Same height as diary section */
+    overflow-y: auto; /* Allow scrolling */
+    overflow-x: hidden;
+    /* Hide native scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.dashboard::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 /* Calories Card */
