@@ -82,9 +82,9 @@ export function Dashboard(container) {
         
         if (remainingCircle) {
             const circumference = 502.4; // Samme omkreds som blå cirkel
-            // Gul cirkel: starter på 0, trækkes blås progression fra 0 plus 125
+            // Gul cirkel: starter på 0, trækkes blås progression fra 0 plus 30
             const blueProgression = (usedPercentage / 100) * circumference;
-            const remainingOffset = -(blueProgression + 125);
+            const remainingOffset = -(blueProgression + 30);
             console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueProgression:', blueProgression, 'usedPercentage:', usedPercentage);
             remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
         }
