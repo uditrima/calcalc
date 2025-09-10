@@ -120,16 +120,16 @@ function createCaloriesGauge() {
     progressCircle.setAttribute('class', 'calories-progress');
     svg.appendChild(progressCircle);
     
-    // Remaining circle (gul for resterende kalorier) - starter fra 12 o'clock
+    // Remaining circle (gul for resterende kalorier) - mindre radius så den ikke dækker den blå
     const remainingCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     remainingCircle.setAttribute('cx', '100');
     remainingCircle.setAttribute('cy', '100');
-    remainingCircle.setAttribute('r', '80');
+    remainingCircle.setAttribute('r', '70'); // Mindre radius
     remainingCircle.setAttribute('fill', 'none');
     remainingCircle.setAttribute('stroke', 'var(--color-gauge-remaining)');
     remainingCircle.setAttribute('stroke-width', '20');
-    remainingCircle.setAttribute('stroke-dasharray', '502.4');
-    remainingCircle.setAttribute('stroke-dashoffset', '502.4');
+    remainingCircle.setAttribute('stroke-dasharray', '439.6'); // Ny omkreds for mindre radius
+    remainingCircle.setAttribute('stroke-dashoffset', '439.6');
     remainingCircle.setAttribute('stroke-linecap', 'round');
     remainingCircle.setAttribute('transform', 'rotate(-90 100 100)');
     remainingCircle.setAttribute('class', 'calories-remaining');
@@ -425,10 +425,10 @@ function updateCaloriesGauge(state) {
     }
     
     if (remainingCircle) {
-        const circumference = 502.4;
+        const circumference = 439.6; // Ny omkreds for mindre radius (70)
         // Remaining circle starter efter used circle
-        const usedArcLength = (usedPercentage / 100) * circumference;
-        const remainingOffset = circumference - (remainingPercentage / 100) * circumference - usedArcLength;
+        const usedArcLength = (usedPercentage / 100) * 502.4; // Used circle omkreds
+        const remainingOffset = circumference - (remainingPercentage / 100) * circumference;
         remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
     }
     
