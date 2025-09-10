@@ -307,6 +307,8 @@
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     margin-bottom: 0;
     box-shadow: var(--shadow-glass);
+    position: relative;
+    z-index: var(--z-base);
 }
 
 .diary-header h2 {
@@ -394,6 +396,9 @@
     border-radius: 0;
     margin-bottom: 0;
     box-shadow: var(--shadow-glass);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
 }
 
 .date-nav-btn {
@@ -436,6 +441,9 @@
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     margin-bottom: var(--space-lg);
     box-shadow: var(--shadow-glass);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
 }
 
 .summary-header {
@@ -517,6 +525,8 @@
     flex-direction: column;
     gap: 0;
     margin-bottom: var(--space-lg);
+    position: relative;
+    z-index: var(--z-base);
 }
 
 .meal-section {

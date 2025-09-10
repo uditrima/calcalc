@@ -33,7 +33,8 @@
 .app-main {
     flex: 1;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: var(--space-xl) var(--space-lg) calc(var(--space-xl) + 80px) var(--space-lg); /* Account for bottom nav height */
 }
 
