@@ -487,6 +487,17 @@ export function Diary(container) {
     function createCustomScrollbar(container) {
         console.log('Creating custom scrollbar for container:', container);
         
+        // Hide native scrollbar
+        container.style.scrollbarWidth = 'none';
+        container.style.msOverflowStyle = 'none';
+        const style = document.createElement('style');
+        style.textContent = `
+            ${container.tagName.toLowerCase()}::-webkit-scrollbar {
+                display: none;
+            }
+        `;
+        document.head.appendChild(style);
+        
         // Create scrollbar track
         const scrollbar = document.createElement('div');
         scrollbar.className = 'custom-scrollbar';
@@ -525,7 +536,10 @@ export function Diary(container) {
         }
         
         // Add scroll listener
-        container.addEventListener('scroll', updateScrollbar);
+        container.addEventListener('scroll', () => {
+            console.log('Container scrolled, updating scrollbar');
+            updateScrollbar();
+        });
         
         // Add click event listener to scrollbar track
         scrollbar.addEventListener('click', (e) => {

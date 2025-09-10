@@ -1,10 +1,12 @@
-/* Hide HTML scrollbar */
+/* Hide HTML scrollbar but allow content to flow */
 html {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Responsive Layout System */
