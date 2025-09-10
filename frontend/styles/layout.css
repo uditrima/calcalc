@@ -70,6 +70,26 @@
     transform: translateX(0);
 }
 
+/* Slide-up view (from bottom) */
+.slide-up-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all 0.3s ease-in-out;
+    background: var(--color-bg);
+    padding: 0;
+    overflow: visible;
+}
+
+.slide-up-view.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Bottom Navigation */
 .bottom-nav {
     display: flex;

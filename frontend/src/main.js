@@ -4,6 +4,7 @@ import { Dashboard } from './ui/dashboard.js';
 import { FoodForm } from './ui/food_form.js';
 import { Diary } from './ui/diary.js';
 import { Exercise } from './ui/exercise.js';
+import { AddMenu } from './ui/add_menu.js';
 import { Weight } from './ui/weight.js';
 
 class CalorieTrackerApp {
@@ -103,6 +104,12 @@ class CalorieTrackerApp {
         weightSection.className = 'slide-view weight-view';
         main.appendChild(weightSection);
         
+        // Add menu section (slide-up from bottom)
+        const addMenuSection = document.createElement('section');
+        addMenuSection.id = 'add-menu-section';
+        addMenuSection.className = 'slide-up-view add-menu-view';
+        main.appendChild(addMenuSection);
+        
         layout.appendChild(main);
         
         // Bottom navigation
@@ -125,7 +132,7 @@ class CalorieTrackerApp {
                 <div class="nav-icon">📖</div>
                 <div class="nav-label">Dagbog</div>
             </div>
-            <div class="nav-item add-btn" data-view="food">
+            <div class="nav-item add-btn" data-view="add-menu">
                 <div class="nav-icon">+</div>
             </div>
             <div class="nav-item" data-view="progress">
@@ -183,6 +190,14 @@ class CalorieTrackerApp {
             this.components.weight = Weight(weightContainer);
             console.log('Weight mounted:', this.components.weight);
         }
+        
+        // Mount AddMenu
+        const addMenuContainer = document.getElementById('add-menu-section');
+        console.log('AddMenu container:', addMenuContainer);
+        if (addMenuContainer) {
+            this.components.addMenu = AddMenu(addMenuContainer);
+            console.log('AddMenu mounted:', this.components.addMenu);
+        }
     }
     
     setupEventListeners() {
@@ -205,6 +220,18 @@ class CalorieTrackerApp {
         this.appContainer.addEventListener('onAddFood', (event) => {
             console.log('Add food clicked:', event.detail);
             this.showView('food');
+        });
+        
+        // Add water events
+        this.appContainer.addEventListener('onAddWater', (event) => {
+            console.log('Add water clicked:', event.detail);
+            // TODO: Handle add water
+        });
+        
+        // Add weight events
+        this.appContainer.addEventListener('onAddWeight', (event) => {
+            console.log('Add weight clicked:', event.detail);
+            this.showView('weight');
         });
         
         // Diary events
@@ -258,7 +285,7 @@ class CalorieTrackerApp {
     
     showView(viewName) {
         // Hide all views
-        const allViews = this.appContainer.querySelectorAll('.main-view, .slide-view');
+        const allViews = this.appContainer.querySelectorAll('.main-view, .slide-view, .slide-up-view');
         allViews.forEach(view => {
             view.classList.remove('active');
         });
@@ -275,6 +302,13 @@ class CalorieTrackerApp {
             dashboardView.classList.add('active');
             const navItem = this.appContainer.querySelector('[data-view="dashboard"]');
             navItem.classList.add('active');
+        } else if (viewName === 'add-menu') {
+            const slideUpView = this.appContainer.querySelector('.slide-up-view');
+            if (slideUpView) {
+                slideUpView.classList.add('active');
+                const navItem = this.appContainer.querySelector(`[data-view="${viewName}"]`);
+                if (navItem) navItem.classList.add('active');
+            }
         } else {
             const slideView = this.appContainer.querySelector(`.${viewName}-view`);
             if (slideView) {
