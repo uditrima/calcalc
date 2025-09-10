@@ -469,6 +469,30 @@ export function Diary(container) {
     function createCustomScrollbar(container) {
         console.log('Creating custom scrollbar for container:', container);
         
+        // Color interpolation function
+        function interpolateColor(color1, color2, ratio) {
+            // Convert hex to RGB
+            const hexToRgb = (hex) => {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            };
+            
+            const rgb1 = hexToRgb(color1);
+            const rgb2 = hexToRgb(color2);
+            
+            if (!rgb1 || !rgb2) return color1;
+            
+            const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * ratio);
+            const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * ratio);
+            const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * ratio);
+            
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        
         // Hide native scrollbar
         container.style.scrollbarWidth = 'none';
         container.style.msOverflowStyle = 'none';
@@ -514,8 +538,13 @@ export function Diary(container) {
             const thumbHeight = scrollbarHeight * 0.07; // Always 7% of scrollbar height
             const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (scrollbarHeight - thumbHeight);
             
+            // Calculate color based on position (0 = top, 1 = bottom)
+            const positionRatio = thumbTop / (scrollbarHeight - thumbHeight);
+            const color = interpolateColor('#46ae98', '#ae7246', positionRatio);
+            
             thumb.style.height = `${thumbHeight}px`;
             thumb.style.top = `${thumbTop}px`;
+            thumb.style.background = color;
         }
         
         // Add scroll listener
