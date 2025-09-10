@@ -75,10 +75,10 @@ export function Dashboard(container) {
         
         if (remainingCircle) {
             const circumference = 502.4; // Samme omkreds som blå cirkel
-            // Gul cirkel: 0 når blå er 502.4, går mod 502.4 når blå går mod 0
+            // Gul cirkel: 0 når ingen kalorier brugt, går mod 502.4 når blå går mod 0
             // Men altid 125 enheder foran
             const blueOffset = circumference - (usedPercentage / 100) * circumference;
-            const remainingOffset = blueOffset - 125;
+            const remainingOffset = Math.max(0, blueOffset - 125);
             remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
         }
         
@@ -157,7 +157,7 @@ function createCaloriesGauge() {
     remainingCircle.setAttribute('stroke', 'var(--color-gauge-remaining)');
     remainingCircle.setAttribute('stroke-width', '20');
     remainingCircle.setAttribute('stroke-dasharray', '502.4'); // Samme omkreds som blå
-    remainingCircle.setAttribute('stroke-dashoffset', '502.4');
+    remainingCircle.setAttribute('stroke-dashoffset', '0'); // Start synlig
     remainingCircle.setAttribute('stroke-linecap', 'round');
     remainingCircle.setAttribute('transform', 'rotate(-90 100 100)');
     remainingCircle.setAttribute('class', 'calories-remaining');
