@@ -105,22 +105,7 @@ function createCaloriesGauge() {
     bgCircle.setAttribute('stroke-width', '20');
     svg.appendChild(bgCircle);
     
-    // Progress circle (lysblå for brugte kalorier) - starter fra 12 o'clock
-    const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    progressCircle.setAttribute('cx', '100');
-    progressCircle.setAttribute('cy', '100');
-    progressCircle.setAttribute('r', '80');
-    progressCircle.setAttribute('fill', 'none');
-    progressCircle.setAttribute('stroke', 'var(--color-gauge-used)');
-    progressCircle.setAttribute('stroke-width', '20');
-    progressCircle.setAttribute('stroke-dasharray', '502.4');
-    progressCircle.setAttribute('stroke-dashoffset', '502.4');
-    progressCircle.setAttribute('stroke-linecap', 'round');
-    progressCircle.setAttribute('transform', 'rotate(-90 100 100)');
-    progressCircle.setAttribute('class', 'calories-progress');
-    svg.appendChild(progressCircle);
-    
-    // Remaining circle (gul for resterende kalorier) - mindre radius så den ikke dækker den blå
+    // Remaining circle (gul for resterende kalorier) - mindre radius, tegnes først
     const remainingCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     remainingCircle.setAttribute('cx', '100');
     remainingCircle.setAttribute('cy', '100');
@@ -134,6 +119,21 @@ function createCaloriesGauge() {
     remainingCircle.setAttribute('transform', 'rotate(-90 100 100)');
     remainingCircle.setAttribute('class', 'calories-remaining');
     svg.appendChild(remainingCircle);
+    
+    // Progress circle (lysblå for brugte kalorier) - større radius, tegnes sidst så den er oven på
+    const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    progressCircle.setAttribute('cx', '100');
+    progressCircle.setAttribute('cy', '100');
+    progressCircle.setAttribute('r', '80');
+    progressCircle.setAttribute('fill', 'none');
+    progressCircle.setAttribute('stroke', 'var(--color-gauge-used)');
+    progressCircle.setAttribute('stroke-width', '20');
+    progressCircle.setAttribute('stroke-dasharray', '502.4');
+    progressCircle.setAttribute('stroke-dashoffset', '502.4');
+    progressCircle.setAttribute('stroke-linecap', 'round');
+    progressCircle.setAttribute('transform', 'rotate(-90 100 100)');
+    progressCircle.setAttribute('class', 'calories-progress');
+    svg.appendChild(progressCircle);
     
     // Center text
     const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
