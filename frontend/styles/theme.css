@@ -18,8 +18,8 @@ body {
 
 :root {
     /* Core Colors */
-    --color-bg: #0a1628;
-    --color-surface: rgba(30, 60, 100, 0.85);
+    --color-bg: rgb(22, 23, 38);
+    --color-surface: rgba(38, 40, 52, 0.85);
     --color-border: rgba(255, 255, 255, 0.12);
     --color-accent: #00ffc8;
     --color-text: #e0e0e0;
@@ -31,8 +31,8 @@ body {
     --font-size-heading: 20px;
     
     /* Glassmorphism Shadows */
-    --shadow-glass: 0 8px 32px rgba(10, 22, 40, 0.4);
-    --shadow-glass-strong: 0 16px 64px rgba(10, 22, 40, 0.5);
+    --shadow-glass: 0 8px 32px rgba(22, 23, 38, 0.4);
+    --shadow-glass-strong: 0 16px 64px rgba(22, 23, 38, 0.5);
     --shadow-glow: 0 0 20px rgba(0, 255, 200, 0.2);
     --shadow-glow-strong: 0 0 40px rgba(0, 255, 200, 0.3);
     
