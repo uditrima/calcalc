@@ -82,11 +82,10 @@ export function Dashboard(container) {
         
         if (remainingCircle) {
             const circumference = 502.4; // Samme omkreds som blå cirkel
-            // Gul cirkel: 0 når ingen kalorier brugt, går mod 502.4 når blå går mod 0
-            // Men altid 125 enheder foran
-            const blueOffset = circumference - (usedPercentage / 100) * circumference;
-            const remainingOffset = Math.max(0, blueOffset - 125);
-            console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueOffset:', blueOffset, 'usedPercentage:', usedPercentage, 'remainingPercentage:', remainingPercentage);
+            // Gul cirkel: starter på 0, trækkes blås progression fra 0 plus 125
+            const blueProgression = (usedPercentage / 100) * circumference;
+            const remainingOffset = Math.max(0, blueProgression + 125);
+            console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueProgression:', blueProgression, 'usedPercentage:', usedPercentage);
             remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
         }
         
