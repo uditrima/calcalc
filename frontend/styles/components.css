@@ -451,7 +451,7 @@
     margin-bottom: var(--space-lg);
     box-shadow: var(--shadow-glass);
     position: sticky;
-    top: 60px;
+    top: 50px;
     z-index: var(--z-dropdown);
 }
 
