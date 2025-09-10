@@ -296,7 +296,7 @@
 
 /* Diary Container */
 .diary {
-    height: 100vh;
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0;
