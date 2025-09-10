@@ -91,8 +91,8 @@ function createCaloriesGauge() {
     gaugeContainer.className = 'gauge-container';
     
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '200');
-    svg.setAttribute('height', '200');
+    svg.setAttribute('width', '150');
+    svg.setAttribute('height', '150');
     svg.setAttribute('viewBox', '0 0 200 200');
     
     // Background circle
@@ -142,7 +142,7 @@ function createCaloriesGauge() {
     const remainingText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     remainingText.setAttribute('x', '100');
     remainingText.setAttribute('y', '90');
-    remainingText.setAttribute('font-size', '32');
+    remainingText.setAttribute('font-size', '24');
     remainingText.setAttribute('font-weight', 'bold');
     remainingText.setAttribute('fill', '#fff');
     remainingText.setAttribute('class', 'calories-remaining-text');
@@ -152,7 +152,7 @@ function createCaloriesGauge() {
     const remainingLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     remainingLabel.setAttribute('x', '100');
     remainingLabel.setAttribute('y', '115');
-    remainingLabel.setAttribute('font-size', '16');
+    remainingLabel.setAttribute('font-size', '12');
     remainingLabel.setAttribute('fill', '#888');
     remainingLabel.textContent = 'Resterende';
     textGroup.appendChild(remainingLabel);
