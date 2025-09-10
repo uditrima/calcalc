@@ -529,10 +529,12 @@ export function Diary(container) {
             }
             
             const scrollbarHeight = scrollbar.getBoundingClientRect().height;
-            const thumbHeight = 60; // Fixed height from CSS
+            const baseThumbHeight = 60; // Base height from CSS
+            const scrollRatio = clientHeight / scrollHeight;
+            const thumbHeight = Math.max(baseThumbHeight * scrollRatio, 20); // Scale based on content, min 20px
             const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (scrollbarHeight - thumbHeight);
             
-            // Don't set height - use CSS fixed height
+            thumb.style.height = `${thumbHeight}px`;
             thumb.style.top = `${thumbTop}px`;
         }
         
