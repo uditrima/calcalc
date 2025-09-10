@@ -486,7 +486,14 @@
 }
 
 .gauge-container .calories-progress {
-    stroke: var(--color-accent);
+    stroke: var(--color-gauge-used);
+    stroke-width: 20;
+    stroke-linecap: round;
+    transition: stroke-dashoffset var(--transition-slow);
+}
+
+.gauge-container .calories-remaining {
+    stroke: var(--color-gauge-remaining);
     stroke-width: 20;
     stroke-linecap: round;
     transition: stroke-dashoffset var(--transition-slow);

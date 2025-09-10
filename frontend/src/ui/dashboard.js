@@ -105,13 +105,13 @@ function createCaloriesGauge() {
     bgCircle.setAttribute('stroke-width', '20');
     svg.appendChild(bgCircle);
     
-    // Progress circle (blue)
+    // Progress circle (lysblå for brugte kalorier)
     const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     progressCircle.setAttribute('cx', '100');
     progressCircle.setAttribute('cy', '100');
     progressCircle.setAttribute('r', '80');
     progressCircle.setAttribute('fill', 'none');
-    progressCircle.setAttribute('stroke', '#007AFF');
+    progressCircle.setAttribute('stroke', 'var(--color-gauge-used)');
     progressCircle.setAttribute('stroke-width', '20');
     progressCircle.setAttribute('stroke-dasharray', '502.4');
     progressCircle.setAttribute('stroke-dashoffset', '502.4');
@@ -120,13 +120,13 @@ function createCaloriesGauge() {
     progressCircle.setAttribute('class', 'calories-progress');
     svg.appendChild(progressCircle);
     
-    // Remaining circle (orange)
+    // Remaining circle (gul for resterende kalorier)
     const remainingCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     remainingCircle.setAttribute('cx', '100');
     remainingCircle.setAttribute('cy', '100');
     remainingCircle.setAttribute('r', '80');
     remainingCircle.setAttribute('fill', 'none');
-    remainingCircle.setAttribute('stroke', '#FF9500');
+    remainingCircle.setAttribute('stroke', 'var(--color-gauge-remaining)');
     remainingCircle.setAttribute('stroke-width', '20');
     remainingCircle.setAttribute('stroke-dasharray', '502.4');
     remainingCircle.setAttribute('stroke-dashoffset', '502.4');

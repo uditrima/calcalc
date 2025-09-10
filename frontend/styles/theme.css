@@ -25,6 +25,10 @@ body {
     --color-text: #e0e0e0;
     --color-text-muted: #a0b0c0;
     
+    /* Gauge Colors */
+    --color-gauge-used: #87CEEB; /* Lysblå for brugte kalorier */
+    --color-gauge-remaining: #FFD700; /* Gul for resterende kalorier */
+    
     /* Typography */
     --font-family: 'Segoe UI', 'Roboto', sans-serif;
     --font-size-base: 14px;
