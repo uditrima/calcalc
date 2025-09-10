@@ -309,29 +309,29 @@
 /* Custom Scrollbar */
 .custom-scrollbar {
     position: fixed;
-    right: 10px;
-    top: 10px;
-    bottom: 10px;
-    width: 20px;
-    background: rgba(255, 0, 0, 0.3);
-    border-radius: 10px;
+    right: 20px;
+    top: 20px;
+    bottom: 20px;
+    width: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
     z-index: 1000;
-    border: 2px solid red;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .custom-scrollbar-thumb {
     position: absolute;
     right: 0;
     width: 100%;
-    background: red;
-    border-radius: 10px;
+    background: var(--color-accent);
+    border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s ease;
     min-height: 20px;
 }
 
 .custom-scrollbar-thumb:hover {
-    background: darkred;
+    background: var(--color-accent-hover, #00ff88);
 }
 
 /* Diary Header Styling */

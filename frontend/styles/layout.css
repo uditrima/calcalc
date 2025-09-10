@@ -20,6 +20,7 @@ body {
     min-width: 320px;
     margin: 0 auto !important;
     width: 50% !important;
+    overflow: visible; /* Allow content to flow beyond viewport */
 }
 
 .app-header {
@@ -44,7 +45,7 @@ body {
 .app-main {
     flex: 1;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Allow content to flow */
     padding: 0;
 }
 
@@ -73,7 +74,7 @@ body {
     transition: all 0.3s ease-in-out;
     background: var(--color-bg);
     padding: 0;
-    overflow: hidden;
+    overflow: visible; /* Allow content to flow */
 }
 
 .slide-view.active {
