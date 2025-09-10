@@ -314,7 +314,7 @@
 .custom-scrollbar {
     position: fixed;
     right: 10px;
-    top: 60px; /* Start at bottom of app-header */
+    top: 100px; /* Start below sticky header sections */
     bottom: 80px; /* Stop exactly at top of navigation bar */
     width: 12px;
     background: rgba(0, 0, 0, 0.2);
