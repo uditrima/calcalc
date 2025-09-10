@@ -410,11 +410,12 @@ function createWeightSection() {
 function updateCaloriesGauge(state) {
     const current = state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
     const target = state.goals.daily_calories || 2000;
+    const remaining = target - current;
     const percentage = Math.min((current / target) * 100, 100);
     
     const progressCircle = document.querySelector('.calories-progress');
-    const currentText = document.querySelector('.calories-current');
-    const targetText = document.querySelector('.calories-target');
+    const remainingCircle = document.querySelector('.calories-remaining');
+    const remainingText = document.querySelector('.calories-remaining-text');
     
     if (progressCircle) {
         const circumference = 502.4;
@@ -422,28 +423,34 @@ function updateCaloriesGauge(state) {
         progressCircle.setAttribute('stroke-dashoffset', offset);
     }
     
-    if (currentText) currentText.textContent = Math.round(current);
-    if (targetText) targetText.textContent = `af ${target}`;
+    if (remainingCircle) {
+        const circumference = 502.4;
+        const remainingPercentage = Math.max(0, (remaining / target) * 100);
+        const remainingOffset = circumference - (remainingPercentage / 100) * circumference;
+        remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
+    }
+    
+    if (remainingText) {
+        remainingText.textContent = Math.max(0, Math.round(remaining));
+    }
+    
+    // Update stats
+    const statItems = document.querySelectorAll('.stat-text');
+    if (statItems.length >= 3) {
+        // Update base goal
+        statItems[0].innerHTML = `<strong>${target}</strong><br>Base Mål`;
+        // Update food
+        statItems[1].innerHTML = `<strong>${Math.round(current)}</strong><br>Mad`;
+        // Update exercise
+        const exerciseCalories = state.exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
+        statItems[2].innerHTML = `<strong>${Math.round(exerciseCalories)}</strong><br>Motion`;
+    }
 }
 
 function updateMacrosGauges(state) {
-    const entries = state.diary.entries;
-    const goals = state.goals;
-    
-    // Calculate totals
-    const totals = entries.reduce((acc, entry) => {
-        acc.protein += entry.protein || 0;
-        acc.carbs += entry.carbohydrates || 0;
-        acc.fat += entry.fat || 0;
-        return acc;
-    }, { protein: 0, carbs: 0, fat: 0 });
-    
-    // Update protein
-    updateSmallGauge('protein', totals.protein, goals.protein_target || 150);
-    // Update carbs
-    updateSmallGauge('carbs', totals.carbs, goals.carbs_target || 250);
-    // Update fat
-    updateSmallGauge('fat', totals.fat, goals.fat_target || 70);
+    // This function is no longer needed as we removed the macros section
+    // The new design focuses on calories, steps, and exercise
+    // Macros can be added back later if needed
 }
 
 function updateSmallGauge(type, current, target) {
@@ -462,30 +469,45 @@ function updateSmallGauge(type, current, target) {
 
 function updateExerciseDisplay(state) {
     const exercises = state.exercises;
-    const display = document.querySelector('.exercise-display');
     
-    if (exercises.length === 0) {
-        display.innerHTML = '<p>Ingen øvelser registreret i dag</p>';
-    } else {
+    // Update exercise stats if they exist
+    const exerciseStats = document.querySelectorAll('.exercise-stat');
+    if (exerciseStats.length >= 2) {
         const totalCalories = exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
-        display.innerHTML = `
-            <p><strong>${exercises.length}</strong> øvelser</p>
-            <p><strong>${Math.round(totalCalories)}</strong> kalorier forbrændt</p>
-        `;
+        const totalDuration = exercises.reduce((sum, ex) => sum + (ex.duration_minutes || 0), 0);
+        
+        // Update calories
+        const caloriesElement = exerciseStats[0].querySelector('.number');
+        if (caloriesElement) {
+            caloriesElement.textContent = Math.round(totalCalories);
+        }
+        
+        // Update duration
+        const durationElement = exerciseStats[1].querySelector('.number');
+        if (durationElement) {
+            const hours = Math.floor(totalDuration / 60);
+            const minutes = totalDuration % 60;
+            durationElement.textContent = `${hours}:${minutes.toString().padStart(2, '0')}`;
+        }
     }
 }
 
 function updateWeightDisplay(state) {
     const weights = state.weights;
-    const display = document.querySelector('.weight-display');
     
-    if (weights.length === 0) {
-        display.innerHTML = '<p>Ingen vægtmålinger</p>';
-    } else {
-        const latest = weights[0]; // Assuming sorted by date desc
-        display.innerHTML = `
-            <p><strong>${latest.weight_kg} kg</strong></p>
-            <p>${new Date(latest.date).toLocaleDateString()}</p>
-        `;
+    // Update weight chart if it exists
+    const chartContainer = document.querySelector('.chart-container');
+    if (chartContainer && weights.length > 0) {
+        // Update chart with real data
+        const latest = weights[0];
+        const chartPoint = chartContainer.querySelector('.chart-point');
+        if (chartPoint) {
+            // Calculate position based on weight value
+            const minWeight = 70;
+            const maxWeight = 120;
+            const weight = latest.weight_kg;
+            const percentage = Math.max(0, Math.min(100, ((weight - minWeight) / (maxWeight - minWeight)) * 100));
+            chartPoint.style.top = `${100 - percentage}%`;
+        }
     }
 }
