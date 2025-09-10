@@ -63,45 +63,79 @@ class CalorieTrackerApp {
         // Header
         const header = document.createElement('header');
         header.className = 'app-header';
-        header.innerHTML = '<h1>Kalorie Tracker</h1>';
+        header.innerHTML = '<h1>I dag</h1>';
         layout.appendChild(header);
         
         // Main content area
         const main = document.createElement('main');
         main.className = 'app-main';
         
-        // Dashboard section
+        // Dashboard section (main view)
         const dashboardSection = document.createElement('section');
         dashboardSection.id = 'dashboard-section';
-        dashboardSection.className = 'section';
+        dashboardSection.className = 'main-view';
         main.appendChild(dashboardSection);
         
-        // Food management section
+        // Food form section (slide-in)
         const foodSection = document.createElement('section');
         foodSection.id = 'food-section';
-        foodSection.className = 'section';
+        foodSection.className = 'slide-view food-view';
         main.appendChild(foodSection);
         
-        // Diary section
+        // Diary section (slide-in)
         const diarySection = document.createElement('section');
         diarySection.id = 'diary-section';
-        diarySection.className = 'section';
+        diarySection.className = 'slide-view diary-view';
         main.appendChild(diarySection);
         
-        // Exercise section
+        // Exercise section (slide-in)
         const exerciseSection = document.createElement('section');
         exerciseSection.id = 'exercise-section';
-        exerciseSection.className = 'section';
+        exerciseSection.className = 'slide-view exercise-view';
         main.appendChild(exerciseSection);
         
-        // Weight section
+        // Weight section (slide-in)
         const weightSection = document.createElement('section');
         weightSection.id = 'weight-section';
-        weightSection.className = 'section';
+        weightSection.className = 'slide-view weight-view';
         main.appendChild(weightSection);
         
         layout.appendChild(main);
+        
+        // Bottom navigation
+        const nav = this.createBottomNavigation();
+        layout.appendChild(nav);
+        
         this.appContainer.appendChild(layout);
+    }
+    
+    createBottomNavigation() {
+        const nav = document.createElement('nav');
+        nav.className = 'bottom-nav';
+        
+        nav.innerHTML = `
+            <div class="nav-item active" data-view="dashboard">
+                <div class="nav-icon">⊞</div>
+                <div class="nav-label">Dashboard</div>
+            </div>
+            <div class="nav-item" data-view="diary">
+                <div class="nav-icon">📖</div>
+                <div class="nav-label">Dagbog</div>
+            </div>
+            <div class="nav-item add-btn" data-view="food">
+                <div class="nav-icon">+</div>
+            </div>
+            <div class="nav-item" data-view="progress">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">Fremgang</div>
+            </div>
+            <div class="nav-item" data-view="more">
+                <div class="nav-icon">⋯</div>
+                <div class="nav-label">Mere</div>
+            </div>
+        `;
+        
+        return nav;
     }
     
     mountComponents() {
@@ -149,10 +183,19 @@ class CalorieTrackerApp {
     }
     
     setupEventListeners() {
+        // Navigation events
+        this.appContainer.addEventListener('click', (event) => {
+            const navItem = event.target.closest('.nav-item');
+            if (navItem) {
+                const view = navItem.dataset.view;
+                this.showView(view);
+            }
+        });
+        
         // Food form events
         this.appContainer.addEventListener('onFoodSave', (event) => {
             console.log('Food saved:', event.detail);
-            // TODO: Handle food save via API
+            this.showView('dashboard');
         });
         
         // Diary events
@@ -202,6 +245,35 @@ class CalorieTrackerApp {
             console.log('Delete weight:', event.detail.weightId);
             // TODO: Handle delete weight
         });
+    }
+    
+    showView(viewName) {
+        // Hide all views
+        const allViews = this.appContainer.querySelectorAll('.main-view, .slide-view');
+        allViews.forEach(view => {
+            view.classList.remove('active');
+        });
+        
+        // Update navigation
+        const navItems = this.appContainer.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Show selected view
+        if (viewName === 'dashboard') {
+            const dashboardView = this.appContainer.querySelector('.main-view');
+            dashboardView.classList.add('active');
+            const navItem = this.appContainer.querySelector('[data-view="dashboard"]');
+            navItem.classList.add('active');
+        } else {
+            const slideView = this.appContainer.querySelector(`.${viewName}-view`);
+            if (slideView) {
+                slideView.classList.add('active');
+                const navItem = this.appContainer.querySelector(`[data-view="${viewName}"]`);
+                if (navItem) navItem.classList.add('active');
+            }
+        }
     }
     
     async loadInitialData() {

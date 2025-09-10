@@ -63,12 +63,30 @@ export function Dashboard(container) {
 
 function createCaloriesGauge() {
     const section = document.createElement('div');
-    section.className = 'calories-gauge';
+    section.className = 'calories-card';
+    
+    // Card header
+    const header = document.createElement('div');
+    header.className = 'card-header';
     
     const title = document.createElement('h2');
-    title.textContent = 'Dagens Kalorier';
-    section.appendChild(title);
+    title.textContent = 'Kalorier';
+    header.appendChild(title);
     
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-edit';
+    editBtn.innerHTML = '✏️';
+    header.appendChild(editBtn);
+    
+    section.appendChild(header);
+    
+    // Formula text
+    const formula = document.createElement('div');
+    formula.className = 'formula-text';
+    formula.textContent = 'Resterende = Mål - Mad + Motion';
+    section.appendChild(formula);
+    
+    // Gauge container
     const gaugeContainer = document.createElement('div');
     gaugeContainer.className = 'gauge-container';
     
@@ -87,13 +105,13 @@ function createCaloriesGauge() {
     bgCircle.setAttribute('stroke-width', '20');
     svg.appendChild(bgCircle);
     
-    // Progress circle
+    // Progress circle (blue)
     const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     progressCircle.setAttribute('cx', '100');
     progressCircle.setAttribute('cy', '100');
     progressCircle.setAttribute('r', '80');
     progressCircle.setAttribute('fill', 'none');
-    progressCircle.setAttribute('stroke', '#00ff88');
+    progressCircle.setAttribute('stroke', '#007AFF');
     progressCircle.setAttribute('stroke-width', '20');
     progressCircle.setAttribute('stroke-dasharray', '502.4');
     progressCircle.setAttribute('stroke-dashoffset', '502.4');
@@ -102,60 +120,167 @@ function createCaloriesGauge() {
     progressCircle.setAttribute('class', 'calories-progress');
     svg.appendChild(progressCircle);
     
+    // Remaining circle (orange)
+    const remainingCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    remainingCircle.setAttribute('cx', '100');
+    remainingCircle.setAttribute('cy', '100');
+    remainingCircle.setAttribute('r', '80');
+    remainingCircle.setAttribute('fill', 'none');
+    remainingCircle.setAttribute('stroke', '#FF9500');
+    remainingCircle.setAttribute('stroke-width', '20');
+    remainingCircle.setAttribute('stroke-dasharray', '502.4');
+    remainingCircle.setAttribute('stroke-dashoffset', '502.4');
+    remainingCircle.setAttribute('stroke-linecap', 'round');
+    remainingCircle.setAttribute('transform', 'rotate(-90 100 100)');
+    remainingCircle.setAttribute('class', 'calories-remaining');
+    svg.appendChild(remainingCircle);
+    
     // Center text
     const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     textGroup.setAttribute('text-anchor', 'middle');
     
-    const currentText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    currentText.setAttribute('x', '100');
-    currentText.setAttribute('y', '90');
-    currentText.setAttribute('font-size', '24');
-    currentText.setAttribute('fill', '#fff');
-    currentText.setAttribute('class', 'calories-current');
-    currentText.textContent = '0';
-    textGroup.appendChild(currentText);
+    const remainingText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    remainingText.setAttribute('x', '100');
+    remainingText.setAttribute('y', '90');
+    remainingText.setAttribute('font-size', '32');
+    remainingText.setAttribute('font-weight', 'bold');
+    remainingText.setAttribute('fill', '#fff');
+    remainingText.setAttribute('class', 'calories-remaining-text');
+    remainingText.textContent = '288';
+    textGroup.appendChild(remainingText);
     
-    const targetText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    targetText.setAttribute('x', '100');
-    targetText.setAttribute('y', '115');
-    targetText.setAttribute('font-size', '16');
-    targetText.setAttribute('fill', '#888');
-    targetText.setAttribute('class', 'calories-target');
-    targetText.textContent = 'af 2000';
-    textGroup.appendChild(targetText);
+    const remainingLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    remainingLabel.setAttribute('x', '100');
+    remainingLabel.setAttribute('y', '115');
+    remainingLabel.setAttribute('font-size', '16');
+    remainingLabel.setAttribute('fill', '#888');
+    remainingLabel.textContent = 'Resterende';
+    textGroup.appendChild(remainingLabel);
     
     svg.appendChild(textGroup);
     gaugeContainer.appendChild(svg);
+    
+    // Stats on the right
+    const statsContainer = document.createElement('div');
+    statsContainer.className = 'calories-stats';
+    
+    const baseGoal = createStatItem('🏁', 'Base Mål', '1,500');
+    const food = createStatItem('🍴', 'Mad', '1,712');
+    const exercise = createStatItem('🔥', 'Motion', '500');
+    
+    statsContainer.appendChild(baseGoal);
+    statsContainer.appendChild(food);
+    statsContainer.appendChild(exercise);
+    
+    gaugeContainer.appendChild(statsContainer);
     section.appendChild(gaugeContainer);
+    
+    // Page dots
+    const dots = document.createElement('div');
+    dots.className = 'page-dots';
+    dots.innerHTML = '● ○ ○ ○ ○';
+    section.appendChild(dots);
     
     return section;
 }
 
+function createStatItem(icon, label, value) {
+    const item = document.createElement('div');
+    item.className = 'stat-item';
+    
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'stat-icon';
+    iconSpan.textContent = icon;
+    
+    const textSpan = document.createElement('span');
+    textSpan.className = 'stat-text';
+    textSpan.innerHTML = `<strong>${value}</strong><br>${label}`;
+    
+    item.appendChild(iconSpan);
+    item.appendChild(textSpan);
+    return item;
+}
+
 function createMacrosSection() {
     const section = document.createElement('div');
-    section.className = 'macros-section';
+    section.className = 'stats-row';
+    
+    // Steps card
+    const stepsCard = createStepsCard();
+    section.appendChild(stepsCard);
+    
+    // Exercise card
+    const exerciseCard = createExerciseCard();
+    section.appendChild(exerciseCard);
+    
+    return section;
+}
+
+function createStepsCard() {
+    const card = document.createElement('div');
+    card.className = 'stat-card';
     
     const title = document.createElement('h3');
-    title.textContent = 'Makronæringsstoffer';
-    section.appendChild(title);
+    title.textContent = 'Skridt';
+    card.appendChild(title);
     
-    const macrosContainer = document.createElement('div');
-    macrosContainer.className = 'macros-container';
+    const content = document.createElement('div');
+    content.className = 'stat-content';
     
-    // Protein
-    const proteinGauge = createSmallGauge('Protein', '#ff6b6b');
-    macrosContainer.appendChild(proteinGauge);
+    const icon = document.createElement('div');
+    icon.className = 'stat-icon-large';
+    icon.innerHTML = '👟';
     
-    // Carbs
-    const carbsGauge = createSmallGauge('Kulhydrater', '#4ecdc4');
-    macrosContainer.appendChild(carbsGauge);
+    const value = document.createElement('div');
+    value.className = 'stat-value';
+    value.innerHTML = '<span class="number">0</span>';
     
-    // Fat
-    const fatGauge = createSmallGauge('Fedt', '#ffe66d');
-    macrosContainer.appendChild(fatGauge);
+    const goal = document.createElement('div');
+    goal.className = 'stat-goal';
+    goal.textContent = 'Mål: 10,000 skridt';
     
-    section.appendChild(macrosContainer);
-    return section;
+    content.appendChild(icon);
+    content.appendChild(value);
+    content.appendChild(goal);
+    
+    card.appendChild(content);
+    return card;
+}
+
+function createExerciseCard() {
+    const card = document.createElement('div');
+    card.className = 'stat-card';
+    
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    
+    const title = document.createElement('h3');
+    title.textContent = 'Motion';
+    header.appendChild(title);
+    
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.innerHTML = '+';
+    header.appendChild(addBtn);
+    
+    card.appendChild(header);
+    
+    const content = document.createElement('div');
+    content.className = 'stat-content';
+    
+    const calories = document.createElement('div');
+    calories.className = 'exercise-stat';
+    calories.innerHTML = '🔥 <span class="number">500</span> cal';
+    
+    const duration = document.createElement('div');
+    duration.className = 'exercise-stat';
+    duration.innerHTML = '🕐 <span class="number">0:24</span> hr';
+    
+    content.appendChild(calories);
+    content.appendChild(duration);
+    
+    card.appendChild(content);
+    return card;
 }
 
 function createSmallGauge(name, color) {
@@ -230,17 +355,55 @@ function createExerciseSection() {
 
 function createWeightSection() {
     const section = document.createElement('div');
-    section.className = 'weight-section';
+    section.className = 'weight-card';
+    
+    const header = document.createElement('div');
+    header.className = 'card-header';
     
     const title = document.createElement('h3');
     title.textContent = 'Vægt';
-    section.appendChild(title);
+    header.appendChild(title);
     
-    const weightDisplay = document.createElement('div');
-    weightDisplay.className = 'weight-display';
-    weightDisplay.innerHTML = '<p>Ingen vægtmålinger</p>';
+    const subtitle = document.createElement('div');
+    subtitle.className = 'card-subtitle';
+    subtitle.textContent = 'Sidste 90 dage';
+    header.appendChild(subtitle);
     
-    section.appendChild(weightDisplay);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.innerHTML = '+';
+    header.appendChild(addBtn);
+    
+    section.appendChild(header);
+    
+    // Weight chart placeholder
+    const chart = document.createElement('div');
+    chart.className = 'weight-chart';
+    chart.innerHTML = `
+        <div class="chart-container">
+            <div class="chart-lines">
+                <div class="weight-line" style="top: 20%;"></div>
+                <div class="weight-line" style="top: 80%;"></div>
+            </div>
+            <div class="chart-point" style="top: 20%; right: 10px;"></div>
+        </div>
+        <div class="chart-labels">
+            <div class="y-labels">
+                <span>118</span>
+                <span>104</span>
+                <span>91</span>
+                <span>77</span>
+            </div>
+            <div class="x-labels">
+                <span>06/12</span>
+                <span>07/12</span>
+                <span>08/11</span>
+                <span>09/10</span>
+            </div>
+        </div>
+    `;
+    
+    section.appendChild(chart);
     return section;
 }
 

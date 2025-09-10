@@ -2,12 +2,225 @@
 
 /* Dashboard */
 .dashboard {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-lg);
     padding: var(--space-lg);
-    min-height: 200px;
-    border: 2px solid red; /* Debug border */
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+/* Calories Card */
+.calories-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.card-header h2 {
+    color: var(--color-text);
+    font-size: 24px;
+    margin: 0;
+}
+
+.card-subtitle {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.formula-text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-bottom: var(--space-lg);
+}
+
+.gauge-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.calories-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    flex: 1;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.stat-icon {
+    font-size: 20px;
+}
+
+.stat-text {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.page-dots {
+    text-align: center;
+    margin-top: var(--space-lg);
+    color: var(--color-text-muted);
+    font-size: 12px;
+    letter-spacing: 4px;
+}
+
+/* Stats Row */
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.stat-card h3 {
+    color: var(--color-text);
+    font-size: 18px;
+    margin: 0 0 var(--space-md) 0;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-sm);
+}
+
+.stat-icon-large {
+    font-size: 32px;
+    margin-bottom: var(--space-sm);
+}
+
+.stat-value {
+    color: var(--color-text);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.stat-goal {
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.exercise-stat {
+    color: var(--color-text);
+    font-size: 14px;
+    margin: var(--space-xs) 0;
+}
+
+/* Weight Card */
+.weight-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.weight-chart {
+    margin-top: var(--space-md);
+    position: relative;
+    height: 200px;
+}
+
+.chart-container {
+    position: relative;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    margin: var(--space-md) 0;
+}
+
+.chart-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.weight-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #4CAF50;
+}
+
+.chart-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #4CAF50;
+    border-radius: 50%;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-sm);
+}
+
+.y-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.x-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    margin-left: var(--space-lg);
+}
+
+/* Buttons */
+.btn-edit, .btn-add {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+}
+
+.btn-edit:hover, .btn-add:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
 }
 
 .calories-gauge {
