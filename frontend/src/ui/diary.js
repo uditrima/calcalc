@@ -467,6 +467,8 @@ export function Diary(container) {
     }
     
     function createCustomScrollbar(container) {
+        console.log('Creating custom scrollbar for container:', container);
+        
         // Create scrollbar track
         const scrollbar = document.createElement('div');
         scrollbar.className = 'custom-scrollbar';
@@ -484,6 +486,8 @@ export function Diary(container) {
             const scrollTop = container.scrollTop;
             const scrollHeight = container.scrollHeight;
             const clientHeight = container.clientHeight;
+            
+            console.log('Updating scrollbar:', { scrollTop, scrollHeight, clientHeight });
             
             if (scrollHeight <= clientHeight) {
                 scrollbar.style.display = 'none';
