@@ -18,12 +18,12 @@ body {
 
 :root {
     /* Core Colors */
-    --color-bg: #0f0f0f;
-    --color-surface: rgba(25, 25, 25, 0.85);
-    --color-border: rgba(255, 255, 255, 0.08);
+    --color-bg: #0a1628;
+    --color-surface: rgba(30, 60, 100, 0.85);
+    --color-border: rgba(255, 255, 255, 0.12);
     --color-accent: #00ffc8;
     --color-text: #e0e0e0;
-    --color-text-muted: #999;
+    --color-text-muted: #a0b0c0;
     
     /* Typography */
     --font-family: 'Segoe UI', 'Roboto', sans-serif;
@@ -31,8 +31,8 @@ body {
     --font-size-heading: 20px;
     
     /* Glassmorphism Shadows */
-    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --shadow-glass-strong: 0 16px 64px rgba(0, 0, 0, 0.4);
+    --shadow-glass: 0 8px 32px rgba(10, 22, 40, 0.4);
+    --shadow-glass-strong: 0 16px 64px rgba(10, 22, 40, 0.5);
     --shadow-glow: 0 0 20px rgba(0, 255, 200, 0.2);
     --shadow-glow-strong: 0 0 40px rgba(0, 255, 200, 0.3);
     
