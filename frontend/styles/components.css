@@ -299,8 +299,9 @@
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 var(--space-md) 0 0;
+    padding: 0;
     position: relative;
+    margin-right: var(--space-md);
 }
 
 /* Diary Header Styling */
