@@ -296,7 +296,7 @@
 
 /* Diary Container */
 .diary {
-    height: calc(100% - 80px); /* Subtract bottom navigation height */
+    height: 100%; /* Full height of its container */
     overflow-y: auto; /* Diary handles its own scrolling */
     overflow-x: hidden;
     padding: 0;
