@@ -7,11 +7,7 @@ const api = new ApiClient('http://localhost:5000/api');
 export const AppState = {
     // Initial state
     state: {
-        foods: [
-            { id: 1, name: 'Æble', calories: 52, protein: 0.3, carbohydrates: 14, fat: 0.2 },
-            { id: 2, name: 'Banan', calories: 89, protein: 1.1, carbohydrates: 23, fat: 0.3 },
-            { id: 3, name: 'Havregryn', calories: 389, protein: 16.9, carbohydrates: 66, fat: 6.9 }
-        ],
+        foods: [],
         diary: { 
             date: new Date().toISOString().split('T')[0], 
             entries: [
@@ -111,7 +107,10 @@ export const AppState = {
     async loadFoods() {
         try {
             const response = await api.getFoods();
-            if (response.success) {
+            // API returns array directly, not wrapped in success/data object
+            if (Array.isArray(response)) {
+                this.setFoods(response);
+            } else if (response.success) {
                 this.setFoods(response.data);
             }
         } catch (error) {

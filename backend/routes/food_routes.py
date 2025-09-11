@@ -12,6 +12,10 @@ def get_foods():
         return jsonify([{
             'id': food.id,
             'name': food.name,
+            'category': food.category,
+            'brand': food.brand,
+            'used': food.used,
+            'last_used': food.last_used,
             'calories': food.calories,
             'protein': food.protein,
             'carbohydrates': food.carbohydrates,
@@ -48,6 +52,10 @@ def get_food(food_id):
         return jsonify({
             'id': food.id,
             'name': food.name,
+            'category': food.category,
+            'brand': food.brand,
+            'used': food.used,
+            'last_used': food.last_used,
             'calories': food.calories,
             'protein': food.protein,
             'carbohydrates': food.carbohydrates,
@@ -87,6 +95,10 @@ def create_food():
         return jsonify({
             'id': food.id,
             'name': food.name,
+            'category': food.category,
+            'brand': food.brand,
+            'used': food.used,
+            'last_used': food.last_used,
             'calories': food.calories,
             'protein': food.protein,
             'carbohydrates': food.carbohydrates,
@@ -127,6 +139,10 @@ def update_food(food_id):
         return jsonify({
             'id': food.id,
             'name': food.name,
+            'category': food.category,
+            'brand': food.brand,
+            'used': food.used,
+            'last_used': food.last_used,
             'calories': food.calories,
             'protein': food.protein,
             'carbohydrates': food.carbohydrates,

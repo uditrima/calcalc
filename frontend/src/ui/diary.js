@@ -327,9 +327,12 @@ export function Diary(container) {
         const line2 = document.createElement('div');
         line2.className = 'meal-line-2';
         
+        const addButtonContainer = document.createElement('div');
+        addButtonContainer.className = 'add-button-container';
+        
         const addButton = document.createElement('button');
         addButton.className = 'add-food-btn';
-        addButton.textContent = 'TILFØJ FØDEVARE';
+        addButton.innerHTML = '+';
         addButton.addEventListener('click', () => {
             const customEvent = new CustomEvent('onAddFood', {
                 detail: { mealType },
@@ -337,7 +340,14 @@ export function Diary(container) {
             });
             container.dispatchEvent(customEvent);
         });
-        line2.appendChild(addButton);
+        addButtonContainer.appendChild(addButton);
+        
+        const addText = document.createElement('span');
+        addText.className = 'add-food-text';
+        addText.textContent = 'TILFØJ FØDEVARE';
+        addButtonContainer.appendChild(addText);
+        
+        line2.appendChild(addButtonContainer);
         
         const moreMenu = document.createElement('button');
         moreMenu.className = 'meal-more-menu';

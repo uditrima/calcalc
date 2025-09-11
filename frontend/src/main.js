@@ -1,5 +1,6 @@
 // Main application entry point
 import { AppState } from './state/app_state.js';
+import { ApiClient } from './data/api.js';
 import { Dashboard } from './ui/dashboard.js';
 import { FoodForm } from './ui/food_form.js';
 import { Diary } from './ui/diary.js';
@@ -11,6 +12,7 @@ class CalorieTrackerApp {
     constructor() {
         this.appContainer = null;
         this.components = {};
+        this.api = new ApiClient('http://localhost:5000/api');
         this.init();
     }
     
@@ -220,6 +222,38 @@ class CalorieTrackerApp {
         this.appContainer.addEventListener('onAddFood', (event) => {
             console.log('Add food clicked:', event.detail);
             this.showView('food');
+        });
+        
+        // Food section events
+        this.appContainer.addEventListener('onGoBack', (event) => {
+            console.log('Go back clicked');
+            this.showView('dashboard');
+        });
+        
+        this.appContainer.addEventListener('onFoodSelect', (event) => {
+            console.log('Food selected:', event.detail);
+            // TODO: Handle food selection
+        });
+        
+        this.appContainer.addEventListener('onAddFoodItem', async (event) => {
+            console.log('Add food item:', event.detail);
+            const food = event.detail;
+            
+            // Update last_used timestamp for the food
+            if (food.id) {
+                try {
+                    const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp
+                    await this.api.updateFood(food.id, { last_used: currentTime });
+                    
+                    // Reload foods to get updated data
+                    await AppState.loadFoods();
+                } catch (error) {
+                    console.error('Failed to update food last_used:', error);
+                }
+            }
+            
+            // TODO: Handle adding food item to diary
+            this.showView('dashboard');
         });
         
         // Add water events

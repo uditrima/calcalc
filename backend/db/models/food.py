@@ -9,6 +9,14 @@ class Food(Base):
     
     # Required fields
     name = Column(String(255), unique=True, nullable=False)
+    category = Column(String(100), nullable=False)
+    
+    # Optional fields
+    brand = Column(String(100), nullable=True)
+    
+    # Usage tracking
+    used = Column(Integer, default=0)
+    last_used = Column(Integer, nullable=True)  # Unix timestamp when last added to diary
     
     # Nutritional values per 100g (all with default 0.0)
     calories = Column(Float, default=0.0)
