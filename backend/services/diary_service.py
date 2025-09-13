@@ -1,6 +1,7 @@
-from db.models.diary_entry import DiaryEntry
+from db.models.diary_entry_improved import DiaryEntry
 from db.models.food import Food
 from db.database import db
+from services.food_association_service import FoodAssociationService
 from datetime import date
 
 class DiaryService:
@@ -23,13 +24,21 @@ class DiaryService:
         
         entry = DiaryEntry(
             food_id=food_id,
-            grams=grams,
+            amount_grams=grams,
             meal_type=meal_type,
             date=target_date
         )
         
+        # Calculate nutrition values
+        entry.calculate_nutrition(food)
+        
         self.db.session.add(entry)
         self.db.session.commit()
+        
+        # Update food associations (temporarily disabled for debugging)
+        # association_service = FoodAssociationService(self.db.session)
+        # association_service.update_associations_for_meal(target_date, meal_type)
+        
         return entry
     
     def update_entry(self, entry_id, data):
@@ -66,29 +75,26 @@ class DiaryService:
         if not entry or not entry.food:
             return {}
         
-        food = entry.food
-        grams = entry.grams
-        multiplier = grams / 100.0
-        
+        # Return the already calculated values from the entry
         return {
-            'calories': food.calories * multiplier,
-            'protein': food.protein * multiplier,
-            'carbohydrates': food.carbohydrates * multiplier,
-            'fat': food.fat * multiplier,
-            'fiber': food.fiber * multiplier,
-            'sugar': food.sugar * multiplier,
-            'saturated_fat': food.saturated_fat * multiplier,
-            'unsaturated_fat': food.unsaturated_fat * multiplier,
-            'cholesterol': food.cholesterol * multiplier,
-            'sodium': food.sodium * multiplier,
-            'potassium': food.potassium * multiplier,
-            'calcium': food.calcium * multiplier,
-            'iron': food.iron * multiplier,
-            'vitamin_a': food.vitamin_a * multiplier,
-            'vitamin_c': food.vitamin_c * multiplier,
-            'vitamin_d': food.vitamin_d * multiplier,
-            'vitamin_b12': food.vitamin_b12 * multiplier,
-            'magnesium': food.magnesium * multiplier
+            'calories': entry.calories,
+            'protein': entry.protein,
+            'carbohydrates': entry.carbohydrates,
+            'fat': entry.fat,
+            'fiber': entry.fiber,
+            'sugar': entry.sugar,
+            'saturated_fat': entry.saturated_fat,
+            'unsaturated_fat': entry.unsaturated_fat,
+            'cholesterol': entry.cholesterol,
+            'sodium': entry.sodium,
+            'potassium': entry.potassium,
+            'calcium': entry.calcium,
+            'iron': entry.iron,
+            'vitamin_a': entry.vitamin_a,
+            'vitamin_c': entry.vitamin_c,
+            'vitamin_d': entry.vitamin_d,
+            'vitamin_b12': entry.vitamin_b12,
+            'magnesium': entry.magnesium
         }
     
     def calculate_daily_nutrition(self, target_date):

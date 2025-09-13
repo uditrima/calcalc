@@ -1,0 +1,5 @@
+[33m8f66da9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m Implementer fødevare database integration og forbedret diary struktur
+[33mc338935[m Implement custom scrollbar for dashboard-section
+[33mfe434ce[m Adjust custom-scrollbar bottom position to 8px
+[33m400bea1[m Remove top/bottom padding and bottom margin from app-header
+[33meea4f14[m Remove padding from app-main across all media queries

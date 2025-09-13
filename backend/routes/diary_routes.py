@@ -18,7 +18,7 @@ def get_diary_entries(date):
             'id': entry.id,
             'date': entry.date.isoformat(),
             'meal_type': entry.meal_type,
-            'grams': entry.grams,
+            'grams': entry.amount_grams,
             'food_id': entry.food_id,
             'food_name': entry.food.name if entry.food else None,
             'nutrition': diary_service.calculate_entry_nutrition(entry)
@@ -61,7 +61,7 @@ def add_diary_entry():
             'id': entry.id,
             'date': entry.date.isoformat(),
             'meal_type': entry.meal_type,
-            'grams': entry.grams,
+            'grams': entry.amount_grams,
             'food_id': entry.food_id,
             'food_name': entry.food.name if entry.food else None,
             'nutrition': diary_service.calculate_entry_nutrition(entry)
@@ -93,7 +93,7 @@ def update_diary_entry(entry_id):
             'id': entry.id,
             'date': entry.date.isoformat(),
             'meal_type': entry.meal_type,
-            'grams': entry.grams,
+            'grams': entry.amount_grams,
             'food_id': entry.food_id,
             'food_name': entry.food.name if entry.food else None,
             'nutrition': diary_service.calculate_entry_nutrition(entry)

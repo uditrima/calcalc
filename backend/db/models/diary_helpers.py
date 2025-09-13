@@ -1,6 +1,6 @@
 from sqlalchemy import func, and_
 from datetime import date, datetime, timedelta
-from db.models.diary_entry import DiaryEntry
+from db.models.diary_entry_improved import DiaryEntry
 from db.models.food import Food
 from db.models.meal_types import MealType
 

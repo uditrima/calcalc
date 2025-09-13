@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from datetime import date, datetime
 from sqlalchemy.orm import sessionmaker
 from db.database import engine
-from db.models.diary_entry import DiaryEntry
+from db.models.diary_entry_improved import DiaryEntry
 from db.models.food import Food
 from db.models.meal_types import MealType
 from db.models.diary_helpers import DiaryHelpers

@@ -3,6 +3,7 @@ import { AppState } from './state/app_state.js';
 import { ApiClient } from './data/api.js';
 import { Dashboard } from './ui/dashboard.js';
 import { FoodForm } from './ui/food_form.js';
+import { AddFood } from './ui/add_food.js';
 import { Diary } from './ui/diary.js';
 import { Exercise } from './ui/exercise.js';
 import { AddMenu } from './ui/add_menu.js';
@@ -88,6 +89,12 @@ class CalorieTrackerApp {
         foodSection.className = 'slide-view food-view';
         main.appendChild(foodSection);
         
+        // Add food section (slide-in)
+        const addFoodSection = document.createElement('section');
+        addFoodSection.id = 'add-food-section';
+        addFoodSection.className = 'slide-view add-food-view';
+        main.appendChild(addFoodSection);
+        
         // Diary section (slide-in)
         const diarySection = document.createElement('section');
         diarySection.id = 'diary-section';
@@ -169,6 +176,14 @@ class CalorieTrackerApp {
             console.log('FoodForm mounted:', this.components.foodForm);
         }
         
+        // Mount AddFood
+        const addFoodContainer = document.getElementById('add-food-section');
+        console.log('AddFood container:', addFoodContainer);
+        if (addFoodContainer) {
+            this.components.addFood = AddFood(addFoodContainer);
+            console.log('AddFood mounted:', this.components.addFood);
+        }
+        
         // Mount Diary
         const diaryContainer = document.getElementById('diary-section');
         console.log('Diary container:', diaryContainer);
@@ -230,20 +245,41 @@ class CalorieTrackerApp {
             this.showView('dashboard');
         });
         
+        this.appContainer.addEventListener('onGoBackToFood', (event) => {
+            console.log('Go back to food clicked');
+            this.showView('food');
+        });
+        
         this.appContainer.addEventListener('onFoodSelect', (event) => {
             console.log('Food selected:', event.detail);
-            // TODO: Handle food selection
+            // Navigate to add food view with selected food
+            if (this.components.addFood) {
+                this.components.addFood.setFood(event.detail);
+                this.showView('add-food');
+            }
         });
         
         this.appContainer.addEventListener('onAddFoodItem', async (event) => {
             console.log('Add food item:', event.detail);
             const food = event.detail;
             
+            // Navigate to add food view with selected food
+            if (this.components.addFood) {
+                this.components.addFood.setFood(food);
+                this.showView('add-food');
+            }
+        });
+        
+        // Add food acceptance event
+        this.appContainer.addEventListener('onAcceptFood', async (event) => {
+            console.log('Accept food:', event.detail);
+            const foodData = event.detail;
+            
             // Update last_used timestamp for the food
-            if (food.id) {
+            if (foodData.food.id) {
                 try {
                     const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp
-                    await this.api.updateFood(food.id, { last_used: currentTime });
+                    await this.api.updateFood(foodData.food.id, { last_used: currentTime });
                     
                     // Reload foods to get updated data
                     await AppState.loadFoods();
@@ -253,7 +289,7 @@ class CalorieTrackerApp {
             }
             
             // TODO: Handle adding food item to diary
-            this.showView('dashboard');
+            console.log('Food added to diary:', foodData);
         });
         
         // Add water events
@@ -342,6 +378,11 @@ class CalorieTrackerApp {
                 slideUpView.classList.add('active');
                 const navItem = this.appContainer.querySelector(`[data-view="${viewName}"]`);
                 if (navItem) navItem.classList.add('active');
+            }
+        } else if (viewName === 'add-food') {
+            const slideView = this.appContainer.querySelector('.add-food-view');
+            if (slideView) {
+                slideView.classList.add('active');
             }
         } else {
             const slideView = this.appContainer.querySelector(`.${viewName}-view`);

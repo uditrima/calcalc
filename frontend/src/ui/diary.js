@@ -307,55 +307,49 @@ export function Diary(container) {
         section.className = 'meal-section';
         section.setAttribute('data-meal-type', mealType);
         
-        // Line 1: Title and calories
+        // Line 1: Title, add link, calories and more menu
         const line1 = document.createElement('div');
         line1.className = 'meal-line-1';
+        
+        const leftSection = document.createElement('div');
+        leftSection.className = 'meal-left-section';
         
         const mealTitle = document.createElement('span');
         mealTitle.className = 'meal-title';
         mealTitle.textContent = title;
-        line1.appendChild(mealTitle);
+        leftSection.appendChild(mealTitle);
         
-        const mealCalories = document.createElement('span');
-        mealCalories.className = 'meal-calories';
-        mealCalories.textContent = '0';
-        line1.appendChild(mealCalories);
-        
-        section.appendChild(line1);
-        
-        // Line 2: Add button and more menu
-        const line2 = document.createElement('div');
-        line2.className = 'meal-line-2';
-        
-        const addButtonContainer = document.createElement('div');
-        addButtonContainer.className = 'add-button-container';
-        
-        const addButton = document.createElement('button');
-        addButton.className = 'add-food-btn';
-        addButton.innerHTML = '+';
-        addButton.addEventListener('click', () => {
+        const addLink = document.createElement('span');
+        addLink.className = 'add-food-link';
+        addLink.textContent = 'TILFØJ FØDEVARE';
+        addLink.addEventListener('click', () => {
             const customEvent = new CustomEvent('onAddFood', {
                 detail: { mealType },
                 bubbles: true
             });
             container.dispatchEvent(customEvent);
         });
-        addButtonContainer.appendChild(addButton);
+        leftSection.appendChild(addLink);
         
-        const addText = document.createElement('span');
-        addText.className = 'add-food-text';
-        addText.textContent = 'TILFØJ FØDEVARE';
-        addButtonContainer.appendChild(addText);
+        line1.appendChild(leftSection);
         
-        line2.appendChild(addButtonContainer);
+        const rightSection = document.createElement('div');
+        rightSection.className = 'meal-right-section';
+        
+        const mealCalories = document.createElement('span');
+        mealCalories.className = 'meal-calories';
+        mealCalories.textContent = '0';
+        rightSection.appendChild(mealCalories);
         
         const moreMenu = document.createElement('button');
         moreMenu.className = 'meal-more-menu';
         moreMenu.innerHTML = '⋯';
         moreMenu.title = 'Mere menu';
-        line2.appendChild(moreMenu);
+        rightSection.appendChild(moreMenu);
         
-        section.appendChild(line2);
+        line1.appendChild(rightSection);
+        
+        section.appendChild(line1);
         
         return section;
     }

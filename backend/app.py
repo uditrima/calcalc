@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from db.database import db, init_db
 from db.models.food import Food
-from db.models.diary_entry import DiaryEntry
+from db.models.diary_entry_improved import DiaryEntry
 from db.models.exercise import Exercise
 from db.models.weight import Weight
 from db.models.user_goals import UserGoals
@@ -13,6 +13,7 @@ from routes.diary_routes import diary_bp
 from routes.exercise_routes import exercise_bp
 from routes.weight_routes import weight_bp
 from routes.goals_routes import goals_bp
+# from routes.food_association_routes import food_association_bp
 
 def create_app():
     app = Flask(__name__)
@@ -27,6 +28,7 @@ def create_app():
     app.register_blueprint(exercise_bp)
     app.register_blueprint(weight_bp)
     app.register_blueprint(goals_bp)
+    # app.register_blueprint(food_association_bp)
     
     # TODO: configure error handlers
     
