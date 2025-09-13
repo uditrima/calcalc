@@ -1,0 +1,403 @@
+/* Food Component Styles */
+
+/* Food Section Styling */
+.food-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    overflow: hidden;
+}
+
+/* 1. Food Header */
+.food-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: var(--space-lg) var(--space-lg) 0 var(--space-lg);
+    box-shadow: var(--shadow-glass);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+}
+
+.go-back-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+}
+
+.go-back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    cursor: pointer;
+}
+
+.meal-title {
+    color: rgb(122, 188, 251);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.dropdown-arrow {
+    color: var(--color-accent);
+    font-size: 14px;
+    transition: transform var(--transition-base);
+}
+
+.dropdown-menu {
+    position: relative;
+}
+
+.dropdown-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+}
+
+.dropdown-btn:hover {
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass-strong);
+    -webkit-backdrop-filter: var(--blur-glass-strong);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass-strong);
+    min-width: 150px;
+    z-index: var(--z-dropdown);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-base);
+}
+
+.dropdown-content.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all var(--transition-base);
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 255, 200, 0.1);
+    color: var(--color-accent);
+}
+
+/* 2. Search Section */
+.search-section {
+    padding: var(--space-lg);
+    background: var(--color-bg);
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm) var(--space-md);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+}
+
+.search-icon {
+    color: var(--color-text-muted);
+    font-size: 18px;
+    margin-right: var(--space-sm);
+}
+
+.search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* 3. Menu Section */
+.menu-section {
+    display: flex;
+    gap: 0;
+    padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.menu-item {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    transition: all var(--transition-base);
+    position: relative;
+    border-bottom: 2px solid transparent;
+}
+
+.menu-item:hover {
+    color: var(--color-text);
+}
+
+.menu-item.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+/* 4. Carousel Section */
+.carousel-section {
+    padding: var(--space-lg);
+    background: var(--color-bg);
+}
+
+.carousel-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.carousel-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.carousel-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glass);
+    border-color: var(--color-accent);
+}
+
+.carousel-icon {
+    font-size: 32px;
+    color: var(--color-accent);
+}
+
+.carousel-label {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--color-text);
+}
+
+.new-badge {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px var(--space-xs);
+    border-radius: var(--radius-sm);
+}
+
+/* 5. Sort By Section */
+.sort-by-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+}
+
+.sort-by-section h3 {
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.sort-dropdown {
+    position: relative;
+}
+
+.sort-dropdown-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: all var(--transition-base);
+}
+
+.sort-dropdown-btn:hover {
+    color: var(--color-accent);
+}
+
+.sort-dropdown-content {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass-strong);
+    -webkit-backdrop-filter: var(--blur-glass-strong);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass-strong);
+    min-width: 150px;
+    z-index: var(--z-dropdown);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-base);
+}
+
+.sort-dropdown-content.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.sort-option {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all var(--transition-base);
+}
+
+.sort-option:hover {
+    background: rgba(0, 255, 200, 0.1);
+    color: var(--color-accent);
+}
+
+/* 6. Food Items Section */
+.food-items-section {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+}
+
+.food-items-section::-webkit-scrollbar {
+    display: none;
+}
+
+.food-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+}
+
+.food-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glass);
+    border-color: var(--color-accent);
+}
+
+.food-item-content {
+    flex: 1;
+}
+
+.food-details {
+    flex: 1;
+}
+
+.food-name {
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.food-info {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.food-actions {
+    display: flex;
+    align-items: center;
+}
+
+.add-food-btn {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all var(--transition-base);
+}
+
+.add-food-btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-glow);
+}

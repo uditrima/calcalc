@@ -1,0 +1,83 @@
+/* Add Menu Component Styles */
+
+/* Add Menu Section */
+.add-menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    height: calc(100vh - 160px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.add-menu-section::-webkit-scrollbar {
+    display: none;
+}
+
+.add-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-md);
+}
+
+.add-menu-header h2 {
+    color: var(--color-text);
+    font-size: 24px;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+}
+
+.add-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+}
+
+.add-menu-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    text-align: center;
+}
+
+.add-menu-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glass);
+    border-color: var(--color-accent);
+}
+
+.add-menu-icon {
+    font-size: 48px;
+    color: var(--color-accent);
+}
+
+.add-menu-label {
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.add-menu-description {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+}

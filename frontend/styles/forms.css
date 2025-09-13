@@ -1,0 +1,169 @@
+/* Form Elements and Common Components */
+
+/* Section Styling */
+.section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+    margin-bottom: var(--space-lg);
+    min-height: 100px;
+}
+
+.section h2 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-heading);
+}
+
+.section h3 {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    font-size: 18px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-group label {
+    display: block;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(0, 255, 200, 0.2);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    box-shadow: var(--shadow-glass);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-glow);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+}
+
+.btn-secondary:hover {
+    transform: scale(1.02);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Inputs */
+.input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(0, 255, 200, 0.2);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+    position: fixed;
+    right: 0px;
+    top: 27px;
+    bottom: 8px;
+    width: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Custom Scrollbar for Food Items */
+.food-items-section .custom-scrollbar {
+    position: fixed;
+    right: 8px;
+    top: 27px;
+    bottom: 8px;
+    width: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.custom-scrollbar-thumb {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    background: var(--color-accent);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.custom-scrollbar-thumb:hover {
+    background: var(--color-accent-hover, #00ff88);
+}

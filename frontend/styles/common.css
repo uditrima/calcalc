@@ -1,0 +1,350 @@
+/* Common Components and Utilities */
+
+/* Entry Actions */
+.entry-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.entry-action-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.entry-action-btn:hover {
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.entry-action-btn.delete:hover {
+    color: #ff4757;
+    background: rgba(255, 71, 87, 0.1);
+}
+
+.entry-action-btn.edit:hover {
+    color: var(--color-accent);
+    background: rgba(0, 255, 200, 0.1);
+}
+
+/* Exercise Entry */
+.exercise-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.exercise-entry:last-child {
+    border-bottom: none;
+}
+
+.exercise-info {
+    flex: 1;
+}
+
+.exercise-name {
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+}
+
+.exercise-details {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.exercise-calories {
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Weight Entry */
+.weight-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.weight-entry:last-child {
+    border-bottom: none;
+}
+
+.weight-info {
+    flex: 1;
+}
+
+.weight-value {
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.weight-date {
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.weight-change {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    text-align: right;
+}
+
+.weight-change.positive {
+    color: var(--color-accent);
+}
+
+.weight-change.negative {
+    color: #ff4757;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+    color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+}
+
+.empty-state-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.empty-state-description {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: var(--space-lg);
+}
+
+.empty-state-action {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-lg);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.empty-state-action:hover {
+    background: var(--color-accent-hover);
+    transform: scale(1.02);
+}
+
+/* Loading State */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2xl);
+    color: var(--color-text-muted);
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-border);
+    border-top: 2px solid var(--color-accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: var(--space-sm);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-state {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+    color: #ff4757;
+}
+
+.error-state-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-md);
+}
+
+.error-state-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+.error-state-description {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text-muted);
+}
+
+.error-state-action {
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-lg);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.error-state-action:hover {
+    background: #ff3742;
+    transform: scale(1.02);
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    text-align: center;
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    position: absolute;
+    z-index: var(--z-tooltip);
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    font-size: 12px;
+    border: 1px solid var(--color-border);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--color-surface) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 2px var(--space-xs);
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: var(--radius-sm);
+    line-height: 1;
+}
+
+.badge-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+}
+
+.badge-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.badge-success {
+    background: #2ed573;
+    color: white;
+}
+
+.badge-warning {
+    background: #ffa502;
+    color: white;
+}
+
+.badge-danger {
+    background: #ff4757;
+    color: white;
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-lg) 0;
+    opacity: 0.5;
+}
+
+.divider-vertical {
+    width: 1px;
+    height: 100%;
+    background: var(--color-border);
+    margin: 0 var(--space-lg);
+    opacity: 0.5;
+}
+
+/* Spacer */
+.spacer {
+    flex: 1;
+}
+
+.spacer-sm {
+    height: var(--space-sm);
+}
+
+.spacer-md {
+    height: var(--space-md);
+}
+
+.spacer-lg {
+    height: var(--space-lg);
+}
+
+.spacer-xl {
+    height: var(--space-xl);
+}
+
+.spacer-2xl {
+    height: var(--space-2xl);
+}

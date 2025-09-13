@@ -1,0 +1,332 @@
+/* Dashboard Component Styles */
+
+/* Dashboard */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+    background: var(--color-bg);
+    height: calc(100vh - 160px); /* Same height as diary section */
+    overflow-y: auto; /* Allow scrolling */
+    overflow-x: hidden;
+    /* Hide native scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.dashboard::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Calories Card */
+.calories-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.card-header h2 {
+    color: var(--color-text);
+    font-size: 24px;
+    margin: 0;
+}
+
+.card-subtitle {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.btn-edit {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-bg);
+}
+
+.formula-text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-bottom: var(--space-lg);
+    text-align: center;
+}
+
+.gauge-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.calories-remaining {
+    stroke: var(--color-gauge-remaining);
+    stroke-dasharray: 502.4;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.calories-progress {
+    stroke: var(--color-gauge-used);
+    stroke-dasharray: 502.4;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.calories-remaining-text {
+    fill: var(--color-text);
+    font-family: var(--font-family);
+}
+
+.calories-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    flex: 1;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.stat-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+}
+
+.stat-text {
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.stat-text strong {
+    color: var(--color-text);
+    font-weight: 600;
+    display: block;
+}
+
+.page-dots {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-top: var(--space-md);
+}
+
+/* Stats Row */
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+.stat-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.stat-card h3 {
+    color: var(--color-text);
+    font-size: 18px;
+    margin: 0 0 var(--space-md) 0;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-icon-large {
+    font-size: 32px;
+    margin-bottom: var(--space-sm);
+}
+
+.stat-value {
+    margin-bottom: var(--space-sm);
+}
+
+.number {
+    color: var(--color-text);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.stat-goal {
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.exercise-stat {
+    color: var(--color-text);
+    font-size: 14px;
+    margin-bottom: var(--space-sm);
+}
+
+.exercise-stat .number {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.btn-add {
+    background: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-bg);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: var(--space-sm);
+}
+
+.btn-add:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+}
+
+/* Exercise Section */
+.exercise-section {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.exercise-section h3 {
+    color: var(--color-text);
+    font-size: 18px;
+    margin: 0 0 var(--space-md) 0;
+}
+
+.exercise-display {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    text-align: center;
+    padding: var(--space-lg) 0;
+}
+
+/* Weight Card */
+.weight-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-glass);
+}
+
+.weight-chart {
+    position: relative;
+    height: 120px;
+    margin: var(--space-md) 0;
+}
+
+.chart-container {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface) 100%);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.chart-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.weight-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--color-border);
+    opacity: 0.3;
+}
+
+.chart-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    border: 2px solid var(--color-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-sm);
+}
+
+.y-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 120px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+.x-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    margin-top: var(--space-sm);
+}
+
+/* Gauges - SVG Styling */
+.gauge-container svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.gauge-container circle {
+    transition: all 0.3s ease;
+}
+
+.gauge-container text {
+    font-family: var(--font-family);
+    user-select: none;
+}
