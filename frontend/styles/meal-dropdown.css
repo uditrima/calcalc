@@ -1,0 +1,88 @@
+/* Meal Dropdown Component Styles */
+
+/* Meal Dropdown Menu */
+.meal-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    z-index: var(--z-dropdown);
+    margin-top: var(--space-xs);
+    overflow: hidden;
+}
+
+.meal-option {
+    padding: var(--space-md) var(--space-lg);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.meal-option:last-child {
+    border-bottom: none;
+}
+
+.meal-option:hover {
+    background: var(--color-primary);
+    color: var(--color-bg);
+}
+
+/* Meal dropdown animations */
+.meal-dropdown-menu {
+    animation: mealDropdownSlideIn 0.2s ease-out;
+}
+
+@keyframes mealDropdownSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Meal option hover effects */
+.meal-option {
+    position: relative;
+    overflow: hidden;
+}
+
+.meal-option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.meal-option:hover::before {
+    left: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .meal-dropdown-menu {
+        left: -10px;
+        right: -10px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .meal-option {
+        padding: var(--space-lg);
+        font-size: 18px;
+    }
+}
