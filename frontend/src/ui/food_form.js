@@ -97,7 +97,7 @@ function createFoodHeader() {
     mealDropdown.className = 'meal-dropdown-menu';
     mealDropdown.style.display = 'none';
     
-    const mealOptions = getMealOptions(true); // true = core only (4 meals)
+    const mealOptions = getMealOptions(false); // false = extended (5 meals)
     
     mealOptions.forEach(meal => {
         const option = document.createElement('div');
