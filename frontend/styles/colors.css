@@ -260,4 +260,18 @@
     --gradient-success: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-light) 100%);
     --gradient-warning: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-light) 100%);
     --gradient-error: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-light) 100%);
+    
+    /* Meal Section Colors */
+    --meal-morgenmad: #7abcfb;      /* blålig frisk morgenstemning */
+    --meal-frokost: #46ae98;        /* grønlig energisk frokost */
+    --meal-aftensmad: #ae7246;      /* varm brunlig aften */
+    --meal-mellemm1: #c166dd;       /* lilla, lidt sødere tone */
+    --meal-mellemm2: #f8b043;       /* gylden snack/fuel tone */
+
+    /* Baggrundsvarianter (subtile) */
+    --meal-morgenmad-bg: rgba(122, 188, 251, 0.08);
+    --meal-frokost-bg: rgba(70, 174, 152, 0.08);
+    --meal-aftensmad-bg: rgba(174, 114, 70, 0.08);
+    --meal-mellemm1-bg: rgba(193, 102, 221, 0.08);
+    --meal-mellemm2-bg: rgba(248, 176, 67, 0.08);
 }

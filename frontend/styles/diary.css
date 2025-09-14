@@ -265,6 +265,67 @@
     border: 1px solid var(--color-border);
     border-bottom: none;
     border-radius: 0;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.meal-section::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-border);
+    transition: all 0.2s ease;
+}
+
+.meal-section:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Meal-specific colors */
+.meal-section[data-meal-type="morgenmad"]::before {
+    background: var(--meal-morgenmad);
+}
+
+.meal-section[data-meal-type="morgenmad"]:hover {
+    background: var(--meal-morgenmad-bg);
+}
+
+.meal-section[data-meal-type="frokost"]::before {
+    background: var(--meal-frokost);
+}
+
+.meal-section[data-meal-type="frokost"]:hover {
+    background: var(--meal-frokost-bg);
+}
+
+.meal-section[data-meal-type="aftensmad"]::before {
+    background: var(--meal-aftensmad);
+}
+
+.meal-section[data-meal-type="aftensmad"]:hover {
+    background: var(--meal-aftensmad-bg);
+}
+
+.meal-section[data-meal-type="mellemmaaltid1"]::before {
+    background: var(--meal-mellemm1);
+}
+
+.meal-section[data-meal-type="mellemmaaltid1"]:hover {
+    background: var(--meal-mellemm1-bg);
+}
+
+.meal-section[data-meal-type="mellemmaaltid2"]::before {
+    background: var(--meal-mellemm2);
+}
+
+.meal-section[data-meal-type="mellemmaaltid2"]:hover {
+    background: var(--meal-mellemm2-bg);
 }
 
 .meal-section:first-child {
@@ -296,9 +357,31 @@
 }
 
 .meal-title {
-    color: rgb(122, 188, 251);
+    color: var(--color-text);
     font-size: var(--font-size-base);
     font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+/* Meal-specific title colors */
+.meal-section[data-meal-type="morgenmad"] .meal-title {
+    color: var(--meal-morgenmad);
+}
+
+.meal-section[data-meal-type="frokost"] .meal-title {
+    color: var(--meal-frokost);
+}
+
+.meal-section[data-meal-type="aftensmad"] .meal-title {
+    color: var(--meal-aftensmad);
+}
+
+.meal-section[data-meal-type="mellemmaaltid1"] .meal-title {
+    color: var(--meal-mellemm1);
+}
+
+.meal-section[data-meal-type="mellemmaaltid2"] .meal-title {
+    color: var(--meal-mellemm2);
 }
 
 .meal-calories {

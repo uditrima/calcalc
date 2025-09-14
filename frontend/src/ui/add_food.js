@@ -1,6 +1,7 @@
 // Add Food UI component
 import { AppState } from '../state/app_state.js';
 import { getMealOptions } from '../data/meal_types.js';
+import { PortionConverter } from '../utils/portion_converter.js';
 
 export function AddFood(container) {
     if (!container) {
@@ -419,10 +420,14 @@ export function AddFood(container) {
     function updateSummary() {
         if (!currentFood) return;
         
-        const totalCalories = Math.round(currentFood.calories * currentServings);
-        const totalCarbs = (currentFood.carbohydrates * currentServings).toFixed(1);
-        const totalFat = (currentFood.fat * currentServings).toFixed(1);
-        const totalProtein = (currentFood.protein * currentServings).toFixed(1);
+        // Convert currentServings (portions) to grams for calculation
+        const portionInGrams = PortionConverter.portionToGrams(currentServings);
+        const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
+        
+        const totalCalories = Math.round(nutrition.calories);
+        const totalCarbs = nutrition.carbohydrates.toFixed(1);
+        const totalFat = nutrition.fat.toFixed(1);
+        const totalProtein = nutrition.protein.toFixed(1);
         
         // Update calorie gauge
         const caloriesText = addFoodSection.querySelector('.calories-text');
@@ -458,10 +463,14 @@ export function AddFood(container) {
     function updateDailyGoals() {
         if (!currentFood) return;
         
-        const totalCalories = Math.round(currentFood.calories * currentServings);
-        const totalCarbs = (currentFood.carbohydrates * currentServings).toFixed(1);
-        const totalFat = (currentFood.fat * currentServings).toFixed(1);
-        const totalProtein = (currentFood.protein * currentServings).toFixed(1);
+        // Convert currentServings (portions) to grams for calculation
+        const portionInGrams = PortionConverter.portionToGrams(currentServings);
+        const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
+        
+        const totalCalories = Math.round(nutrition.calories);
+        const totalCarbs = nutrition.carbohydrates.toFixed(1);
+        const totalFat = nutrition.fat.toFixed(1);
+        const totalProtein = nutrition.protein.toFixed(1);
         
         // Update goal items
         const goalItems = addFoodSection.querySelectorAll('.goal-item');
@@ -509,14 +518,19 @@ export function AddFood(container) {
             return;
         }
         
+        // Convert currentServings (portions) to grams for backend
+        const portionInGrams = PortionConverter.portionToGrams(currentServings);
+        const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
+        
         const foodData = {
             food: currentFood,
             servings: currentServings,
             mealType: currentMealType,
-            calories: Math.round(currentFood.calories * currentServings),
-            carbs: currentFood.carbohydrates * currentServings,
-            fat: currentFood.fat * currentServings,
-            protein: currentFood.protein * currentServings
+            amount_grams: portionInGrams, // Send grams to backend
+            calories: Math.round(nutrition.calories),
+            carbs: nutrition.carbohydrates,
+            fat: nutrition.fat,
+            protein: nutrition.protein
         };
         
         console.log('Accepting food:', foodData);
@@ -624,7 +638,7 @@ function createCustomScrollbar(container) {
         
         // Calculate color based on position (0 = top, 1 = bottom)
         const positionRatio = thumbTop / (scrollbarHeight - thumbHeight);
-        const color = interpolateColor('var(--color-primary)', 'var(--color-secondary)', positionRatio);
+        const color = interpolateColor('#46ae98', '#ae7246', positionRatio);
         
         thumb.style.height = `${thumbHeight}px`;
         thumb.style.top = `${thumbTop}px`;
@@ -688,13 +702,4 @@ function createCustomScrollbar(container) {
     
     // Update on resize
     window.addEventListener('resize', updateScrollbar);
-    
-    // Click to scroll
-    scrollbar.addEventListener('click', (e) => {
-        const rect = scrollbar.getBoundingClientRect();
-        const clickY = e.clientY - rect.top;
-        const percentage = clickY / rect.height;
-        const scrollTop = percentage * (container.scrollHeight - container.clientHeight);
-        container.scrollTop = scrollTop;
-    });
 }

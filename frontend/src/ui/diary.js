@@ -1,6 +1,7 @@
 // Diary UI component
 import { AppState } from '../state/app_state.js';
 import { EXTENDED_MEAL_TYPES, getMealDisplayName } from '../data/meal_types.js';
+import { PortionConverter } from '../utils/portion_converter.js';
 
 export function Diary(container) {
     if (!container) {
@@ -432,9 +433,13 @@ export function Diary(container) {
     function createFoodItem(entry) {
         const item = document.createElement('div');
         item.className = 'food-item';
+        
+        // Convert servings to grams for display
+        const portionGrams = PortionConverter.formatPortion(entry.servings || 1.0, true);
+        
         item.innerHTML = `
             <div class="food-name">${entry.food_name || 'Ukendt fødevare'}</div>
-            <div class="food-portion">${entry.servings || 1} portioner</div>
+            <div class="food-portion">${portionGrams}</div>
             <div class="food-calories">${Math.round(entry.calories || 0)} cal</div>
         `;
         return item;

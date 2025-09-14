@@ -240,6 +240,11 @@ class CalorieTrackerApp {
             // Determine where we came from based on the event detail
             const fromView = event.detail && event.detail.mealType ? 'diary' : 'dashboard';
             this.showView('food', fromView);
+            
+            // If mealType is provided, set it in the food form
+            if (event.detail && event.detail.mealType && this.components.foodForm) {
+                this.components.foodForm.setMealType(event.detail.mealType);
+            }
         });
         
         // Food section events

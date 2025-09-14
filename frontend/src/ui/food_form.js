@@ -1,6 +1,7 @@
 // Food form UI component
 import { AppState } from '../state/app_state.js';
 import { getMealOptions } from '../data/meal_types.js';
+import { PortionConverter } from '../utils/portion_converter.js';
 
 export function FoodForm(container) {
     if (!container) {
@@ -49,8 +50,26 @@ export function FoodForm(container) {
     // Add to container
     container.appendChild(foodSection);
     
-    // Return the food section element for external access
-    return foodSection;
+    // Public methods
+    const foodFormComponent = {
+        setMealType: (mealType) => {
+            const mealOptions = getMealOptions(false);
+            const selectedMeal = mealOptions.find(meal => meal.value === mealType);
+            if (selectedMeal) {
+                const title = foodSection.querySelector('.meal-title');
+                if (title) {
+                    title.textContent = selectedMeal.label;
+                }
+                // Set data attribute for CSS styling
+                foodSection.setAttribute('data-current-meal', mealType);
+                // Store current meal type
+                window.currentMealType = mealType;
+            }
+        }
+    };
+    
+    // Return the food form component for external access
+    return foodFormComponent;
 }
 
 function createFoodHeader() {
@@ -165,6 +184,8 @@ function createFoodHeader() {
         const foodSection = document.querySelector('.food-section');
         if (foodSection) {
             foodSection.classList.remove('dropdown-open');
+            // Set data attribute for CSS styling
+            foodSection.setAttribute('data-current-meal', mealValue);
         }
         
         // Store current meal type for later use
@@ -508,8 +529,8 @@ function createFoodItem(food) {
     // Format food details for display
     const brandText = food.brand ? `${food.brand} - ` : '';
     const calories = Math.round(food.calories || 0);
-    const lastPortion = food.last_portion || 1.0; // Use last_portion from database, default to 1.0
-    const details = `${calories} cal, ${brandText}${food.category || 'ukendt'}, ${lastPortion.toFixed(1)} gram`;
+    const lastPortionGrams = PortionConverter.formatPortion(food.last_portion || 1.0, true);
+    const details = `${calories} cal, ${brandText}${food.category || 'ukendt'}, ${lastPortionGrams}`;
     
     foodItem.innerHTML = `
         <div class="food-item-content">
@@ -686,13 +707,4 @@ function createCustomScrollbar(container) {
     
     // Update on resize
     window.addEventListener('resize', updateScrollbar);
-    
-    // Click to scroll
-    scrollbar.addEventListener('click', (e) => {
-        const rect = scrollbar.getBoundingClientRect();
-        const clickY = e.clientY - rect.top;
-        const percentage = clickY / rect.height;
-        const scrollTop = percentage * (container.scrollHeight - container.clientHeight);
-        container.scrollTop = scrollTop;
-    });
 }

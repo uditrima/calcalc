@@ -66,10 +66,32 @@
 }
 
 .meal-title {
-    color: rgb(122, 188, 251);
+    color: var(--color-text);
     font-size: 20px;
     font-weight: 600;
     margin: 0;
+    transition: color 0.2s ease;
+}
+
+/* Meal-specific title colors for food header */
+.food-section[data-current-meal="morgenmad"] .meal-title {
+    color: var(--meal-morgenmad);
+}
+
+.food-section[data-current-meal="frokost"] .meal-title {
+    color: var(--meal-frokost);
+}
+
+.food-section[data-current-meal="aftensmad"] .meal-title {
+    color: var(--meal-aftensmad);
+}
+
+.food-section[data-current-meal="mellemmaaltid1"] .meal-title {
+    color: var(--meal-mellemm1);
+}
+
+.food-section[data-current-meal="mellemmaaltid2"] .meal-title {
+    color: var(--meal-mellemm2);
 }
 
 .dropdown-arrow {
