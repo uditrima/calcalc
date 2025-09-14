@@ -82,7 +82,13 @@ export function AddFood(container) {
             const customEvent = new CustomEvent('onGoBackToFood', {
                 bubbles: true
             });
-            document.dispatchEvent(customEvent);
+            // Dispatch on the app container instead of document
+            const appContainer = document.querySelector('#app');
+            if (appContainer) {
+                appContainer.dispatchEvent(customEvent);
+            } else {
+                document.dispatchEvent(customEvent);
+            }
         });
         header.appendChild(goBackBtn);
         
@@ -226,13 +232,13 @@ export function AddFood(container) {
         gauge.className = 'calorie-gauge';
         gauge.innerHTML = `
             <svg width="120" height="120" viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#333" stroke-width="20"></circle>
+                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-bg-secondary)" stroke-width="20"></circle>
                 <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-gauge-remaining)" stroke-width="20" 
                         stroke-dasharray="502.4" stroke-dashoffset="0" stroke-linecap="round" 
                         transform="rotate(-90 100 100)" class="calories-remaining"></circle>
                 <g text-anchor="middle">
-                    <text x="100" y="90" font-size="20" font-weight="bold" fill="#fff" class="calories-text">0</text>
-                    <text x="100" y="115" font-size="12" fill="#888">Cal</text>
+                    <text x="100" y="90" font-size="20" font-weight="bold" fill="var(--color-text)" class="calories-text">0</text>
+                    <text x="100" y="115" font-size="12" fill="var(--color-text-muted)">Cal</text>
                 </g>
             </svg>
         `;
@@ -242,9 +248,9 @@ export function AddFood(container) {
         const macrosContainer = document.createElement('div');
         macrosContainer.className = 'macros-container';
         
-        const carbsMacro = createMacroItem('Carbs', '15%', '0.4g', '#46ae98');
-        const fatMacro = createMacroItem('Fat', '22%', '0.3g', '#ae7246');
-        const proteinMacro = createMacroItem('Protein', '63%', '1.6g', '#e67e22');
+        const carbsMacro = createMacroItem('Carbs', '15%', '0.4g', 'carbs');
+        const fatMacro = createMacroItem('Fat', '22%', '0.3g', 'fat');
+        const proteinMacro = createMacroItem('Protein', '63%', '1.6g', 'protein');
         
         macrosContainer.appendChild(carbsMacro);
         macrosContainer.appendChild(fatMacro);
@@ -258,7 +264,7 @@ export function AddFood(container) {
         return section;
     }
     
-    function createMacroItem(label, percentage, amount, color) {
+    function createMacroItem(label, percentage, amount, colorClass) {
         const item = document.createElement('div');
         item.className = 'macro-item';
         
@@ -275,8 +281,7 @@ export function AddFood(container) {
         macroAmount.textContent = amount;
         
         const macroIndicator = document.createElement('div');
-        macroIndicator.className = 'macro-indicator';
-        macroIndicator.style.backgroundColor = color;
+        macroIndicator.className = `macro-indicator ${colorClass}`;
         
         item.appendChild(macroLabel);
         item.appendChild(macroPercentage);
@@ -504,13 +509,24 @@ export function AddFood(container) {
             detail: foodData,
             bubbles: true
         });
-        document.dispatchEvent(customEvent);
+        // Dispatch on the app container instead of document
+        const appContainer = document.querySelector('#app');
+        if (appContainer) {
+            appContainer.dispatchEvent(customEvent);
+        } else {
+            document.dispatchEvent(customEvent);
+        }
         
         // Go back to food view
         const goBackEvent = new CustomEvent('onGoBackToFood', {
             bubbles: true
         });
-        document.dispatchEvent(goBackEvent);
+        // Dispatch on the app container instead of document
+        if (appContainer) {
+            appContainer.dispatchEvent(goBackEvent);
+        } else {
+            document.dispatchEvent(goBackEvent);
+        }
     }
     
     return addFoodComponent;
@@ -591,7 +607,7 @@ function createCustomScrollbar(container) {
         
         // Calculate color based on position (0 = top, 1 = bottom)
         const positionRatio = thumbTop / (scrollbarHeight - thumbHeight);
-        const color = interpolateColor('#46ae98', '#ae7246', positionRatio);
+        const color = interpolateColor('var(--color-primary)', 'var(--color-secondary)', positionRatio);
         
         thumb.style.height = `${thumbHeight}px`;
         thumb.style.top = `${thumbTop}px`;

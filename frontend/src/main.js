@@ -14,6 +14,7 @@ class CalorieTrackerApp {
         this.appContainer = null;
         this.components = {};
         this.api = new ApiClient('http://localhost:5000/api');
+        this.navigationHistory = [];
         this.init();
     }
     
@@ -236,13 +237,15 @@ class CalorieTrackerApp {
         // Add food events
         this.appContainer.addEventListener('onAddFood', (event) => {
             console.log('Add food clicked:', event.detail);
-            this.showView('food');
+            // Determine where we came from based on the event detail
+            const fromView = event.detail && event.detail.mealType ? 'diary' : 'dashboard';
+            this.showView('food', fromView);
         });
         
         // Food section events
         this.appContainer.addEventListener('onGoBack', (event) => {
             console.log('Go back clicked');
-            this.showView('dashboard');
+            this.goBack();
         });
         
         this.appContainer.addEventListener('onGoBackToFood', (event) => {
@@ -255,7 +258,7 @@ class CalorieTrackerApp {
             // Navigate to add food view with selected food
             if (this.components.addFood) {
                 this.components.addFood.setFood(event.detail);
-                this.showView('add-food');
+                this.showView('add-food', 'food');
             }
         });
         
@@ -266,7 +269,7 @@ class CalorieTrackerApp {
             // Navigate to add food view with selected food
             if (this.components.addFood) {
                 this.components.addFood.setFood(food);
-                this.showView('add-food');
+                this.showView('add-food', 'food');
             }
         });
         
@@ -353,7 +356,12 @@ class CalorieTrackerApp {
         });
     }
     
-    showView(viewName) {
+    showView(viewName, fromView = null) {
+        // Add current view to history if we're navigating from somewhere
+        if (fromView && this.navigationHistory.length === 0) {
+            this.navigationHistory.push(fromView);
+        }
+        
         // Hide all views
         const allViews = this.appContainer.querySelectorAll('.main-view, .slide-view, .slide-up-view');
         allViews.forEach(view => {
@@ -391,6 +399,16 @@ class CalorieTrackerApp {
                 const navItem = this.appContainer.querySelector(`[data-view="${viewName}"]`);
                 if (navItem) navItem.classList.add('active');
             }
+        }
+    }
+    
+    goBack() {
+        if (this.navigationHistory.length > 0) {
+            const previousView = this.navigationHistory.pop();
+            this.showView(previousView);
+        } else {
+            // Default fallback to dashboard
+            this.showView('dashboard');
         }
     }
     

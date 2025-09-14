@@ -39,6 +39,14 @@
     transition: stroke-dashoffset 0.5s ease;
 }
 
+.exercise-progress {
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.exercise-progress-end {
+    transition: stroke-dashoffset 0.5s ease;
+}
+
 .calories-remaining-text {
     fill: var(--color-text);
     font-family: var(--font-family);
@@ -94,6 +102,23 @@
 }
 
 .gauge-danger .calories-progress {
+    stroke: #ff4757;
+}
+
+/* Exercise circle color variants */
+.exercise-progress {
+    stroke: #ff6b6b;
+}
+
+.gauge-success .exercise-progress {
+    stroke: #2ed573;
+}
+
+.gauge-warning .exercise-progress {
+    stroke: #ffa502;
+}
+
+.gauge-danger .exercise-progress {
     stroke: #ff4757;
 }
 

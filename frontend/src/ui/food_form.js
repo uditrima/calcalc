@@ -64,7 +64,13 @@ function createFoodHeader() {
         const customEvent = new CustomEvent('onGoBack', {
             bubbles: true
         });
-        document.dispatchEvent(customEvent);
+        // Dispatch on the app container instead of document
+        const appContainer = document.querySelector('#app');
+        if (appContainer) {
+            appContainer.dispatchEvent(customEvent);
+        } else {
+            document.dispatchEvent(customEvent);
+        }
     });
     header.appendChild(goBackBtn);
     
@@ -135,18 +141,80 @@ function createSearchSection() {
     searchInput.type = 'text';
     searchInput.className = 'search-input';
     searchInput.placeholder = 'Search for a food';
-    searchInput.addEventListener('input', handleSearch);
+    
+    // Add debounced search to improve performance
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => handleSearch(e), 300);
+    });
+    
     searchContainer.appendChild(searchInput);
     
     section.appendChild(searchContainer);
     
     function handleSearch(e) {
-        const query = e.target.value.toLowerCase();
-        // TODO: Implement search functionality
+        const query = e.target.value.toLowerCase().trim();
         console.log('Searching for:', query);
+        
+        // Get all foods from state
+        const allFoods = AppState.getFoods();
+        
+        if (!query) {
+            // If no query, show all foods sorted by recent
+            renderFoodItems(allFoods, 'recent');
+            return;
+        }
+        
+        // Filter foods based on search query (only on food name/title)
+        const filteredFoods = allFoods.filter(food => {
+            const foodName = (food.name || '').toLowerCase();
+            return foodName.includes(query);
+        });
+        
+        // Render filtered foods
+        if (filteredFoods.length === 0) {
+            renderNoResults(query);
+        } else {
+            renderFoodItems(filteredFoods, 'recent');
+        }
     }
     
     return section;
+}
+
+// Function to render no results message
+function renderNoResults(query) {
+    if (!window.foodItemsSection) {
+        return;
+    }
+    
+    // Find and preserve custom scrollbar
+    const existingScrollbar = window.foodItemsSection.querySelector('.custom-scrollbar');
+    
+    // Clear existing items but preserve scrollbar
+    const foodItems = window.foodItemsSection.querySelectorAll('.food-item');
+    foodItems.forEach(item => item.remove());
+    
+    // Create no results message
+    const noResultsDiv = document.createElement('div');
+    noResultsDiv.className = 'no-results';
+    noResultsDiv.innerHTML = `
+        <div class="no-results-icon">🔍</div>
+        <div class="no-results-title">Ingen resultater fundet</div>
+        <div class="no-results-message">Ingen fødevare matcher "${query}"</div>
+    `;
+    
+    window.foodItemsSection.appendChild(noResultsDiv);
+    
+    // Re-add scrollbar if it was removed
+    if (!existingScrollbar) {
+        createCustomScrollbar(window.foodItemsSection);
+    } else {
+        // Trigger scrollbar update for existing scrollbar
+        const scrollEvent = new Event('scroll');
+        window.foodItemsSection.dispatchEvent(scrollEvent);
+    }
 }
 
 function createMenuSection() {

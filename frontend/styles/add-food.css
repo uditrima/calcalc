@@ -214,6 +214,23 @@ image.pngimage.png
     flex-shrink: 0;
 }
 
+/* Specific macro indicator colors */
+.macro-indicator.carbs {
+    background: var(--color-carbs);
+}
+
+.macro-indicator.fat {
+    background: var(--color-fat);
+}
+
+.macro-indicator.protein {
+    background: var(--color-protein);
+}
+
+.macro-indicator.calories {
+    background: var(--color-calories);
+}
+
 .daily-goal-section {
     background: var(--color-surface);
     padding: var(--space-lg);

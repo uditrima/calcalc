@@ -1,5 +1,35 @@
 /* Food Component Styles */
 
+/* No Results Styling */
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+    text-align: center;
+    color: var(--color-text-muted);
+    min-height: 200px;
+}
+
+.no-results-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-md);
+    opacity: 0.6;
+}
+
+.no-results-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.no-results-message {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
 /* Food Section Styling */
 .food-section {
     height: 100%;

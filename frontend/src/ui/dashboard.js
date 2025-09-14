@@ -113,6 +113,32 @@ export function Dashboard(container) {
             console.log('Progress end circle attributes set');
         }
         
+        // Opdater motion cirkler
+        const exerciseCircle = document.querySelector('.exercise-progress');
+        const exerciseEndCircle = document.querySelector('.exercise-progress-end');
+        
+        if (exerciseCircle && exerciseEndCircle) {
+            const exercisePercentage = Math.min((exerciseCalories / target) * 100, 100);
+            const exerciseCircumference = 408.2; // Omkreds for r=65
+            const exerciseOffset = exerciseCircumference - (exercisePercentage / 100) * exerciseCircumference;
+            
+            // Hovedcirkel (skarp ende)
+            exerciseCircle.setAttribute('stroke', '#ff6b6b');
+            exerciseCircle.setAttribute('stroke-width', '8');
+            exerciseCircle.setAttribute('stroke-dasharray', '408.2');
+            exerciseCircle.setAttribute('stroke-dashoffset', exerciseOffset);
+            exerciseCircle.setAttribute('stroke-linecap', 'butt');
+            
+            // Ende-cirkel (rund ende)
+            exerciseEndCircle.setAttribute('stroke', '#ff6b6b');
+            exerciseEndCircle.setAttribute('stroke-width', '8');
+            exerciseEndCircle.setAttribute('stroke-dasharray', '0, 408.2'); // Kun vis den runde ende
+            exerciseEndCircle.setAttribute('stroke-dashoffset', exerciseOffset);
+            exerciseEndCircle.setAttribute('stroke-linecap', 'round');
+            
+            console.log('Exercise circles updated:', { exercisePercentage, exerciseOffset });
+        }
+        
         
         if (remainingText) {
             remainingText.textContent = Math.max(0, Math.round(remaining));
@@ -352,6 +378,36 @@ function createCaloriesGauge() {
     progressEndCircle.setAttribute('transform', 'rotate(-90 100 100)');
     progressEndCircle.setAttribute('class', 'calories-progress-end');
     svg.appendChild(progressEndCircle);
+    
+    // Hovedcirkel for motion/øvelse kalorier (skarp ende)
+    const exerciseCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    exerciseCircle.setAttribute('cx', '100');
+    exerciseCircle.setAttribute('cy', '100');
+    exerciseCircle.setAttribute('r', '65'); // Mindre radius for at være inden i hovedcirklen
+    exerciseCircle.setAttribute('fill', 'none');
+    exerciseCircle.setAttribute('stroke', '#ff6b6b'); // Rød farve for motion
+    exerciseCircle.setAttribute('stroke-width', '8');
+    exerciseCircle.setAttribute('stroke-dasharray', '408.2'); // Omkreds for r=65
+    exerciseCircle.setAttribute('stroke-dashoffset', '408.2');
+    exerciseCircle.setAttribute('stroke-linecap', 'butt'); // Skarp ende
+    exerciseCircle.setAttribute('transform', 'rotate(90 100 100) scale(-1, 1) translate(-200 0)');
+    exerciseCircle.setAttribute('class', 'exercise-progress');
+    svg.appendChild(exerciseCircle);
+    
+    // Ende-cirkel for motion/øvelse kalorier (rund ende)
+    const exerciseEndCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    exerciseEndCircle.setAttribute('cx', '100');
+    exerciseEndCircle.setAttribute('cy', '100');
+    exerciseEndCircle.setAttribute('r', '65');
+    exerciseEndCircle.setAttribute('fill', 'none');
+    exerciseEndCircle.setAttribute('stroke', '#ff6b6b');
+    exerciseEndCircle.setAttribute('stroke-width', '8');
+    exerciseEndCircle.setAttribute('stroke-dasharray', '0, 408.2'); // Kun vis den runde ende
+    exerciseEndCircle.setAttribute('stroke-dashoffset', '408.2');
+    exerciseEndCircle.setAttribute('stroke-linecap', 'round'); // Rund ende
+    exerciseEndCircle.setAttribute('transform', 'rotate(90 100 100) scale(-1, 1) translate(-200 0)');
+    exerciseEndCircle.setAttribute('class', 'exercise-progress-end');
+    svg.appendChild(exerciseEndCircle);
     
     
     // Center text
