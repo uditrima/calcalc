@@ -141,6 +141,16 @@ function createFoodHeader() {
         
         // Rotate arrow
         dropdownArrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+        
+        // Add/remove dropdown-open class to food-section for fade effect
+        const foodSection = document.querySelector('.food-section');
+        if (foodSection) {
+            if (isVisible) {
+                foodSection.classList.remove('dropdown-open');
+            } else {
+                foodSection.classList.add('dropdown-open');
+            }
+        }
     }
     
     function selectMeal(mealValue, mealLabel) {
@@ -150,6 +160,12 @@ function createFoodHeader() {
         // Hide dropdown
         mealDropdown.style.display = 'none';
         dropdownArrow.style.transform = 'rotate(0deg)';
+        
+        // Remove dropdown-open class to restore normal opacity
+        const foodSection = document.querySelector('.food-section');
+        if (foodSection) {
+            foodSection.classList.remove('dropdown-open');
+        }
         
         // Store current meal type for later use
         window.currentMealType = mealValue;
@@ -171,6 +187,12 @@ function createFoodHeader() {
         if (!mealDropdown.contains(e.target) && !titleContainer.contains(e.target)) {
             mealDropdown.style.display = 'none';
             dropdownArrow.style.transform = 'rotate(0deg)';
+            
+            // Remove dropdown-open class to restore normal opacity
+            const foodSection = document.querySelector('.food-section');
+            if (foodSection) {
+                foodSection.classList.remove('dropdown-open');
+            }
         }
     });
     
