@@ -6,8 +6,8 @@
 .meal-dropdown-menu:not([style*="display: none"]) ~ * .carousel-section,
 .meal-dropdown-menu:not([style*="display: none"]) ~ * .sort-by-section,
 .meal-dropdown-menu:not([style*="display: none"]) ~ * .food-items-section {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
+    opacity: 0.25;
+    transition: opacity 0.45s ease;
 }
 
 /* Alternative approach using a class on the food-section */
@@ -16,8 +16,8 @@
 .food-section.dropdown-open .carousel-section,
 .food-section.dropdown-open .sort-by-section,
 .food-section.dropdown-open .food-items-section {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
+    opacity: 0.25;
+    transition: opacity 0.45s ease;
 }
 
 /* Meal Dropdown Menu */

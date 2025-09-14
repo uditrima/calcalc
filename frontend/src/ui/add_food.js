@@ -187,6 +187,28 @@ export function AddFood(container) {
         const servingsDisplay = document.createElement('div');
         servingsDisplay.className = 'servings-display';
         servingsDisplay.textContent = currentServings.toFixed(1);
+        servingsDisplay.setAttribute('contenteditable', 'true');
+        servingsDisplay.addEventListener('click', () => {
+            servingsDisplay.focus();
+        });
+        servingsDisplay.addEventListener('blur', () => {
+            const newValue = parseFloat(servingsDisplay.textContent);
+            if (!isNaN(newValue) && newValue > 0 && newValue <= 10) {
+                currentServings = newValue;
+                updateServingsDisplay();
+                updateSummary();
+                updateDailyGoals();
+            } else {
+                // Reset to current value if invalid
+                updateServingsDisplay();
+            }
+        });
+        servingsDisplay.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                servingsDisplay.blur();
+            }
+        });
         
         const increaseBtn = document.createElement('button');
         increaseBtn.className = 'portion-btn increase-btn';
