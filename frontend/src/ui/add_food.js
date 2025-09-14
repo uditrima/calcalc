@@ -1,5 +1,6 @@
 // Add Food UI component
 import { AppState } from '../state/app_state.js';
+import { getMealOptions } from '../data/meal_types.js';
 
 export function AddFood(container) {
     if (!container) {
@@ -133,13 +134,7 @@ export function AddFood(container) {
         const mealSelector = document.createElement('div');
         mealSelector.className = 'meal-selector';
         
-        const mealTypes = [
-            { value: 'morgenmad', label: 'Morgenmad' },
-            { value: 'frokost', label: 'Frokost' },
-            { value: 'aftensmad', label: 'Aftensmad' },
-            { value: 'mellemmaaltid1', label: 'Mellemmåltid 1' },
-            { value: 'mellemmaaltid2', label: 'Mellemmåltid 2' }
-        ];
+        const mealTypes = getMealOptions(false); // false = extended (5 meals)
         
         const mealDropdown = document.createElement('select');
         mealDropdown.className = 'meal-dropdown';

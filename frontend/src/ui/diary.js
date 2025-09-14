@@ -1,5 +1,6 @@
 // Diary UI component
 import { AppState } from '../state/app_state.js';
+import { EXTENDED_MEAL_TYPES, getMealDisplayName } from '../data/meal_types.js';
 
 export function Diary(container) {
     if (!container) {
@@ -175,25 +176,11 @@ export function Diary(container) {
     const mealsContainer = document.createElement('div');
     mealsContainer.className = 'meals-container';
     
-    // Morgenmad
-    const morgenmadSection = createMealSection('Morgenmad', 'morgenmad');
-    mealsContainer.appendChild(morgenmadSection);
-    
-    // Frokost
-    const frokostSection = createMealSection('Frokost', 'frokost');
-    mealsContainer.appendChild(frokostSection);
-    
-    // Aftensmad
-    const aftensmadSection = createMealSection('Aftensmad', 'aftensmad');
-    mealsContainer.appendChild(aftensmadSection);
-    
-    // Mellemmåltid 1
-    const mellemmaaltid1Section = createMealSection('Mellemmåltid 1', 'mellemmaaltid1');
-    mealsContainer.appendChild(mellemmaaltid1Section);
-    
-    // Mellemmåltid 2
-    const mellemmaaltid2Section = createMealSection('Mellemmåltid 2', 'mellemmaaltid2');
-    mealsContainer.appendChild(mellemmaaltid2Section);
+    // Create meal sections dynamically from central definition
+    EXTENDED_MEAL_TYPES.forEach(mealType => {
+        const mealSection = createMealSection(getMealDisplayName(mealType), mealType);
+        mealsContainer.appendChild(mealSection);
+    });
     
     // Motion
     const motionSection = createExerciseSection('Motion', 'motion');
@@ -223,7 +210,7 @@ export function Diary(container) {
         const entries = currentState.diary.entries || [];
         
         // Update meal calories for each meal type
-        const mealTypes = ['morgenmad', 'frokost', 'aftensmad', 'mellemmaaltid1', 'mellemmaaltid2'];
+        const mealTypes = EXTENDED_MEAL_TYPES;
         
         mealTypes.forEach(mealType => {
             const mealEntries = entries.filter(entry => entry.meal_type === mealType);

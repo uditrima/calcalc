@@ -1,5 +1,6 @@
 // Food form UI component
 import { AppState } from '../state/app_state.js';
+import { getMealOptions } from '../data/meal_types.js';
 
 export function FoodForm(container) {
     if (!container) {
@@ -86,9 +87,28 @@ function createFoodHeader() {
     const dropdownArrow = document.createElement('span');
     dropdownArrow.className = 'dropdown-arrow';
     dropdownArrow.innerHTML = '▼';
+    dropdownArrow.addEventListener('click', toggleMealDropdown);
     titleContainer.appendChild(dropdownArrow);
     
     header.appendChild(titleContainer);
+    
+    // Meal dropdown menu
+    const mealDropdown = document.createElement('div');
+    mealDropdown.className = 'meal-dropdown-menu';
+    mealDropdown.style.display = 'none';
+    
+    const mealOptions = getMealOptions(true); // true = core only (4 meals)
+    
+    mealOptions.forEach(meal => {
+        const option = document.createElement('div');
+        option.className = 'meal-option';
+        option.textContent = meal.label;
+        option.dataset.value = meal.value;
+        option.addEventListener('click', () => selectMeal(meal.value, meal.label));
+        mealDropdown.appendChild(option);
+    });
+    
+    header.appendChild(mealDropdown);
     
     // Dropdown menu
     const dropdown = document.createElement('div');
@@ -115,10 +135,42 @@ function createFoodHeader() {
         dropdownContent.classList.toggle('show');
     }
     
+    function toggleMealDropdown() {
+        const isVisible = mealDropdown.style.display !== 'none';
+        mealDropdown.style.display = isVisible ? 'none' : 'block';
+        
+        // Rotate arrow
+        dropdownArrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+    
+    function selectMeal(mealValue, mealLabel) {
+        // Update title
+        title.textContent = mealLabel;
+        
+        // Hide dropdown
+        mealDropdown.style.display = 'none';
+        dropdownArrow.style.transform = 'rotate(0deg)';
+        
+        // Store current meal type for later use
+        window.currentMealType = mealValue;
+        
+        // Dispatch event for other components to listen to
+        const mealChangeEvent = new CustomEvent('mealTypeChanged', {
+            detail: { mealType: mealValue, mealLabel: mealLabel }
+        });
+        document.dispatchEvent(mealChangeEvent);
+        
+        console.log('Meal selected:', mealValue, mealLabel);
+    }
+    
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!dropdown.contains(e.target)) {
             dropdownContent.classList.remove('show');
+        }
+        if (!mealDropdown.contains(e.target) && !titleContainer.contains(e.target)) {
+            mealDropdown.style.display = 'none';
+            dropdownArrow.style.transform = 'rotate(0deg)';
         }
     });
     
