@@ -508,7 +508,8 @@ function createFoodItem(food) {
     // Format food details for display
     const brandText = food.brand ? `${food.brand} - ` : '';
     const calories = Math.round(food.calories || 0);
-    const details = `${calories} cal, ${brandText}${food.category || 'ukendt'}, 100.0 gram`;
+    const lastPortion = food.last_portion || 1.0; // Use last_portion from database, default to 1.0
+    const details = `${calories} cal, ${brandText}${food.category || 'ukendt'}, ${lastPortion.toFixed(1)} gram`;
     
     foodItem.innerHTML = `
         <div class="food-item-content">
