@@ -24,10 +24,11 @@
     align-items: center;
     padding: var(--space-md) 0;
     border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--space-md);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin-bottom: 0;
     position: sticky;
     top: 0;
-    background: var(--color-bg);
+    background: var(--color-surface);
     z-index: 10;
 }
 
@@ -39,7 +40,7 @@
     text-align: center;
 }
 
-.go-back-btn, .accept-btn {
+.accept-btn {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     color: var(--color-text);
@@ -54,7 +55,7 @@
     transition: all 0.2s ease;
 }
 
-.go-back-btn:hover, .accept-btn:hover {
+.accept-btn:hover {
     background: var(--color-primary);
     border-color: var(--color-primary);
     color: var(--color-bg);
@@ -62,9 +63,7 @@
 
 .selected-food-section {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
     padding: var(--space-lg);
-    margin-bottom: var(--space-md);
 }
 
 .selected-food-name {
@@ -74,14 +73,29 @@
     text-align: center;
 }
 
-.meal-section, .portion-section {
+.select-meal-section {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
     padding: var(--space-lg);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid var(--color-border);
+    border-left: none;
+    border-right: none;
 }
+
+.portion-section {
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    margin: 0 0 var(--space-lg) 0;
+}
+
 
 .meal-label, .portion-label {
     color: var(--color-text);
@@ -140,13 +154,14 @@
     text-align: center;
 }
 
-.summary-section {
+.add-food-summary-section {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
     padding: var(--space-lg);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border: 1px solid var(--color-border);
 }
 
-.summary-section h3 {
+.add-food-summary-section h3 {
     color: var(--color-text);
     font-size: 18px;
     margin: 0 0 var(--space-md) 0;
@@ -158,15 +173,7 @@
     align-items: center;
 }
 
-.calorie-gauge-container {
-    flex-shrink: 0;
-}
-
-.calorie-gauge {
-    width: 120px;
-    height: 120px;
-}
-
+image.pngimage.png
 .macros-container {
     flex: 1;
     display: flex;
@@ -209,8 +216,8 @@
 
 .daily-goal-section {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
     padding: var(--space-lg);
+    border: 1px solid var(--color-border);
 }
 
 .daily-goal-section h3 {
@@ -268,9 +275,11 @@
 
 .fold-out-section {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     padding: var(--space-lg);
     text-align: center;
+    border: 1px solid var(--color-border);
+    margin: 0 0 var(--space-lg) 0;
 }
 
 .fold-out-btn {

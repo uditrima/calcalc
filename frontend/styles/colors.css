@@ -1,0 +1,263 @@
+/* Colors - Grundlæggende farvepalette for Kalorie Tracker */
+
+/* Primary Colors */
+:root {
+    /* Brand Colors */
+    --color-primary: #46ae98;
+    --color-primary-hover: #3a9b85;
+    --color-primary-light: #5bc4a8;
+    --color-primary-dark: #2d7a6b;
+    
+    /* Secondary Colors */
+    --color-secondary: #ae7246;
+    --color-secondary-hover: #9a6239;
+    --color-secondary-light: #c4855a;
+    --color-secondary-dark: #8b5a38;
+    
+    /* Accent Colors */
+    --color-accent: #ff6b6b;
+    --color-accent-hover: #ff5252;
+    --color-accent-light: #ff8a8a;
+    --color-accent-dark: #e55555;
+    
+    /* Success Colors */
+    --color-success: #2ed573;
+    --color-success-hover: #26c965;
+    --color-success-light: #4ddb8a;
+    --color-success-dark: #24b05a;
+    
+    /* Warning Colors */
+    --color-warning: #ffa502;
+    --color-warning-hover: #ff9500;
+    --color-warning-light: #ffb733;
+    --color-warning-dark: #e6940a;
+    
+    /* Error Colors */
+    --color-error: #ff4757;
+    --color-error-hover: #ff3742;
+    --color-error-light: #ff6b7a;
+    --color-error-dark: #e63946;
+    
+    /* Info Colors */
+    --color-info: #3742fa;
+    --color-info-hover: #2f3542;
+    --color-info-light: #5352ed;
+    --color-info-dark: #2c2e3e;
+}
+
+/* Background Colors */
+:root {
+    /* Main Background */
+    --color-bg: #0a0a0a;
+    --color-bg-secondary: #111111;
+    --color-bg-tertiary: #1a1a1a;
+    
+    /* Surface Colors */
+    --color-surface: rgba(255, 255, 255, 0.05);
+    --color-surface-hover: rgba(255, 255, 255, 0.08);
+    --color-surface-active: rgba(255, 255, 255, 0.12);
+    --color-surface-elevated: rgba(255, 255, 255, 0.1);
+    
+    /* Glassmorphism */
+    --color-glass: rgba(255, 255, 255, 0.1);
+    --color-glass-hover: rgba(255, 255, 255, 0.15);
+    --color-glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* Text Colors */
+:root {
+    /* Primary Text */
+    --color-text: #ffffff;
+    --color-text-secondary: #e0e0e0;
+    --color-text-muted: #a0a0a0;
+    --color-text-disabled: #606060;
+    
+    /* Text on Dark */
+    --color-text-on-dark: #ffffff;
+    --color-text-on-dark-secondary: #d0d0d0;
+    --color-text-on-dark-muted: #909090;
+    
+    /* Text on Light */
+    --color-text-on-light: #000000;
+    --color-text-on-light-secondary: #333333;
+    --color-text-on-light-muted: #666666;
+}
+
+/* Border Colors */
+:root {
+    /* Primary Borders */
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-border-hover: rgba(255, 255, 255, 0.2);
+    --color-border-active: rgba(255, 255, 255, 0.3);
+    --color-border-focus: var(--color-primary);
+    
+    /* Secondary Borders */
+    --color-border-light: rgba(255, 255, 255, 0.05);
+    --color-border-medium: rgba(255, 255, 255, 0.15);
+    --color-border-strong: rgba(255, 255, 255, 0.25);
+    
+    /* Status Borders */
+    --color-border-success: var(--color-success);
+    --color-border-warning: var(--color-warning);
+    --color-border-error: var(--color-error);
+    --color-border-info: var(--color-info);
+}
+
+/* Gauge Colors */
+:root {
+    /* Calorie Gauge */
+    --color-gauge-used: #46ae98;
+    --color-gauge-remaining: #ffa502;
+    --color-gauge-bg: #333333;
+    
+    /* Progress Gauges */
+    --color-gauge-success: var(--color-success);
+    --color-gauge-warning: var(--color-warning);
+    --color-gauge-danger: var(--color-error);
+    --color-gauge-info: var(--color-info);
+}
+
+/* Nutrition Colors */
+:root {
+    /* Calorie Colors */
+    --color-calories: #7abcfb;
+    --color-calories-hover: #6bb0fa;
+    --color-calories-light: #8cc8fc;
+    --color-calories-dark: #5aa8e8;
+    --color-calories-bg: rgba(122, 188, 251, 0.1);
+    --color-calories-border: rgba(122, 188, 251, 0.3);
+    
+    /* Motion/Exercise Colors */
+    --color-motion: #ff6b6b;
+    --color-motion-hover: #ff5252;
+    --color-motion-light: #ff8a8a;
+    --color-motion-dark: #e55555;
+    --color-motion-bg: rgba(255, 107, 107, 0.1);
+    --color-motion-border: rgba(255, 107, 107, 0.3);
+    
+    /* Carbohydrate Colors */
+    --color-carbs: #36c8af;
+    --color-carbs-hover: #2bb89a;
+    --color-carbs-light: #4dd4c0;
+    --color-carbs-dark: #2aa892;
+    --color-carbs-bg: rgba(54, 200, 175, 0.1);
+    --color-carbs-border: rgba(54, 200, 175, 0.3);
+    
+    /* Fat Colors */
+    --color-fat: #c166dd;
+    --color-fat-hover: #b855d4;
+    --color-fat-light: #cc7ae3;
+    --color-fat-dark: #a855c7;
+    --color-fat-bg: rgba(193, 102, 221, 0.1);
+    --color-fat-border: rgba(193, 102, 221, 0.3);
+    
+    /* Protein Colors */
+    --color-protein: #f8b043;
+    --color-protein-hover: #f7a52e;
+    --color-protein-light: #f9c066;
+    --color-protein-dark: #e69d2a;
+    --color-protein-bg: rgba(248, 176, 67, 0.1);
+    --color-protein-border: rgba(248, 176, 67, 0.3);
+}
+
+/* Chart Colors */
+:root {
+    /* Data Visualization */
+    --color-chart-1: #46ae98;
+    --color-chart-2: #ffa502;
+    --color-chart-3: #ff6b6b;
+    --color-chart-4: #3742fa;
+    --color-chart-5: #2ed573;
+    --color-chart-6: #ae7246;
+    --color-chart-7: #ff4757;
+    --color-chart-8: #5352ed;
+    
+    /* Chart Backgrounds */
+    --color-chart-bg: rgba(255, 255, 255, 0.02);
+    --color-chart-grid: rgba(255, 255, 255, 0.05);
+    --color-chart-axis: rgba(255, 255, 255, 0.1);
+}
+
+/* Interactive States */
+:root {
+    /* Hover States */
+    --color-hover-bg: rgba(255, 255, 255, 0.05);
+    --color-hover-text: var(--color-text);
+    --color-hover-border: rgba(255, 255, 255, 0.15);
+    
+    /* Active States */
+    --color-active-bg: rgba(255, 255, 255, 0.1);
+    --color-active-text: var(--color-text);
+    --color-active-border: rgba(255, 255, 255, 0.2);
+    
+    /* Focus States */
+    --color-focus-bg: rgba(70, 174, 152, 0.1);
+    --color-focus-text: var(--color-text);
+    --color-focus-border: var(--color-primary);
+    --color-focus-shadow: 0 0 0 2px rgba(70, 174, 152, 0.2);
+    
+    /* Disabled States */
+    --color-disabled-bg: rgba(255, 255, 255, 0.02);
+    --color-disabled-text: var(--color-text-disabled);
+    --color-disabled-border: rgba(255, 255, 255, 0.05);
+}
+
+/* Status Colors */
+:root {
+    /* Success States */
+    --color-success-bg: rgba(46, 213, 115, 0.1);
+    --color-success-text: var(--color-success);
+    --color-success-border: var(--color-success);
+    
+    /* Warning States */
+    --color-warning-bg: rgba(255, 165, 2, 0.1);
+    --color-warning-text: var(--color-warning);
+    --color-warning-border: var(--color-warning);
+    
+    /* Error States */
+    --color-error-bg: rgba(255, 71, 87, 0.1);
+    --color-error-text: var(--color-error);
+    --color-error-border: var(--color-error);
+    
+    /* Info States */
+    --color-info-bg: rgba(55, 66, 250, 0.1);
+    --color-info-text: var(--color-info);
+    --color-info-border: var(--color-info);
+}
+
+/* Shadow Colors */
+:root {
+    /* Glassmorphism Shadows */
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-glass-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+    --shadow-glass-active: 0 4px 20px rgba(0, 0, 0, 0.2);
+    
+    /* Component Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.25);
+    
+    /* Focus Shadows */
+    --shadow-focus: 0 0 0 2px rgba(70, 174, 152, 0.2);
+    --shadow-focus-error: 0 0 0 2px rgba(255, 71, 87, 0.2);
+    --shadow-focus-success: 0 0 0 2px rgba(46, 213, 115, 0.2);
+}
+
+/* Gradient Colors */
+:root {
+    /* Primary Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-light) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    
+    /* Background Gradients */
+    --gradient-bg: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
+    --gradient-surface: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    
+    /* Status Gradients */
+    --gradient-success: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-light) 100%);
+    --gradient-warning: linear-gradient(135deg, var(--color-warning) 0%, var(--color-warning-light) 100%);
+    --gradient-error: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-light) 100%);
+}

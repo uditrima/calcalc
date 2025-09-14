@@ -64,33 +64,55 @@ export function Dashboard(container) {
     function updateCaloriesGauge(state) {
         const current = state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
         const target = state.goals.daily_calories || 2000;
-        const remaining = target - current;
-        const usedPercentage = Math.min((current / target) * 100, 100);
-        const remainingPercentage = Math.max(0, (remaining / target) * 100);
+        const exerciseCalories = state.exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
+        const remaining = target - current + exerciseCalories; // Formel: Mål - Mad + Motion
         
-        console.log('updateCaloriesGauge - current:', current, 'target:', target, 'usedPercentage:', usedPercentage);
+        // Beregn faktisk brugte kalorier (mad minus motion)
+        const netCalories = Math.max(0, current - exerciseCalories);
+        const usedPercentage = Math.min((netCalories / target) * 100, 100);
+        
+        console.log('updateCaloriesGauge - current:', current, 'target:', target, 'exerciseCalories:', exerciseCalories, 'netCalories:', netCalories, 'remaining:', remaining, 'usedPercentage:', usedPercentage);
         
         const progressCircle = document.querySelector('.calories-progress');
-        const remainingCircle = document.querySelector('.calories-remaining');
+        const progressEndCircle = document.querySelector('.calories-progress-end');
         const remainingText = document.querySelector('.calories-remaining-text');
         
-        console.log('Found elements - progressCircle:', progressCircle, 'remainingCircle:', remainingCircle);
+        console.log('Found elements - progressCircle:', progressCircle, 'progressEndCircle:', progressEndCircle);
         
         if (progressCircle) {
             const circumference = 502.4;
             const usedOffset = circumference - (usedPercentage / 100) * circumference;
             console.log('Setting progressCircle stroke-dashoffset to:', usedOffset);
+            
+            // Sæt alle attributter eksplicit for hovedcirklen (skarp ende)
+            progressCircle.setAttribute('stroke', '#7abcfb');
+            progressCircle.setAttribute('stroke-width', '12');
+            progressCircle.setAttribute('stroke-dasharray', '502.4');
             progressCircle.setAttribute('stroke-dashoffset', usedOffset);
+            progressCircle.setAttribute('stroke-linecap', 'butt');
+            
+            console.log('Progress circle attributes set:', {
+                stroke: progressCircle.getAttribute('stroke'),
+                strokeWidth: progressCircle.getAttribute('stroke-width'),
+                strokeDasharray: progressCircle.getAttribute('stroke-dasharray'),
+                strokeDashoffset: progressCircle.getAttribute('stroke-dashoffset')
+            });
         }
         
-        if (remainingCircle) {
-            const circumference = 502.4; // Samme omkreds som blå cirkel
-            // Gul cirkel: starter på 0, trækkes blås progression fra 0 plus 30
-            const blueProgression = (usedPercentage / 100) * circumference;
-            const remainingOffset = -(blueProgression + 30);
-            console.log('Setting remainingCircle stroke-dashoffset to:', remainingOffset, 'blueProgression:', blueProgression, 'usedPercentage:', usedPercentage);
-            remainingCircle.setAttribute('stroke-dashoffset', remainingOffset);
+        if (progressEndCircle) {
+            const circumference = 502.4;
+            const usedOffset = circumference - (usedPercentage / 100) * circumference;
+            
+            // Sæt attributter for ende-cirklen (rund ende)
+            progressEndCircle.setAttribute('stroke', '#7abcfb');
+            progressEndCircle.setAttribute('stroke-width', '12');
+            progressEndCircle.setAttribute('stroke-dasharray', '0, 502.4'); // Kun vis den runde ende
+            progressEndCircle.setAttribute('stroke-dashoffset', usedOffset);
+            progressEndCircle.setAttribute('stroke-linecap', 'round');
+            
+            console.log('Progress end circle attributes set');
         }
+        
         
         if (remainingText) {
             remainingText.textContent = Math.max(0, Math.round(remaining));
@@ -100,12 +122,12 @@ export function Dashboard(container) {
         const statItems = document.querySelectorAll('.stat-text');
         if (statItems.length >= 3) {
             // Update base goal
-            statItems[0].innerHTML = `<strong>${target}</strong><br>Base Mål`;
+            statItems[0].innerHTML = `Base Mål <strong>${target}</strong>`;
             // Update food
-            statItems[1].innerHTML = `<strong>${Math.round(current)}</strong><br>Mad`;
+            statItems[1].innerHTML = `Mad <strong>${Math.round(current)}</strong>`;
             // Update exercise
             const exerciseCalories = state.exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
-            statItems[2].innerHTML = `<strong>${Math.round(exerciseCalories)}</strong><br>Motion`;
+            statItems[2].innerHTML = `Motion <strong>${Math.round(exerciseCalories)}</strong>`;
         }
     }
     
@@ -288,45 +310,49 @@ function createCaloriesGauge() {
     svg.setAttribute('height', '150');
     svg.setAttribute('viewBox', '0 0 200 200');
     
-    // Background circle
-    const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    bgCircle.setAttribute('cx', '100');
-    bgCircle.setAttribute('cy', '100');
-    bgCircle.setAttribute('r', '80');
-    bgCircle.setAttribute('fill', 'none');
-    bgCircle.setAttribute('stroke', '#333');
-    bgCircle.setAttribute('stroke-width', '20');
-    svg.appendChild(bgCircle);
+    // Goal circle (mørk baggrund for hele målet)
+    const goalCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    goalCircle.setAttribute('cx', '100');
+    goalCircle.setAttribute('cy', '100');
+    goalCircle.setAttribute('r', '80');
+    goalCircle.setAttribute('fill', 'none');
+    goalCircle.setAttribute('stroke', '#161726');
+    goalCircle.setAttribute('stroke-dasharray', '502.4');
+    goalCircle.setAttribute('stroke-dashoffset', '0');
+    goalCircle.setAttribute('stroke-linecap', 'round');
+    goalCircle.setAttribute('transform', 'rotate(-90 100 100)');
+    goalCircle.setAttribute('class', 'calories-goal');
+    svg.appendChild(goalCircle);
     
-    // Remaining circle (gul for resterende kalorier) - samme radius som blå
-    const remainingCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    remainingCircle.setAttribute('cx', '100');
-    remainingCircle.setAttribute('cy', '100');
-    remainingCircle.setAttribute('r', '80'); // Samme radius som blå
-    remainingCircle.setAttribute('fill', 'none');
-    remainingCircle.setAttribute('stroke', 'var(--color-gauge-remaining)');
-    remainingCircle.setAttribute('stroke-width', '20');
-    remainingCircle.setAttribute('stroke-dasharray', '502.4'); // Samme omkreds som blå
-    remainingCircle.setAttribute('stroke-dashoffset', '0'); // Start synlig
-    remainingCircle.setAttribute('stroke-linecap', 'round');
-    remainingCircle.setAttribute('transform', 'rotate(-90 100 100)');
-    remainingCircle.setAttribute('class', 'calories-remaining');
-    svg.appendChild(remainingCircle);
-    
-    // Progress circle (lysblå for brugte kalorier) - samme radius, tegnes sidst
+    // Progress circle (kalorie farve for indtaget mad) - 360 grader hvis indtaget = mål
     const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     progressCircle.setAttribute('cx', '100');
     progressCircle.setAttribute('cy', '100');
     progressCircle.setAttribute('r', '80');
     progressCircle.setAttribute('fill', 'none');
-    progressCircle.setAttribute('stroke', 'var(--color-gauge-used)');
-    progressCircle.setAttribute('stroke-width', '20');
+    progressCircle.setAttribute('stroke', '#7abcfb'); // Direkte farve i stedet for CSS variabel
     progressCircle.setAttribute('stroke-dasharray', '502.4');
     progressCircle.setAttribute('stroke-dashoffset', '502.4');
-    progressCircle.setAttribute('stroke-linecap', 'round');
+    progressCircle.setAttribute('stroke-linecap', 'butt'); // Skarp ende
     progressCircle.setAttribute('transform', 'rotate(-90 100 100)');
     progressCircle.setAttribute('class', 'calories-progress');
     svg.appendChild(progressCircle);
+    
+    // Opret en lille cirkel for den runde ende
+    const progressEndCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    progressEndCircle.setAttribute('cx', '100');
+    progressEndCircle.setAttribute('cy', '100');
+    progressEndCircle.setAttribute('r', '80');
+    progressEndCircle.setAttribute('fill', 'none');
+    progressEndCircle.setAttribute('stroke', '#7abcfb');
+    progressEndCircle.setAttribute('stroke-width', '12');
+    progressEndCircle.setAttribute('stroke-dasharray', '0, 502.4'); // Kun vis den runde ende
+    progressEndCircle.setAttribute('stroke-dashoffset', '502.4');
+    progressEndCircle.setAttribute('stroke-linecap', 'round'); // Rund ende
+    progressEndCircle.setAttribute('transform', 'rotate(-90 100 100)');
+    progressEndCircle.setAttribute('class', 'calories-progress-end');
+    svg.appendChild(progressEndCircle);
+    
     
     // Center text
     const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -387,7 +413,7 @@ function createStatItem(icon, label, value) {
     
     const textSpan = document.createElement('span');
     textSpan.className = 'stat-text';
-    textSpan.innerHTML = `<strong>${value}</strong><br>${label}`;
+    textSpan.innerHTML = `${label} <strong>${value}</strong>`;
     
     item.appendChild(iconSpan);
     item.appendChild(textSpan);

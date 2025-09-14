@@ -1,0 +1,146 @@
+/* Gauge Components - Dedicated gauge styling */
+
+/* Gauge Container */
+.gauge-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.calorie-gauge-container {
+    flex-shrink: 0;
+}
+
+.calorie-gauge {
+    width: 120px;
+    height: 120px;
+}
+
+/* Gauge SVG Elements */
+.gauge-bg {
+    stroke: #161726;
+    stroke-width: 12;
+}
+
+.calories-goal {
+    stroke: #161726;
+    stroke-dasharray: 502.4;
+    stroke-dashoffset: 0;
+    stroke-width: 12;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.calories-progress {
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.calories-consumed {
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.calories-remaining-text {
+    fill: var(--color-text);
+    font-family: var(--font-family);
+}
+
+/* Gauges - SVG Styling */
+.gauge-container svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.gauge-container circle {
+    transition: all 0.3s ease;
+}
+
+.gauge-container text {
+    font-family: var(--font-family);
+    user-select: none;
+}
+
+/* Gauge rotation animation */
+.gauge-rotate {
+    animation: gaugeRotate 1s ease-out;
+}
+
+@keyframes gaugeRotate {
+    from { transform: rotate(-90deg); }
+    to { transform: rotate(calc(var(--gauge-angle, 0deg) - 90deg)); }
+}
+
+/* Gauge variants */
+.gauge-small {
+    width: 80px;
+    height: 80px;
+}
+
+.gauge-medium {
+    width: 120px;
+    height: 120px;
+}
+
+.gauge-large {
+    width: 160px;
+    height: 160px;
+}
+
+/* Gauge color variants */
+.gauge-success .calories-progress {
+    stroke: #2ed573;
+}
+
+.gauge-warning .calories-progress {
+    stroke: #ffa502;
+}
+
+.gauge-danger .calories-progress {
+    stroke: #ff4757;
+}
+
+/* Gauge text styling */
+.gauge-text {
+    font-family: var(--font-family);
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+.gauge-value {
+    font-size: 20px;
+    fill: var(--color-text);
+}
+
+.gauge-label {
+    font-size: 12px;
+    fill: var(--color-text-muted);
+}
+
+/* Gauge hover effects */
+.gauge-container:hover svg {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.gauge-container:hover circle {
+    stroke-width: 14px;
+}
+
+/* Gauge loading state */
+.gauge-loading {
+    opacity: 0.6;
+    animation: gaugePulse 2s ease-in-out infinite;
+}
+
+@keyframes gaugePulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Gauge progress animation */
+.gauge-progress-animate {
+    animation: gaugeProgressFill 1s ease-out;
+}
+
+@keyframes gaugeProgressFill {
+    from { stroke-dashoffset: 502.4; }
+    to { stroke-dashoffset: var(--gauge-dashoffset, 0); }
+}

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from services.weight_service import WeightService
 from datetime import datetime
 
-weight_bp = Blueprint('weight', __name__, url_prefix='/api/weights')
+weight_bp = Blueprint('weight', __name__)
 weight_service = WeightService()
 
 @weight_bp.route('/', methods=['GET'])

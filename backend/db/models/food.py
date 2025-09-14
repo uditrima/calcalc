@@ -17,6 +17,7 @@ class Food(Base):
     # Usage tracking
     used = Column(Integer, default=0)
     last_used = Column(Integer, nullable=True)  # Unix timestamp when last added to diary
+    last_portion = Column(Float, default=1.0)  # Last used portion size
     
     # Nutritional values per 100g (all with default 0.0)
     calories = Column(Float, default=0.0)

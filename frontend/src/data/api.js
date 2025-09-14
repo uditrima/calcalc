@@ -53,26 +53,30 @@ export class ApiClient {
     }
     
     // Diary API methods
-    async getDiary(date) {
-        return await this._request(`/diary/${date}/`);
+    async getDiaryEntries(date) {
+        return await this._request(`/diary/entries?date=${date}`);
+    }
+    
+    async getDiarySummary(date) {
+        return await this._request(`/diary/summary?date=${date}`);
     }
     
     async addDiaryEntry(data) {
-        return await this._request('/diary/', {
+        return await this._request('/diary/entries', {
             method: 'POST',
             body: JSON.stringify(data)
         });
     }
     
     async updateDiaryEntry(id, data) {
-        return await this._request(`/diary/${id}/`, {
+        return await this._request(`/diary/entries/${id}`, {
             method: 'PUT',
             body: JSON.stringify(data)
         });
     }
     
     async deleteDiaryEntry(id) {
-        return await this._request(`/diary/${id}/`, {
+        return await this._request(`/diary/entries/${id}`, {
             method: 'DELETE'
         });
     }

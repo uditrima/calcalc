@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.food_service import FoodService
 
-food_bp = Blueprint('food', __name__, url_prefix='/api/foods')
+food_bp = Blueprint('food', __name__)
 food_service = FoodService()
 
 @food_bp.route('/', methods=['GET'])

@@ -118,7 +118,7 @@ export function AddFood(container) {
     
     function createMealSection() {
         const section = document.createElement('div');
-        section.className = 'meal-section';
+        section.className = 'select-meal-section';
         
         const mealLabel = document.createElement('div');
         mealLabel.className = 'meal-label';
@@ -209,7 +209,7 @@ export function AddFood(container) {
     
     function createSummarySection() {
         const section = document.createElement('div');
-        section.className = 'summary-section';
+        section.className = 'add-food-summary-section';
         
         const summaryTitle = document.createElement('h3');
         summaryTitle.textContent = 'Oversigt';

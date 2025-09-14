@@ -218,9 +218,9 @@ export function Diary(container) {
     // Initial update
     updateMealSections();
     
-    function updateMealSections() {
-        const state = AppState.getState();
-        const entries = state.diary.entries || [];
+    function updateMealSections(state = null) {
+        const currentState = state || AppState.getState();
+        const entries = currentState.diary.entries || [];
         
         // Update meal calories for each meal type
         const mealTypes = ['morgenmad', 'frokost', 'aftensmad', 'mellemmaaltid1', 'mellemmaaltid2'];
@@ -239,7 +239,7 @@ export function Diary(container) {
         });
         
         // Update exercise calories
-        const exerciseEntries = state.exercises || [];
+        const exerciseEntries = currentState.exercises || [];
         const exerciseCalories = exerciseEntries.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
         
         const exerciseSection = document.querySelector('[data-exercise-type="motion"]');
@@ -251,7 +251,7 @@ export function Diary(container) {
         }
         
         // Update summary section
-        updateSummarySection(state);
+        updateSummarySection(currentState);
     }
     
     function updateSummarySection(state) {
@@ -279,17 +279,20 @@ export function Diary(container) {
     // Date navigation functionality
     let currentDate = new Date();
     
+    // Load initial data for today
+    loadDiaryForDate(currentDate);
+    
     prevButton.addEventListener('click', () => {
         currentDate.setDate(currentDate.getDate() - 1);
         dateDisplay.textContent = formatDate(currentDate);
-        // TODO: Load diary for new date
+        loadDiaryForDate(currentDate);
         console.log('Previous day:', formatDate(currentDate));
     });
     
     nextButton.addEventListener('click', () => {
         currentDate.setDate(currentDate.getDate() + 1);
         dateDisplay.textContent = formatDate(currentDate);
-        // TODO: Load diary for new date
+        loadDiaryForDate(currentDate);
         console.log('Next day:', formatDate(currentDate));
     });
     
@@ -302,10 +305,170 @@ export function Diary(container) {
         return date.toLocaleDateString('da-DK', options);
     }
     
+    async function loadDiaryForDate(date) {
+        try {
+            const dateString = date.toISOString().split('T')[0];
+            console.log('Loading diary data for date:', dateString);
+            
+            // Load diary entries for the selected date
+            await AppState.loadDiary(dateString);
+            
+            // Load exercises for the selected date
+            await AppState.loadExercises(dateString);
+            
+            // Get updated state
+            const state = AppState.getState();
+            console.log('State after loading:', state);
+            
+            // Update the diary display with new data
+            updateDiaryDisplay(dateString);
+            
+            console.log('Diary data loaded successfully for:', dateString);
+        } catch (error) {
+            console.error('Error loading diary data:', error);
+        }
+    }
+    
+    function updateDiaryDisplay(dateString) {
+        const state = AppState.getState();
+        console.log('Updating diary display with state:', state);
+        
+        if (!state) {
+            console.log('State is undefined in updateDiaryDisplay');
+            return;
+        }
+        
+        // Update summary details with data for selected date
+        updateSummaryDetails(state, dateString);
+        
+        // Update meal sections with diary entries for selected date
+        updateMealSections(state);
+        
+        // Update exercise section with exercises for selected date
+        updateExerciseSection(state);
+    }
+    
+    function updateSummaryDetails(state, dateString) {
+        if (!state) {
+            console.log('State is undefined in updateSummaryDetails');
+            return;
+        }
+        
+        // Use the existing updateSummarySection function which has the correct selectors
+        updateSummarySection(state);
+        
+        console.log('Summary details updated for date:', dateString, {
+            totalCalories: (state.diary && state.diary.entries) ? state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0) : 0,
+            totalExercise: (state.exercises || []).reduce((sum, ex) => sum + (ex.calories_burned || 0), 0)
+        });
+    }
+    
+    function updateMealSections(state, dateString) {
+        if (!state) {
+            console.log('State is undefined in updateMealSections');
+            return;
+        }
+        const diaryEntries = (state.diary && state.diary.entries) || [];
+        
+        // Group entries by meal type
+        const entriesByMeal = {};
+        diaryEntries.forEach(entry => {
+            const mealType = entry.meal_type || 'morgenmad';
+            if (!entriesByMeal[mealType]) {
+                entriesByMeal[mealType] = [];
+            }
+            entriesByMeal[mealType].push(entry);
+        });
+        
+        // Update each meal section
+        Object.keys(entriesByMeal).forEach(mealType => {
+            const mealSection = document.querySelector(`[data-meal="${mealType}"]`);
+            if (mealSection) {
+                updateMealSectionContent(mealSection, entriesByMeal[mealType]);
+            }
+        });
+    }
+    
+    function updateMealSectionContent(mealSection, entries) {
+        // Find the food list container
+        const foodList = mealSection.querySelector('.food-list');
+        if (!foodList) return;
+        
+        // Clear existing content
+        foodList.innerHTML = '';
+        
+        // Add entries
+        entries.forEach(entry => {
+            const foodItem = createFoodItem(entry);
+            foodList.appendChild(foodItem);
+        });
+        
+        // Update meal totals
+        const totalCalories = entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
+        const totalElement = mealSection.querySelector('.meal-total');
+        if (totalElement) {
+            totalElement.textContent = `${Math.round(totalCalories)} cal`;
+        }
+    }
+    
+    function updateExerciseSection(state = null) {
+        const currentState = state || AppState.getState();
+        if (!currentState) {
+            console.log('State is undefined in updateExerciseSection');
+            return;
+        }
+        const exercises = currentState.exercises || [];
+        
+        // Find exercise section
+        const exerciseSection = document.querySelector('.exercise-section');
+        if (!exerciseSection) return;
+        
+        // Update exercise list
+        const exerciseList = exerciseSection.querySelector('.exercise-list');
+        if (exerciseList) {
+            exerciseList.innerHTML = '';
+            
+            exercises.forEach(exercise => {
+                const exerciseItem = createExerciseItem(exercise);
+                exerciseList.appendChild(exerciseItem);
+            });
+        }
+        
+        // Update exercise totals
+        const totalCalories = exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
+        const totalElement = exerciseSection.querySelector('.exercise-total');
+        if (totalElement) {
+            totalElement.textContent = `${Math.round(totalCalories)} cal`;
+        }
+    }
+    
+    function createFoodItem(entry) {
+        const item = document.createElement('div');
+        item.className = 'food-item';
+        item.innerHTML = `
+            <div class="food-name">${entry.food_name || 'Ukendt fødevare'}</div>
+            <div class="food-portion">${entry.servings || 1} portioner</div>
+            <div class="food-calories">${Math.round(entry.calories || 0)} cal</div>
+        `;
+        return item;
+    }
+    
+    function createExerciseItem(exercise) {
+        const item = document.createElement('div');
+        item.className = 'exercise-item';
+        item.innerHTML = `
+            <div class="exercise-name">${exercise.name || 'Ukendt øvelse'}</div>
+            <div class="exercise-duration">${exercise.duration_minutes || 0} min</div>
+            <div class="exercise-calories">${Math.round(exercise.calories_burned || 0)} cal</div>
+        `;
+        return item;
+    }
+    
     function createMealSection(title, mealType) {
         const section = document.createElement('div');
         section.className = 'meal-section';
         section.setAttribute('data-meal-type', mealType);
+        section.setAttribute('data-meal', mealType);
         
         // Line 1: Title, add link, calories and more menu
         const line1 = document.createElement('div');

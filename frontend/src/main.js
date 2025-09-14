@@ -398,16 +398,20 @@ class CalorieTrackerApp {
         try {
             console.log('Loading initial data...');
             
+            const today = new Date().toISOString().split('T')[0];
+            console.log('Loading data for date:', today);
+            
             // Load all data in parallel
             await Promise.all([
                 AppState.loadFoods(),
-                AppState.loadDiary(new Date().toISOString().split('T')[0]),
-                AppState.loadExercises(new Date().toISOString().split('T')[0]),
+                AppState.loadDiary(today),
+                AppState.loadExercises(today),
                 AppState.loadWeights(),
                 AppState.loadGoals()
             ]);
             
             console.log('Initial data loaded successfully');
+            console.log('Current state:', AppState.getState());
         } catch (error) {
             console.error('Failed to load initial data:', error);
         }

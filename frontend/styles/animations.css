@@ -183,15 +183,6 @@
     to { width: var(--progress-width, 0%); }
 }
 
-/* Gauge rotation animation */
-.gauge-rotate {
-    animation: gaugeRotate 1s ease-out;
-}
-
-@keyframes gaugeRotate {
-    from { transform: rotate(-90deg); }
-    to { transform: rotate(calc(var(--gauge-angle, 0deg) - 90deg)); }
-}
 
 /* Card hover animations */
 .card-hover {

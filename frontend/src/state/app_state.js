@@ -10,21 +10,10 @@ export const AppState = {
         foods: [],
         diary: { 
             date: new Date().toISOString().split('T')[0], 
-            entries: [
-                { id: 1, food_id: 1, food_name: 'Æble', calories: 52, protein: 0.3, carbohydrates: 14, fat: 0.2, meal_type: 'morgenmad' },
-                { id: 2, food_id: 2, food_name: 'Banan', calories: 89, protein: 1.1, carbohydrates: 23, fat: 0.3, meal_type: 'snack' },
-                { id: 3, food_id: 3, food_name: 'Test Mad', calories: 1271, protein: 50, carbohydrates: 100, fat: 30, meal_type: 'aftensmad' }
-            ] 
+            entries: []
         },
-        exercises: [
-            { id: 1, name: 'Løb', duration: 30, calories_burned: 300, exercise_type: 'cardio' },
-            { id: 2, name: 'Vægtløftning', duration: 45, calories_burned: 200, exercise_type: 'styrke' }
-        ],
-        weights: [
-            { id: 1, weight: 75.5, date: '2024-01-01' },
-            { id: 2, weight: 75.2, date: '2024-01-02' },
-            { id: 3, weight: 74.8, date: '2024-01-03' }
-        ],
+        exercises: [],
+        weights: [],
         goals: {
             daily_calories: 2000,
             protein_target: 150,
@@ -120,12 +109,17 @@ export const AppState = {
     
     async loadDiary(date) {
         try {
-            const response = await api.getDiary(date);
-            if (response.success) {
-                this.setDiary({ date, entries: response.data });
+            const response = await api.getDiaryEntries(date);
+            // Backend returns array directly for diary entries
+            if (Array.isArray(response)) {
+                this.setDiary({ date, entries: response });
+            } else {
+                console.error('Unexpected diary response format:', response);
+                this.setDiary({ date, entries: [] });
             }
         } catch (error) {
             console.error('Failed to load diary:', error);
+            this.setDiary({ date, entries: [] });
         }
     },
     

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from services.exercise_service import ExerciseService
 from datetime import datetime
 
-exercise_bp = Blueprint('exercise', __name__, url_prefix='/api/exercises')
+exercise_bp = Blueprint('exercise', __name__)
 exercise_service = ExerciseService()
 
 @exercise_bp.route('/<date>', methods=['GET'])

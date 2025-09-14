@@ -77,31 +77,6 @@
     text-align: center;
 }
 
-.gauge-container {
-    display: flex;
-    align-items: center;
-    gap: var(--space-lg);
-    margin-bottom: var(--space-lg);
-}
-
-.calories-remaining {
-    stroke: var(--color-gauge-remaining);
-    stroke-dasharray: 502.4;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.5s ease;
-}
-
-.calories-progress {
-    stroke: var(--color-gauge-used);
-    stroke-dasharray: 502.4;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.5s ease;
-}
-
-.calories-remaining-text {
-    fill: var(--color-text);
-    font-family: var(--font-family);
-}
 
 .calories-stats {
     display: flex;
@@ -126,12 +101,28 @@
     color: var(--color-text);
     font-size: 14px;
     line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .stat-text strong {
     color: var(--color-text);
     font-weight: 600;
-    display: block;
+    display: inline;
+}
+
+/* Specific colors for each stat item */
+.stat-item:nth-child(1) .stat-text strong {
+    color: var(--color-calories);
+}
+
+.stat-item:nth-child(2) .stat-text strong {
+    color: var(--color-calories);
+}
+
+.stat-item:nth-child(3) .stat-text strong {
+    color: var(--color-motion);
 }
 
 .page-dots {
@@ -317,16 +308,3 @@
     margin-top: var(--space-sm);
 }
 
-/* Gauges - SVG Styling */
-.gauge-container svg {
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.gauge-container circle {
-    transition: all 0.3s ease;
-}
-
-.gauge-container text {
-    font-family: var(--font-family);
-    user-select: none;
-}

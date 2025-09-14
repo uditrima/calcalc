@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.goals_service import GoalsService
 
-goals_bp = Blueprint('goals', __name__, url_prefix='/api/goals')
+goals_bp = Blueprint('goals', __name__)
 goals_service = GoalsService()
 
 @goals_bp.route('/', methods=['GET'])
