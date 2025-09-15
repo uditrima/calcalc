@@ -1,5 +1,6 @@
 // Dashboard UI component
 import { AppState } from '../state/app_state.js';
+import { goalsState } from '../state/goals_state.js';
 
 export function Dashboard(container) {
     console.log('Dashboard component called with container:', container);
@@ -60,7 +61,7 @@ export function Dashboard(container) {
     async function loadTodaysDataForDashboard(today) {
         try {
             // Load today's diary entries
-            const diaryResponse = await fetch(`http://localhost:5000/api/diary/${today}`);
+            const diaryResponse = await fetch(`http://localhost:5000/api/diary/entries?date=${today}`);
             const diaryData = await diaryResponse.json();
             
             // Load today's exercises
@@ -254,9 +255,8 @@ export function Dashboard(container) {
             scrollbar.style.display = 'block';
             
             if (scrollHeight <= clientHeight) {
-                // If no scrolling needed, make thumb full height
-                thumb.style.height = '100%';
-                thumb.style.top = '0px';
+                // If no scrolling needed, hide scrollbar
+                scrollbar.style.display = 'none';
                 return;
             }
             
@@ -472,7 +472,9 @@ function createCaloriesGauge() {
     const statsContainer = document.createElement('div');
     statsContainer.className = 'calories-stats';
     
-    const baseGoal = createStatItem('🏁', 'Base Mål', '1,500');
+    // Get goals data or use default
+    const formattedGoals = goalsState.getFormattedGoals();
+    const baseGoal = createStatItem('🏁', 'Base Mål', formattedGoals?.calories.formatted || '1,500');
     const food = createStatItem('🍴', 'Mad', '1,712');
     const exercise = createStatItem('🔥', 'Motion', '500');
     

@@ -9,6 +9,7 @@ import { Exercise } from './ui/exercise.js';
 import { AddMenu } from './ui/add_menu.js';
 import { Weight } from './ui/weight.js';
 import { EditSettings } from './ui/edit-profile-page.js';
+import { NutritionGoals } from './ui/nutrition_goals.js';
 
 class CalorieTrackerApp {
     constructor() {
@@ -150,6 +151,12 @@ class CalorieTrackerApp {
         settingsSection.className = 'slide-view settings-view';
         main.appendChild(settingsSection);
         
+        // Nutrition goals section (slide-in)
+        const nutritionGoalsSection = document.createElement('section');
+        nutritionGoalsSection.id = 'nutrition-goals-section';
+        nutritionGoalsSection.className = 'slide-view nutrition-goals-view';
+        main.appendChild(nutritionGoalsSection);
+        
         // Add menu section (slide-up from bottom)
         const addMenuSection = document.createElement('section');
         addMenuSection.id = 'add-menu-section';
@@ -251,6 +258,14 @@ class CalorieTrackerApp {
         if (settingsContainer) {
             this.components.settings = EditSettings(settingsContainer);
             console.log('Settings mounted:', this.components.settings);
+        }
+        
+        // Mount NutritionGoals
+        const nutritionGoalsContainer = document.getElementById('nutrition-goals-section');
+        console.log('NutritionGoals container:', nutritionGoalsContainer);
+        if (nutritionGoalsContainer) {
+            this.components.nutritionGoals = NutritionGoals(nutritionGoalsContainer);
+            console.log('NutritionGoals mounted:', this.components.nutritionGoals);
         }
         
         // Mount AddMenu
@@ -447,6 +462,16 @@ class CalorieTrackerApp {
             if (slideView) {
                 slideView.classList.add('active');
             }
+        } else if (viewName === 'nutrition-goals') {
+            console.log('Showing nutrition-goals view');
+            const slideView = this.appContainer.querySelector('.nutrition-goals-view');
+            console.log('Found nutrition-goals slideView:', slideView);
+            if (slideView) {
+                slideView.classList.add('active');
+                console.log('Added active class to nutrition-goals view');
+            } else {
+                console.error('nutrition-goals slideView not found');
+            }
         } else {
             const slideView = this.appContainer.querySelector(`.${viewName}-view`);
             if (slideView) {
@@ -493,5 +518,5 @@ class CalorieTrackerApp {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new CalorieTrackerApp();
+    window.calorieTrackerApp = new CalorieTrackerApp();
 });

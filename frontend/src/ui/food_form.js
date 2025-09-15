@@ -631,9 +631,8 @@ function createCustomScrollbar(container) {
         scrollbar.style.display = 'block';
         
         if (scrollHeight <= clientHeight) {
-            // If no scrolling needed, make thumb full height
-            thumb.style.height = '100%';
-            thumb.style.top = '0px';
+            // If no scrolling needed, hide scrollbar
+            scrollbar.style.display = 'none';
             return;
         }
         

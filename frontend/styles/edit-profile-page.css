@@ -5,15 +5,18 @@
     height: calc(100vh - 160px); /* Same height as dashboard */
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
     padding: var(--space-lg);
-    margin-bottom: var(--space-2xl);
     background: var(--color-bg);
     overflow-y: auto; /* Allow scrolling */
     overflow-x: hidden;
     /* Hide native scrollbar */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
+    
+}
+
+.edit-settings:last-child {
+    margin-bottom: 0;
 }
 
 .edit-settings::-webkit-scrollbar {
@@ -46,28 +49,6 @@
     flex: 1;
     text-align: center;
 }
-
-.go-back-btn {
-    background: none;
-    border: none;
-    color: var(--color-text);
-    font-size: 24px;
-    cursor: pointer;
-    padding: var(--space-sm);
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-base);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-}
-
-.go-back-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
-}
-
 /* Personal Metrics Section */
 .personal-metrics-section {
     background: var(--color-surface);
@@ -75,8 +56,8 @@
     -webkit-backdrop-filter: var(--blur-glass);
     border: 1px solid var(--color-border);
     border-top: none;
-    border-radius: 0;
-    margin: 0;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    margin: 0 0 var(--space-sm) 0;
     box-shadow: var(--shadow-glass);
     position: relative;
     z-index: var(--z-base);
@@ -118,16 +99,14 @@
     -webkit-backdrop-filter: var(--blur-glass);
     border: 1px solid var(--color-border);
     border-top: none;
-    border-radius: 0;
-    margin: 0;
+    border-radius: var(--radius-lg);
+    margin: 0 0 var(--space-sm) 0;
     box-shadow: var(--shadow-glass);
     position: relative;
     z-index: var(--z-base);
 }
 
 .goals-section:last-child {
-    border-bottom: 1px solid var(--color-border);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     margin-bottom: 0;
 }
 

@@ -183,7 +183,14 @@ function createGoalItem(title, description) {
         item.style.cursor = 'pointer';
         item.addEventListener('click', () => {
             console.log('Calorie, carbs, protein and fat goals clicked');
-            // TODO: Implement nutrition goals functionality
+            console.log('window.calorieTrackerApp:', window.calorieTrackerApp);
+            // Navigate to nutrition goals section
+            if (window.calorieTrackerApp) {
+                console.log('Navigating to nutrition-goals view');
+                window.calorieTrackerApp.showView('nutrition-goals');
+            } else {
+                console.error('calorieTrackerApp not found on window object');
+            }
         });
     }
     
@@ -269,9 +276,8 @@ function createCustomScrollbar(container) {
         scrollbar.style.display = 'block';
         
         if (scrollHeight <= clientHeight) {
-            // If no scrolling needed, make thumb full height
-            thumb.style.height = '100%';
-            thumb.style.top = '0px';
+            // If no scrolling needed, hide scrollbar
+            scrollbar.style.display = 'none';
             return;
         }
         

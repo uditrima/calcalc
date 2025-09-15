@@ -17,6 +17,11 @@ export class ApiClient {
         
         try {
             const response = await fetch(url, config);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             return await response.json();
         } catch (error) {
             throw new Error(`API request failed: ${error.message}`);

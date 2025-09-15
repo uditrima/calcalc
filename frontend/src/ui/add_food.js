@@ -1,6 +1,7 @@
 // Add Food UI component
 import { AppState } from '../state/app_state.js';
 import { getMealOptions } from '../data/meal_types.js';
+import { goalsState } from '../state/goals_state.js';
 import { PortionConverter } from '../utils/portion_converter.js';
 
 export function AddFood(container) {
@@ -320,10 +321,12 @@ export function AddFood(container) {
         const goalsContainer = document.createElement('div');
         goalsContainer.className = 'goals-container';
         
-        const caloriesGoal = createGoalItem('Calories', '0%', '1,500', 0);
-        const carbsGoal = createGoalItem('Carbs', '0%', '1.6g', 0);
-        const fatGoal = createGoalItem('Fat', '0%', '1.6g', 0);
-        const proteinGoal = createGoalItem('Protein', '0%', '1.6g', 0);
+        // Get goals data or use defaults
+        const formattedGoals = goalsState.getFormattedGoals();
+        const caloriesGoal = createGoalItem('Calories', '0%', formattedGoals?.calories.formatted || '1,500', 0);
+        const carbsGoal = createGoalItem('Carbs', '0%', formattedGoals?.carbs.formatted || '1.6g', 0);
+        const fatGoal = createGoalItem('Fat', '0%', formattedGoals?.fat.formatted || '1.6g', 0);
+        const proteinGoal = createGoalItem('Protein', '0%', formattedGoals?.protein.formatted || '1.6g', 0);
         
         goalsContainer.appendChild(caloriesGoal);
         goalsContainer.appendChild(carbsGoal);
@@ -463,6 +466,10 @@ export function AddFood(container) {
     function updateDailyGoals() {
         if (!currentFood) return;
         
+        // Get goals data
+        const formattedGoals = goalsState.getFormattedGoals();
+        if (!formattedGoals) return;
+        
         // Convert currentServings (portions) to grams for calculation
         const portionInGrams = PortionConverter.portionToGrams(currentServings);
         const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
@@ -472,28 +479,34 @@ export function AddFood(container) {
         const totalFat = nutrition.fat.toFixed(1);
         const totalProtein = nutrition.protein.toFixed(1);
         
+        // Calculate percentages
+        const caloriesPercentage = Math.round((totalCalories / formattedGoals.calories.value) * 100);
+        const carbsPercentage = Math.round((parseFloat(totalCarbs) / formattedGoals.carbs.value) * 100);
+        const fatPercentage = Math.round((parseFloat(totalFat) / formattedGoals.fat.value) * 100);
+        const proteinPercentage = Math.round((parseFloat(totalProtein) / formattedGoals.protein.value) * 100);
+        
         // Update goal items
         const goalItems = addFoodSection.querySelectorAll('.goal-item');
         if (goalItems.length >= 4) {
             // Update calories
             const caloriesItem = goalItems[0];
-            caloriesItem.querySelector('.goal-percentage').textContent = '0%';
-            caloriesItem.querySelector('.goal-amount').textContent = '1,500';
+            caloriesItem.querySelector('.goal-percentage').textContent = `${caloriesPercentage}%`;
+            caloriesItem.querySelector('.goal-amount').textContent = formattedGoals.calories.formatted;
             
             // Update carbs
             const carbsItem = goalItems[1];
-            carbsItem.querySelector('.goal-percentage').textContent = '0%';
-            carbsItem.querySelector('.goal-amount').textContent = '1.6g';
+            carbsItem.querySelector('.goal-percentage').textContent = `${carbsPercentage}%`;
+            carbsItem.querySelector('.goal-amount').textContent = formattedGoals.carbs.formatted;
             
             // Update fat
             const fatItem = goalItems[2];
-            fatItem.querySelector('.goal-percentage').textContent = '0%';
-            fatItem.querySelector('.goal-amount').textContent = '1.6g';
+            fatItem.querySelector('.goal-percentage').textContent = `${fatPercentage}%`;
+            fatItem.querySelector('.goal-amount').textContent = formattedGoals.fat.formatted;
             
             // Update protein
             const proteinItem = goalItems[3];
-            proteinItem.querySelector('.goal-percentage').textContent = '0%';
-            proteinItem.querySelector('.goal-amount').textContent = '1.6g';
+            proteinItem.querySelector('.goal-percentage').textContent = `${proteinPercentage}%`;
+            proteinItem.querySelector('.goal-amount').textContent = formattedGoals.protein.formatted;
         }
     }
     
@@ -626,9 +639,8 @@ function createCustomScrollbar(container) {
         scrollbar.style.display = 'block';
         
         if (scrollHeight <= clientHeight) {
-            // If no scrolling needed, make thumb full height
-            thumb.style.height = '100%';
-            thumb.style.top = '0px';
+            // If no scrolling needed, hide scrollbar
+            scrollbar.style.display = 'none';
             return;
         }
         

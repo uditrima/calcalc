@@ -1,5 +1,6 @@
 // Diary UI component
 import { AppState } from '../state/app_state.js';
+import { goalsState } from '../state/goals_state.js';
 import { EXTENDED_MEAL_TYPES, getMealDisplayName } from '../data/meal_types.js';
 import { PortionConverter } from '../utils/portion_converter.js';
 
@@ -106,7 +107,9 @@ export function Diary(container) {
     goalItem.className = 'summary-item';
     const goalCalories = document.createElement('div');
     goalCalories.className = 'summary-number goal-calories';
-    goalCalories.textContent = '1,500';
+    // Get goals data or use default
+    const formattedGoals = goalsState.getFormattedGoals();
+    goalCalories.textContent = formattedGoals?.calories.formatted || '1,500';
     const goalLabel = document.createElement('div');
     goalLabel.className = 'summary-label';
     goalLabel.textContent = 'Base mål';
@@ -160,7 +163,9 @@ export function Diary(container) {
     remainingItem.className = 'summary-item';
     const remainingCalories = document.createElement('div');
     remainingCalories.className = 'summary-number remaining-calories';
-    remainingCalories.textContent = '1,500';
+    // Get goals data or use default
+    const formattedGoalsRemaining = goalsState.getFormattedGoals();
+    remainingCalories.textContent = formattedGoalsRemaining?.calories.formatted || '1,500';
     const remainingLabel = document.createElement('div');
     remainingLabel.className = 'summary-label';
     remainingLabel.textContent = 'Resterende kalorier';
@@ -687,9 +692,8 @@ export function Diary(container) {
             scrollbar.style.display = 'block';
             
             if (scrollHeight <= clientHeight) {
-                // If no scrolling needed, make thumb full height
-                thumb.style.height = '100%';
-                thumb.style.top = '0px';
+                // If no scrolling needed, hide scrollbar
+                scrollbar.style.display = 'none';
                 return;
             }
             

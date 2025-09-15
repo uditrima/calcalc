@@ -7,6 +7,7 @@ from db.models.exercise import Exercise
 from db.models.weight import Weight
 from db.models.user_goals import UserGoals
 from db.models.user_settings import UserSettings
+from db.models.nutrient import Nutrient
 
 # Import Blueprints
 from routes.food_routes import food_bp
@@ -15,6 +16,7 @@ from routes.exercise_routes import exercise_bp
 from routes.weight_routes import weight_bp
 from routes.goals_routes import goals_bp
 from routes.user_settings_routes import user_settings_bp
+from routes.nutrient_routes import nutrient_bp
 # from routes.food_association_routes import food_association_bp
 
 def create_app():
@@ -31,6 +33,7 @@ def create_app():
     app.register_blueprint(weight_bp, url_prefix='/api/weights')
     app.register_blueprint(goals_bp, url_prefix='/api/goals')
     app.register_blueprint(user_settings_bp, url_prefix='/api')
+    app.register_blueprint(nutrient_bp, url_prefix='/api/nutrients')
     # app.register_blueprint(food_association_bp, url_prefix='/api')
     
     # TODO: configure error handlers

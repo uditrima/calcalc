@@ -1,3 +1,10 @@
+/* Global CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* Set HTML to 100% height with no scrolling */
 html {
     height: 100%;
@@ -23,6 +30,13 @@ body {
     margin: 0 auto !important;
     width: 50% !important;
     overflow: hidden; /* No scrolling at app level */
+}
+
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Take full height of app-container */
+    overflow: hidden; /* No scrolling at layout level */
 }
 
 .app-header {
@@ -58,6 +72,7 @@ body {
     transform: translateX(0);
     transition: all 0.3s ease-in-out;
     min-height: auto;
+    height: 100%; /* Explicitly set height to match parent */
 }
 
 .main-view.active {
@@ -80,6 +95,26 @@ body {
 }
 
 .slide-view.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Nutrition Goals View */
+.nutrition-goals-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-in-out;
+    background: var(--color-bg);
+    padding: 0;
+    overflow: hidden;
+}
+
+.nutrition-goals-view.active {
     opacity: 1;
     transform: translateX(0);
 }
