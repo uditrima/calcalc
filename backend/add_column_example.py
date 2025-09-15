@@ -50,3 +50,4 @@ if __name__ == "__main__":
     else:
         print("Fejl ved tilføjelse af kolonne.")
         sys.exit(1)
+

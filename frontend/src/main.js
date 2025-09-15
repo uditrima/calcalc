@@ -8,6 +8,7 @@ import { Diary } from './ui/diary.js';
 import { Exercise } from './ui/exercise.js';
 import { AddMenu } from './ui/add_menu.js';
 import { Weight } from './ui/weight.js';
+import { EditSettings } from './ui/edit-profile-page.js';
 
 class CalorieTrackerApp {
     constructor() {
@@ -16,6 +17,20 @@ class CalorieTrackerApp {
         this.api = new ApiClient('http://localhost:5000/api');
         this.navigationHistory = [];
         this.init();
+    }
+    
+    getCurrentDateInDanish() {
+        const now = new Date();
+        const day = now.getDate();
+        const month = now.getMonth();
+        const year = now.getFullYear();
+        
+        const danishMonths = [
+            'januar', 'februar', 'marts', 'april', 'maj', 'juni',
+            'juli', 'august', 'september', 'oktober', 'november', 'december'
+        ];
+        
+        return `${day}. ${danishMonths[month]} ${year}`;
     }
     
     async init() {
@@ -71,7 +86,22 @@ class CalorieTrackerApp {
         // Header
         const header = document.createElement('header');
         header.className = 'app-header';
-        header.innerHTML = '<h1>I dag</h1>';
+        
+        // Create h1 with current date
+        const h1 = document.createElement('h1');
+        h1.textContent = this.getCurrentDateInDanish();
+        header.appendChild(h1);
+        
+        // Settings button
+        const settingsBtn = document.createElement('button');
+        settingsBtn.className = 'settings-btn';
+        settingsBtn.innerHTML = '⚙️';
+        settingsBtn.title = 'Indstillinger';
+        settingsBtn.addEventListener('click', () => {
+            this.showView('edit-profile');
+        });
+        header.appendChild(settingsBtn);
+        
         layout.appendChild(header);
         
         // Main content area
@@ -113,6 +143,12 @@ class CalorieTrackerApp {
         weightSection.id = 'weight-section';
         weightSection.className = 'slide-view weight-view';
         main.appendChild(weightSection);
+        
+        // Settings section (slide-in)
+        const settingsSection = document.createElement('section');
+        settingsSection.id = 'settings-section';
+        settingsSection.className = 'slide-view settings-view';
+        main.appendChild(settingsSection);
         
         // Add menu section (slide-up from bottom)
         const addMenuSection = document.createElement('section');
@@ -207,6 +243,14 @@ class CalorieTrackerApp {
         if (weightContainer) {
             this.components.weight = Weight(weightContainer);
             console.log('Weight mounted:', this.components.weight);
+        }
+        
+        // Mount EditSettings
+        const settingsContainer = document.getElementById('settings-section');
+        console.log('Settings container:', settingsContainer);
+        if (settingsContainer) {
+            this.components.settings = EditSettings(settingsContainer);
+            console.log('Settings mounted:', this.components.settings);
         }
         
         // Mount AddMenu
@@ -359,6 +403,7 @@ class CalorieTrackerApp {
             console.log('Delete weight:', event.detail.weightId);
             // TODO: Handle delete weight
         });
+        
     }
     
     showView(viewName, fromView = null) {
@@ -394,6 +439,11 @@ class CalorieTrackerApp {
             }
         } else if (viewName === 'add-food') {
             const slideView = this.appContainer.querySelector('.add-food-view');
+            if (slideView) {
+                slideView.classList.add('active');
+            }
+        } else if (viewName === 'edit-profile') {
+            const slideView = this.appContainer.querySelector('.settings-view');
             if (slideView) {
                 slideView.classList.add('active');
             }

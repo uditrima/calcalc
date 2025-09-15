@@ -18,3 +18,4 @@ class Exercise(db.Model):
     notes = Column(Text, nullable=True)  # Tilføjet kolonne
     intensity = Column(String(50), default='medium')  # Tilføjet kolonne
     created_at = Column(Date, default=date.today)  # Tilføjet kolonne
+

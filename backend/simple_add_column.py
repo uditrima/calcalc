@@ -45,3 +45,4 @@ if __name__ == "__main__":
         print("Kolonnen tilføjet succesfuldt!")
     else:
         print("Fejl ved tilføjelse af kolonne.")
+

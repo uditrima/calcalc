@@ -1,0 +1,296 @@
+/* Settings Component Styles */
+
+/* Settings Container */
+.settings {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Hide native scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.settings::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Settings Header */
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: var(--space-lg) var(--space-lg) 0 var(--space-lg);
+    box-shadow: var(--shadow-glass);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+}
+
+.settings-header h1 {
+    color: var(--color-text);
+    font-size: var(--font-size-heading);
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+}
+
+.go-back-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.go-back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+/* Settings Sections */
+.settings-section {
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+    margin: 0 var(--space-lg);
+    transition: all 0.2s ease;
+}
+
+.settings-section:last-child {
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.settings-section:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Edit Profile Section */
+.edit-profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0;
+    margin: 0 var(--space-lg) 0 var(--space-lg);
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    z-index: var(--z-base);
+}
+
+.edit-profile-section:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+}
+
+.edit-profile-section h2 {
+    color: var(--color-text);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Goals Header */
+.goals-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0;
+    margin: 0 var(--space-lg) 0 var(--space-lg);
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    z-index: var(--z-base);
+}
+
+.goals-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+}
+
+.goals-header h2 {
+    color: var(--color-text);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Apps & Devices Header */
+.apps-devices-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0;
+    margin: 0 var(--space-lg) 0 var(--space-lg);
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    z-index: var(--z-base);
+}
+
+.apps-devices-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+}
+
+.apps-devices-header h2 {
+    color: var(--color-text);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-edit, .btn-add {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover, .btn-add:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-bg);
+    transform: scale(1.05);
+}
+
+
+
+/* Apps & Devices Section */
+.devices-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.device-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.device-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+}
+
+.device-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+}
+
+.device-info {
+    flex: 1;
+}
+
+.device-name {
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+}
+
+.device-status {
+    color: var(--color-success);
+    font-size: 14px;
+}
+
+.device-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.btn-disconnect {
+    background: var(--color-error);
+    border: 1px solid var(--color-error);
+    color: var(--color-bg);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-disconnect:hover {
+    background: var(--color-error-light);
+    border-color: var(--color-error-light);
+    transform: scale(1.05);
+}
+
+/* Settings Button in Header */
+.settings-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 20px;
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.settings-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}

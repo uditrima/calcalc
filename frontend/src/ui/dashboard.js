@@ -39,12 +39,8 @@ export function Dashboard(container) {
     // Create custom scrollbar for the dashboard container
     createCustomScrollbar(dashboard);
     
-    // Subscribe to state changes
-    AppState.subscribe('diary', updateDashboard);
-    AppState.subscribe('exercises', updateDashboard);
-    AppState.subscribe('weights', updateDashboard);
-    AppState.subscribe('goals', updateDashboard);
-    console.log('Dashboard subscribed to state changes');
+    // Dashboard loads its own data independently to always show today's data
+    console.log('Dashboard will load today\'s data independently');
     
     // Initial update - kald efter DOM elementer er tilføjet
     setTimeout(() => {
@@ -53,12 +49,49 @@ export function Dashboard(container) {
     }, 0);
     
     function updateDashboard() {
-        const state = AppState.getState();
-        console.log('Dashboard updating with state:', state);
-        updateCaloriesGauge(state);
-        updateMacrosGauges(state);
-        updateExerciseDisplay(state);
-        updateWeightDisplay(state);
+        // Dashboard should always show today's data, not the selected date from diary
+        const today = new Date().toISOString().split('T')[0];
+        console.log('Dashboard updating with today\'s data:', today);
+        
+        // Load today's data specifically for dashboard
+        loadTodaysDataForDashboard(today);
+    }
+    
+    async function loadTodaysDataForDashboard(today) {
+        try {
+            // Load today's diary entries
+            const diaryResponse = await fetch(`http://localhost:5000/api/diary/${today}`);
+            const diaryData = await diaryResponse.json();
+            
+            // Load today's exercises
+            const exerciseResponse = await fetch(`http://localhost:5000/api/exercises/${today}`);
+            const exerciseData = await exerciseResponse.json();
+            
+            // Get goals (these don't change by date)
+            const state = AppState.getState();
+            
+            // Create today's state for dashboard
+            const todaysState = {
+                diary: { date: today, entries: Array.isArray(diaryData) ? diaryData : [] },
+                exercises: Array.isArray(exerciseData) ? exerciseData : [],
+                goals: state.goals,
+                weights: state.weights
+            };
+            
+            console.log('Dashboard updating with today\'s state:', todaysState);
+            updateCaloriesGauge(todaysState);
+            updateMacrosGauges(todaysState);
+            updateExerciseDisplay(todaysState);
+            updateWeightDisplay(todaysState);
+        } catch (error) {
+            console.error('Error loading today\'s data for dashboard:', error);
+            // Fallback to current state
+            const state = AppState.getState();
+            updateCaloriesGauge(state);
+            updateMacrosGauges(state);
+            updateExerciseDisplay(state);
+            updateWeightDisplay(state);
+        }
     }
     
     function updateCaloriesGauge(state) {
