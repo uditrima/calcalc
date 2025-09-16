@@ -11,11 +11,9 @@ class GoalsService:
     
     def set_goals(self, data):
         """Create or overwrite goals."""
-        # Delete existing goals first
-        existing_goals = UserGoals.query.first()
-        if existing_goals:
-            self.db.session.delete(existing_goals)
-            self.db.session.commit()
+        # Delete ALL existing goals first
+        UserGoals.query.delete()
+        self.db.session.commit()
         
         # Create new goals
         goals = UserGoals(
@@ -31,9 +29,11 @@ class GoalsService:
     
     def update_goals(self, goal_id, data):
         """Update existing goals."""
-        goals = UserGoals.query.get(goal_id)
+        # Since we only have one goals record, get the first one
+        goals = UserGoals.query.first()
         if not goals:
-            return None
+            # If no goals exist, create new ones
+            return self.set_goals(data)
         
         # Update fields if provided
         if 'daily_calories' in data:
