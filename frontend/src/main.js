@@ -17,7 +17,7 @@ window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
     : "https://calcalc-backend.onrender.com/api";
 
-this.api = new ApiClient(API_BASE_URL);
+
 class CalorieTrackerApp {
     constructor() {
         this.appContainer = null;
