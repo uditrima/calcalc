@@ -7,6 +7,9 @@ export function NutritionGoals(container) {
     // Clear container
     container.innerHTML = '';
     
+    // Expose goalsState globally for access from other modules
+    window.goalsState = goalsState;
+    
     // Subscribe to goals state changes
     const unsubscribe = goalsState.subscribe((goals, isLoading, error) => {
         render(container, goals, isLoading, error);
@@ -19,10 +22,14 @@ export function NutritionGoals(container) {
     const handleRetry = () => goalsState.loadGoals();
     const handleReload = () => goalsState.loadGoals();
     const handleCommit = () => commitChanges();
+    const handleActivateCommitButton = () => goalsState.setCommitButtonDimmed(false);
+    const handleDimCommitButton = () => goalsState.setCommitButtonDimmed(true);
     
     window.addEventListener('retryGoals', handleRetry);
     window.addEventListener('reloadGoals', handleReload);
     window.addEventListener('commitGoals', handleCommit);
+    window.addEventListener('activateCommitButton', handleActivateCommitButton);
+    window.addEventListener('dimCommitButton', handleDimCommitButton);
     
     // Return cleanup function
     return () => {
@@ -30,6 +37,8 @@ export function NutritionGoals(container) {
         window.removeEventListener('retryGoals', handleRetry);
         window.removeEventListener('reloadGoals', handleReload);
         window.removeEventListener('commitGoals', handleCommit);
+        window.removeEventListener('activateCommitButton', handleActivateCommitButton);
+        window.removeEventListener('dimCommitButton', handleDimCommitButton);
     };
 }
 

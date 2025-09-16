@@ -31,6 +31,8 @@ function activateCommitButton() {
     if (commitBtn) {
         commitBtn.classList.remove('dimmed');
     }
+    // Update state
+    window.dispatchEvent(new CustomEvent('activateCommitButton'));
 }
 
 export function createLoadingSection() {
@@ -603,22 +605,27 @@ function createActionButtons() {
     cancelButton.textContent = 'Annuller';
     cancelButton.addEventListener('click', () => {
         // Dim the commit button when canceling
-        const commitBtn = document.querySelector('.goals-commit-btn');
-        if (commitBtn) {
-            commitBtn.classList.add('dimmed');
-        }
+        window.dispatchEvent(new CustomEvent('dimCommitButton'));
         window.dispatchEvent(new CustomEvent('reloadGoals'));
     });
     
-    // Commit button (initially dimmed)
+    // Commit button (state from goals state)
     const commitButton = document.createElement('button');
-    commitButton.className = 'goals-commit-btn dimmed';
+    commitButton.className = 'goals-commit-btn';
     commitButton.textContent = 'Gem ændringer';
     commitButton.addEventListener('click', () => {
         if (!commitButton.classList.contains('dimmed')) {
             window.dispatchEvent(new CustomEvent('commitGoals'));
         }
     });
+    
+    // Apply dimmed state based on goals state
+    setTimeout(() => {
+        const isDimmed = window.goalsState?.isCommitButtonDimmed?.() ?? true;
+        if (isDimmed) {
+            commitButton.classList.add('dimmed');
+        }
+    }, 0);
     
     buttonContainer.appendChild(cancelButton);
     buttonContainer.appendChild(commitButton);

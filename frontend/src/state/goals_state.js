@@ -9,6 +9,7 @@ class GoalsState {
         this.error = null;
         this.apiClient = new ApiClient();
         this.listeners = [];
+        this.commitButtonDimmed = true; // Track commit button state
     }
 
     // Subscribe to goals changes
@@ -82,6 +83,16 @@ class GoalsState {
     // Get error state
     getError() {
         return this.error;
+    }
+
+    // Get commit button dimmed state
+    isCommitButtonDimmed() {
+        return this.commitButtonDimmed;
+    }
+
+    // Set commit button dimmed state
+    setCommitButtonDimmed(dimmed) {
+        this.commitButtonDimmed = dimmed;
     }
 
     // Get formatted goals for display
