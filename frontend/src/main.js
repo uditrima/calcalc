@@ -15,8 +15,7 @@ import { NutritionGoals } from './ui/nutrition_goals.js';
 const API_BASE_URL = 
 window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
-    : "https://calcalc-backend.onrender.com/api";
-
+    : "https://calcalc..onrender.com/api";
 
 class CalorieTrackerApp {
     constructor() {
