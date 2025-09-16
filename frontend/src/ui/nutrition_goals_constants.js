@@ -1,9 +1,9 @@
 // Nutrition Goals Constants
 export const KNOB_RANGES = {
-    Kalorier: { min: 500, max: 5000, step: 50 },
-    Kulhydrater: { min: 50, max: 500, step: 5 },
-    Protein: { min: 50, max: 300, step: 5 },
-    Fedt: { min: 20, max: 200, step: 2 }
+    Kalorier: { min: 0, max: 3500, step: 1 },
+    Kulhydrater: { min: 0, max: 350, step: 1 },
+    Protein: { min: 0, max: 350, step: 1 },
+    Fedt: { min: 0, max: 150, step: 1 }
 };
 
 export const LABEL_TO_FIELD_MAP = {

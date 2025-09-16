@@ -4,6 +4,35 @@ import { parseNumeric, formatNumber } from './nutrition_goals_formatters.js';
 import { setKnobValue, updateGoalPercentages } from './nutrition_goals_ui_helpers.js';
 import { addCaloriesKnobClickTracking, updateRelatedKnobs, updateGoalValue } from './nutrition_goals_controllers.js';
 
+// Helper function to calculate percentage color
+function calculatePercentageColor(percentage) {
+    // Clamp percentage between 0 and 100
+    const clampedPercentage = Math.max(0, Math.min(100, percentage));
+    
+    // Convert percentage to 0-1 range
+    const normalizedPercentage = clampedPercentage / 100;
+    
+    // Interpolate between orange (0%) and green (100%)
+    // Orange: rgb(171, 116, 72)
+    // Green: rgb(108, 152, 122)
+    const orangeR = 171, orangeG = 116, orangeB = 72;
+    const greenR = 108, greenG = 152, greenB = 122;
+    
+    const r = Math.round(orangeR + (greenR - orangeR) * normalizedPercentage);
+    const g = Math.round(orangeG + (greenG - orangeG) * normalizedPercentage);
+    const b = Math.round(orangeB + (greenB - orangeB) * normalizedPercentage);
+    
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+// Helper function to activate commit button
+function activateCommitButton() {
+    const commitBtn = document.querySelector('.goals-commit-btn');
+    if (commitBtn) {
+        commitBtn.classList.remove('dimmed');
+    }
+}
+
 export function createLoadingSection() {
     const section = document.createElement('div');
     section.className = 'loading-section';
@@ -78,6 +107,17 @@ function createGoalItem(label, amount, percentage) {
     const item = document.createElement('div');
     item.className = 'goal-item';
     
+    // Add data attribute for macro type styling
+    if (label === 'Protein') {
+        item.setAttribute('data-macro', 'protein');
+    } else if (label === 'Kulhydrater') {
+        item.setAttribute('data-macro', 'carbs');
+    } else if (label === 'Fedt') {
+        item.setAttribute('data-macro', 'fat');
+    } else if (label === 'Kalorier') {
+        item.setAttribute('data-macro', 'calories');
+    }
+    
     const labelEl = document.createElement('div');
     labelEl.className = 'goal-label';
     labelEl.textContent = label;
@@ -98,9 +138,25 @@ function createGoalItem(label, amount, percentage) {
         // Create amount display
         const amountEl = document.createElement('div');
         amountEl.className = 'goal-amount';
-        amountEl.textContent = amount;
         amountEl.setAttribute('data-editable', 'true');
         amountEl.setAttribute('data-original-value', amount);
+        
+        // For calories, create separate spans for number and suffix
+        if (label === 'Kalorier') {
+            const amountNumber = document.createElement('span');
+            amountNumber.className = 'amount-number';
+            amountNumber.textContent = amount;
+            
+            const amountSuffix = document.createElement('span');
+            amountSuffix.className = 'amount-suffix';
+            amountSuffix.textContent = ' kcal';
+            
+            amountEl.appendChild(amountNumber);
+            amountEl.appendChild(amountSuffix);
+        } else {
+            // For macros, just set the text content normally
+            amountEl.textContent = amount;
+        }
         
         // Add click handler for editing
         amountEl.addEventListener('click', () => {
@@ -115,7 +171,40 @@ function createGoalItem(label, amount, percentage) {
         const percentageEl = document.createElement('div');
         percentageEl.className = 'goal-percentage';
         percentageEl.textContent = percentage;
+        
+        // Extract percentage value for color calculation
+        const percentageValue = parseFloat(percentage.replace('%', ''));
+        percentageEl.setAttribute('data-percentage', percentageValue);
+        
+        // Set CSS custom property for color
+        const color = calculatePercentageColor(percentageValue);
+        percentageEl.style.setProperty('--percentage-color', color);
+        
         valuesContainer.appendChild(percentageEl);
+    }
+    
+    // Add calories display for macros
+    if (MACRO_LABELS.includes(label)) {
+        const caloriesEl = document.createElement('div');
+        caloriesEl.className = 'goal-calories';
+        
+        // Calculate calories for this macro
+        const amountValue = parseNumeric(amount);
+        const caloriesPerGram = label === 'Fedt' ? 9 : 4;
+        const calories = amountValue * caloriesPerGram;
+        
+        // Create separate spans for number and suffix
+        const caloriesNumber = document.createElement('span');
+        caloriesNumber.className = 'calories-number';
+        caloriesNumber.textContent = calories;
+        
+        const caloriesSuffix = document.createElement('span');
+        caloriesSuffix.className = 'calories-suffix';
+        caloriesSuffix.textContent = ' kcal';
+        
+        caloriesEl.appendChild(caloriesNumber);
+        caloriesEl.appendChild(caloriesSuffix);
+        valuesContainer.appendChild(caloriesEl);
     }
     
     item.appendChild(valuesContainer);
@@ -187,27 +276,92 @@ function addKnobInteractions(knob, label) {
         knob.setAttribute('data-value', value);
         
         // Update display
-        const formattedValue = formatNumber(value);
+        let formattedValue = formatNumber(value);
+        
+        // Add "g" suffix for macro nutrients
+        if (MACRO_LABELS.includes(label)) {
+            formattedValue = `${formattedValue}g`;
+        }
         
         // Update the goal amount display (if it exists)
         const goalItem = knob.closest('.goal-item');
         if (goalItem) {
             const goalAmount = goalItem.querySelector('.goal-amount');
             if (goalAmount) {
-                goalAmount.textContent = formattedValue;
+                console.log(`Updating goal-amount for ${label}: ${formattedValue}`);
+                
+                if (label === 'Kalorier') {
+                    // Update calories amount spans
+                    const amountNumber = goalAmount.querySelector('.amount-number');
+                    if (amountNumber) {
+                        amountNumber.textContent = formattedValue;
+                    }
+                } else {
+                    // Update macro amount normally
+                    goalAmount.textContent = formattedValue;
+                }
+                
                 goalAmount.setAttribute('data-original-value', formattedValue);
+            } else {
+                console.log(`No goal-amount found for ${label}`);
+            }
+        } else {
+            console.log(`No goal-item found for ${label}`);
+        }
+            
+            // Update calories display for macros
+            if (MACRO_LABELS.includes(label)) {
+                const goalCalories = goalItem.querySelector('.goal-calories');
+                if (goalCalories) {
+                    const caloriesPerGram = label === 'Fedt' ? 9 : 4;
+                    const calories = value * caloriesPerGram;
+                    
+                    // Update the calories number span
+                    const caloriesNumber = goalCalories.querySelector('.calories-number');
+                    if (caloriesNumber) {
+                        caloriesNumber.textContent = calories;
+                    }
+                }
             }
             
             // Update percentage if this is a macro nutrient
             if (MACRO_LABELS.includes(label)) {
+                // Calculate new calories based on current macro values
+                const protein = label === 'Protein' ? value : parseFloat(document.querySelector('#protein-knob')?.getAttribute('data-value') || 0);
+                const carbs = label === 'Kulhydrater' ? value : parseFloat(document.querySelector('#carbs-knob')?.getAttribute('data-value') || 0);
+                const fat = label === 'Fedt' ? value : parseFloat(document.querySelector('#fat-knob')?.getAttribute('data-value') || 0);
+                
+                // Calculate calories from macros
+                const proteinCalories = protein * 4;
+                const carbsCalories = carbs * 4;
+                const fatCalories = fat * 9;
+                const totalCalories = proteinCalories + carbsCalories + fatCalories;
+                
+                // Update calories knob in real-time during drag
+                const caloriesKnob = document.querySelector('#calories-knob');
+                if (caloriesKnob) {
+                    const formattedCalories = formatNumber(totalCalories);
+                    caloriesKnob.setAttribute('data-value', totalCalories);
+                    caloriesKnob.style.setProperty('--knob-position', `${((totalCalories - 0) / (3000 - 0)) * 100}%`);
+                    
+                    // Update calories display
+                    const caloriesGoalItem = caloriesKnob.closest('.goal-item');
+                    if (caloriesGoalItem) {
+                        const caloriesAmount = caloriesGoalItem.querySelector('.goal-amount');
+                        if (caloriesAmount) {
+                            caloriesAmount.textContent = formattedCalories;
+                            caloriesAmount.setAttribute('data-original-value', formattedCalories);
+                        }
+                    }
+                }
+                
                 updateGoalPercentages({ 
-                    protein_target: label === 'Protein' ? value : parseFloat(document.querySelector('#protein-knob')?.getAttribute('data-value') || 0),
-                    carbs_target: label === 'Kulhydrater' ? value : parseFloat(document.querySelector('#carbs-knob')?.getAttribute('data-value') || 0),
-                    fat_target: label === 'Fedt' ? value : parseFloat(document.querySelector('#fat-knob')?.getAttribute('data-value') || 0),
-                    daily_calories: parseFloat(document.querySelector('#calories-knob')?.getAttribute('data-value') || 0)
+                    protein_target: protein,
+                    carbs_target: carbs,
+                    fat_target: fat,
+                    daily_calories: totalCalories
                 });
             }
-        }
         
         // Store value locally (don't save to backend yet)
         knob.setAttribute('data-value', value);
@@ -218,6 +372,9 @@ function addKnobInteractions(knob, label) {
         }
         
         currentValue = value;
+        
+        // Activate commit button when changes are made
+        activateCommitButton();
     };
     
     const startDrag = (e) => {
@@ -236,7 +393,7 @@ function addKnobInteractions(knob, label) {
         const deltaX = currentX - startX;
         
         // Convert horizontal movement to value change
-        const sensitivity = 2;
+        const sensitivity = 0.07; // 30% less sensitive than 0.1 for even finer control
         const valueChange = (deltaX / 100) * (range.max - range.min) * sensitivity;
         const newValue = startValue + valueChange;
         
@@ -310,11 +467,25 @@ function addKnobInteractions(knob, label) {
 function makeAmountEditable(amountEl, label) {
     if (amountEl.querySelector('input')) return;
     
-    const currentValue = amountEl.textContent;
+    let currentValue, editValue;
+    
+    if (label === 'Kalorier') {
+        // For calories, get the number from the span
+        const amountNumber = amountEl.querySelector('.amount-number');
+        currentValue = amountNumber ? amountNumber.textContent : amountEl.textContent;
+        editValue = currentValue;
+    } else {
+        // For macros, handle "g" suffix
+        currentValue = amountEl.textContent;
+        editValue = currentValue;
+        if (MACRO_LABELS.includes(label) && currentValue.endsWith('g')) {
+            editValue = currentValue.slice(0, -1);
+        }
+    }
     
     const input = document.createElement('input');
     input.type = 'text';
-    input.value = currentValue;
+    input.value = editValue;
     input.className = 'goal-amount-input';
     
     amountEl.innerHTML = '';
@@ -325,26 +496,89 @@ function makeAmountEditable(amountEl, label) {
     
     const saveValue = () => {
         const newValue = input.value.trim();
-        if (newValue && newValue !== currentValue) {
+        if (newValue && newValue !== editValue) {
             const numericValue = parseNumeric(newValue);
             if (!isNaN(numericValue)) {
-                const formattedValue = formatNumber(numericValue);
-                amountEl.textContent = formattedValue;
-                amountEl.setAttribute('data-original-value', formattedValue);
+                let formattedValue = formatNumber(numericValue);
+                
+                if (label === 'Kalorier') {
+                    // Update calories amount spans
+                    const amountNumber = amountEl.querySelector('.amount-number');
+                    if (amountNumber) {
+                        amountNumber.textContent = formattedValue;
+                    }
+                    amountEl.setAttribute('data-original-value', formattedValue);
+                } else {
+                    // Add "g" suffix for macro nutrients
+                    if (MACRO_LABELS.includes(label)) {
+                        formattedValue = `${formattedValue}g`;
+                    }
+                    amountEl.textContent = formattedValue;
+                    amountEl.setAttribute('data-original-value', formattedValue);
+                }
+                
                 updateGoalValue(label, newValue);
+                
+                // Activate commit button when changes are made
+                activateCommitButton();
+            } else {
+                // Restore original value
+                if (label === 'Kalorier') {
+                    const amountNumber = amountEl.querySelector('.amount-number');
+                    if (amountNumber) {
+                        amountNumber.textContent = currentValue;
+                    }
+                } else {
+                    amountEl.textContent = currentValue;
+                }
+            }
+        } else {
+            // Restore original value
+            if (label === 'Kalorier') {
+                const amountNumber = amountEl.querySelector('.amount-number');
+                if (amountNumber) {
+                    amountNumber.textContent = currentValue;
+                }
             } else {
                 amountEl.textContent = currentValue;
             }
-        } else {
-            amountEl.textContent = currentValue;
         }
         
-        const finalValue = amountEl.getAttribute('data-original-value') || currentValue;
-        amountEl.innerHTML = finalValue;
+        // Remove input and restore spans
+        amountEl.innerHTML = '';
+        if (label === 'Kalorier') {
+            const amountNumber = document.createElement('span');
+            amountNumber.className = 'amount-number';
+            amountNumber.textContent = amountEl.getAttribute('data-original-value') || currentValue;
+            
+            const amountSuffix = document.createElement('span');
+            amountSuffix.className = 'amount-suffix';
+            amountSuffix.textContent = ' kcal';
+            
+            amountEl.appendChild(amountNumber);
+            amountEl.appendChild(amountSuffix);
+        } else {
+            amountEl.innerHTML = amountEl.getAttribute('data-original-value') || currentValue;
+        }
     };
     
     const cancelEdit = () => {
-        amountEl.textContent = currentValue;
+        // Remove input and restore spans
+        amountEl.innerHTML = '';
+        if (label === 'Kalorier') {
+            const amountNumber = document.createElement('span');
+            amountNumber.className = 'amount-number';
+            amountNumber.textContent = currentValue;
+            
+            const amountSuffix = document.createElement('span');
+            amountSuffix.className = 'amount-suffix';
+            amountSuffix.textContent = ' kcal';
+            
+            amountEl.appendChild(amountNumber);
+            amountEl.appendChild(amountSuffix);
+        } else {
+            amountEl.textContent = currentValue;
+        }
     };
     
     input.addEventListener('blur', saveValue);
@@ -368,15 +602,22 @@ function createActionButtons() {
     cancelButton.className = 'goals-cancel-btn';
     cancelButton.textContent = 'Annuller';
     cancelButton.addEventListener('click', () => {
+        // Dim the commit button when canceling
+        const commitBtn = document.querySelector('.goals-commit-btn');
+        if (commitBtn) {
+            commitBtn.classList.add('dimmed');
+        }
         window.dispatchEvent(new CustomEvent('reloadGoals'));
     });
     
-    // Commit button
+    // Commit button (initially dimmed)
     const commitButton = document.createElement('button');
-    commitButton.className = 'goals-commit-btn';
+    commitButton.className = 'goals-commit-btn dimmed';
     commitButton.textContent = 'Gem ændringer';
     commitButton.addEventListener('click', () => {
-        window.dispatchEvent(new CustomEvent('commitGoals'));
+        if (!commitButton.classList.contains('dimmed')) {
+            window.dispatchEvent(new CustomEvent('commitGoals'));
+        }
     });
     
     buttonContainer.appendChild(cancelButton);

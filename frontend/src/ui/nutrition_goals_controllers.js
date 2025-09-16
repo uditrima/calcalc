@@ -35,14 +35,18 @@ export function updateRelatedKnobs(changedLabel, newValue) {
 }
 
 function updateCaloriesKnob() {
-    const currentGoals = goalsState.getGoals();
-    if (!currentGoals) return;
+    // Get current values from knobs instead of goals state
+    const proteinKnob = getKnobById('protein-knob');
+    const carbsKnob = getKnobById('carbs-knob');
+    const fatKnob = getKnobById('fat-knob');
     
-    const newCalories = calculateTotalCaloriesFromMacros(
-        currentGoals.protein_target,
-        currentGoals.carbs_target,
-        currentGoals.fat_target
-    );
+    if (!proteinKnob || !carbsKnob || !fatKnob) return;
+    
+    const protein = parseFloat(proteinKnob.getAttribute('data-value') || 0);
+    const carbs = parseFloat(carbsKnob.getAttribute('data-value') || 0);
+    const fat = parseFloat(fatKnob.getAttribute('data-value') || 0);
+    
+    const newCalories = calculateTotalCaloriesFromMacros(protein, carbs, fat);
     
     const caloriesKnob = getKnobById('calories-knob');
     if (caloriesKnob) {
@@ -103,11 +107,16 @@ export function updateGoalValue(label, newValue) {
     updatedGoals[fieldName] = numericValue;
     
     if (MACRO_LABELS.includes(label)) {
-        const newCalories = calculateTotalCaloriesFromMacros(
-            updatedGoals.protein_target,
-            updatedGoals.carbs_target,
-            updatedGoals.fat_target
-        );
+        // Get current values from knobs for accurate calculation
+        const proteinKnob = getKnobById('protein-knob');
+        const carbsKnob = getKnobById('carbs-knob');
+        const fatKnob = getKnobById('fat-knob');
+        
+        const protein = label === 'Protein' ? numericValue : parseFloat(proteinKnob?.getAttribute('data-value') || 0);
+        const carbs = label === 'Kulhydrater' ? numericValue : parseFloat(carbsKnob?.getAttribute('data-value') || 0);
+        const fat = label === 'Fedt' ? numericValue : parseFloat(fatKnob?.getAttribute('data-value') || 0);
+        
+        const newCalories = calculateTotalCaloriesFromMacros(protein, carbs, fat);
         updatedGoals.daily_calories = newCalories;
         updateCaloriesKnob();
     } else if (fieldName === 'daily_calories') {

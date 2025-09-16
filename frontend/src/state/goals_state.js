@@ -1,5 +1,6 @@
 // Goals State Management
 import { ApiClient } from '../data/api.js';
+import { MACRO_CALORIES_PER_GRAM } from '../ui/nutrition_goals_constants.js';
 
 class GoalsState {
     constructor() {
@@ -94,9 +95,9 @@ class GoalsState {
         const fat = this.goals.fat_target;
 
         // Calculate macro percentages using total calories
-        const proteinCalories = protein * 4;
-        const carbsCalories = carbs * 4;
-        const fatCalories = fat * 4;
+        const proteinCalories = protein * MACRO_CALORIES_PER_GRAM.protein;
+        const carbsCalories = carbs * MACRO_CALORIES_PER_GRAM.carbs;
+        const fatCalories = fat * MACRO_CALORIES_PER_GRAM.fat;
 
         const proteinPercentage = Math.round((proteinCalories / calories) * 100);
         const carbsPercentage = Math.round((carbsCalories / calories) * 100);
@@ -127,23 +128,25 @@ class GoalsState {
 
     // Calculate calories from macros
     calculateCaloriesFromMacros(protein, carbs, fat) {
-        return (protein * 4) + (carbs * 4) + (fat * 4);
+        return (protein * MACRO_CALORIES_PER_GRAM.protein) + 
+               (carbs * MACRO_CALORIES_PER_GRAM.carbs) + 
+               (fat * MACRO_CALORIES_PER_GRAM.fat);
     }
 
     // Calculate macros from calories (distribute proportionally)
     calculateMacrosFromCalories(calories, currentProtein, currentCarbs, currentFat) {
         // Calculate current macro calories
-        const currentProteinCalories = currentProtein * 4;
-        const currentCarbsCalories = currentCarbs * 4;
-        const currentFatCalories = currentFat * 4;
+        const currentProteinCalories = currentProtein * MACRO_CALORIES_PER_GRAM.protein;
+        const currentCarbsCalories = currentCarbs * MACRO_CALORIES_PER_GRAM.carbs;
+        const currentFatCalories = currentFat * MACRO_CALORIES_PER_GRAM.fat;
         const totalCurrentMacroCalories = currentProteinCalories + currentCarbsCalories + currentFatCalories;
 
         // If no current macros, use default distribution
         if (totalCurrentMacroCalories === 0) {
             return {
-                protein: calories * 0.25 / 4, // 25% protein
-                carbs: calories * 0.45 / 4,   // 45% carbs
-                fat: calories * 0.30 / 4      // 30% fat
+                protein: calories * 0.25 / MACRO_CALORIES_PER_GRAM.protein, // 25% protein
+                carbs: calories * 0.45 / MACRO_CALORIES_PER_GRAM.carbs,     // 45% carbs
+                fat: calories * 0.30 / MACRO_CALORIES_PER_GRAM.fat          // 30% fat
             };
         }
 
@@ -158,9 +161,9 @@ class GoalsState {
         const newFatCalories = calories * fatRatio;
 
         return {
-            protein: newProteinCalories / 4,
-            carbs: newCarbsCalories / 4,
-            fat: newFatCalories / 4
+            protein: newProteinCalories / MACRO_CALORIES_PER_GRAM.protein,
+            carbs: newCarbsCalories / MACRO_CALORIES_PER_GRAM.carbs,
+            fat: newFatCalories / MACRO_CALORIES_PER_GRAM.fat
         };
     }
 

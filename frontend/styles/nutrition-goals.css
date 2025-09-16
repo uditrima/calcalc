@@ -220,10 +220,35 @@
     text-align: right;
 }
 
+/* Specific colors for goal-amount based on macro type */
+.goal-item[data-macro="protein"] .goal-amount {
+    color: var(--color-text);
+}
+
+.goal-item[data-macro="carbs"] .goal-amount {
+    color: var(--color-text);
+}
+
+.goal-item[data-macro="fat"] .goal-amount {
+    color: var(--color-text);
+}
+
 .goal-amount:hover {
     background: var(--color-surface);
-    color: var(--color-primary);
     transform: scale(1.02);
+}
+
+/* Specific hover colors for goal-amount based on macro type */
+.goal-item[data-macro="protein"] .goal-amount:hover {
+    color: var(--color-text);
+}
+
+.goal-item[data-macro="carbs"] .goal-amount:hover {
+    color: var(--color-text);
+}
+
+.goal-item[data-macro="fat"] .goal-amount:hover {
+    color: var(--color-text);
 }
 
 .goal-amount[data-editable="true"]:hover::after {
@@ -240,6 +265,70 @@
     color: var(--color-accent);
     font-size: 16px;
     font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* Dynamic percentage color based on value - using CSS custom properties */
+.goal-percentage[data-percentage] {
+    color: var(--percentage-color, var(--color-accent));
+}
+
+.goal-calories {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: all var(--transition-base);
+}
+
+/* Specific colors for goal-calories based on macro type */
+.goal-item[data-macro="protein"] .goal-calories {
+    color: var(--color-text);
+    opacity: 0.9;
+}
+
+.goal-item[data-macro="carbs"] .goal-calories {
+    color: var(--color-text);
+    opacity: 0.9;
+}
+
+.goal-item[data-macro="fat"] .goal-calories {
+    color: var(--color-text);
+    opacity: 0.9;
+}
+
+/* Split color styling for goal-calories: number in theme color, "kcal" in white */
+.goal-item[data-macro="protein"] .goal-calories .calories-number {
+    color: var(--color-protein);
+}
+
+.goal-item[data-macro="protein"] .goal-calories .calories-suffix {
+    color: var(--color-text);
+}
+
+.goal-item[data-macro="carbs"] .goal-calories .calories-number {
+    color: var(--color-carbs);
+}
+
+.goal-item[data-macro="carbs"] .goal-calories .calories-suffix {
+    color: var(--color-text);
+}
+
+.goal-item[data-macro="fat"] .goal-calories .calories-number {
+    color: var(--color-fat);
+}
+
+.goal-item[data-macro="fat"] .goal-calories .calories-suffix {
+    color: var(--color-text);
+}
+
+/* Split color styling for calories goal-amount: number in theme color, "kcal" in white */
+.goal-item[data-macro="calories"] .goal-amount .amount-number {
+    color: var(--color-calories);
+}
+
+.goal-item[data-macro="calories"] .goal-amount .amount-suffix {
+    color: var(--color-text);
 }
 
 /* Editable Input */
@@ -292,6 +381,7 @@
     cursor: grabbing;
 }
 
+/* Base knob track styling */
 .knob-track {
     position: absolute;
     top: 50%;
@@ -299,13 +389,6 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: conic-gradient(
-        from 0deg,
-        var(--color-primary) 0deg,
-        var(--color-primary) var(--knob-position, 0%),
-        var(--color-border) var(--knob-position, 0%),
-        var(--color-border) 360deg
-    );
     transform: translate(-50%, -50%);
     transition: all var(--transition-base);
 }
@@ -323,13 +406,13 @@
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Base knob handle styling */
 .knob-handle {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 12px;
     height: 12px;
-    background: var(--color-primary);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -337,13 +420,106 @@
     z-index: 2;
 }
 
-.rotary-knob:hover .knob-handle {
-    background: var(--color-primary-hover);
+/* Calories Knob */
+#calories-knob .knob-track {
+    background: conic-gradient(
+        from 0deg,
+        var(--color-calories) 0deg,
+        var(--color-calories) var(--knob-position, 0%),
+        var(--color-border) var(--knob-position, 0%),
+        var(--color-border) 360deg
+    );
+}
+
+#calories-knob .knob-handle {
+    background: var(--color-calories);
+}
+
+#calories-knob:hover .knob-handle {
+    background: var(--color-calories-hover);
     transform: translate(-50%, -50%) scale(1.2);
 }
 
-.rotary-knob.knob-dragging .knob-handle {
-    background: var(--color-primary-hover);
+#calories-knob.knob-dragging .knob-handle {
+    background: var(--color-calories-hover);
+    transform: translate(-50%, -50%) scale(1.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Protein Knob */
+#protein-knob .knob-track {
+    background: conic-gradient(
+        from 0deg,
+        var(--color-protein) 0deg,
+        var(--color-protein) var(--knob-position, 0%),
+        var(--color-border) var(--knob-position, 0%),
+        var(--color-border) 360deg
+    );
+}
+
+#protein-knob .knob-handle {
+    background: var(--color-protein);
+}
+
+#protein-knob:hover .knob-handle {
+    background: var(--color-protein-hover);
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+#protein-knob.knob-dragging .knob-handle {
+    background: var(--color-protein-hover);
+    transform: translate(-50%, -50%) scale(1.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Carbs Knob */
+#carbs-knob .knob-track {
+    background: conic-gradient(
+        from 0deg,
+        var(--color-carbs) 0deg,
+        var(--color-carbs) var(--knob-position, 0%),
+        var(--color-border) var(--knob-position, 0%),
+        var(--color-border) 360deg
+    );
+}
+
+#carbs-knob .knob-handle {
+    background: var(--color-carbs);
+}
+
+#carbs-knob:hover .knob-handle {
+    background: var(--color-carbs-hover);
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+#carbs-knob.knob-dragging .knob-handle {
+    background: var(--color-carbs-hover);
+    transform: translate(-50%, -50%) scale(1.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Fat Knob */
+#fat-knob .knob-track {
+    background: conic-gradient(
+        from 0deg,
+        var(--color-fat) 0deg,
+        var(--color-fat) var(--knob-position, 0%),
+        var(--color-border) var(--knob-position, 0%),
+        var(--color-border) 360deg
+    );
+}
+
+#fat-knob .knob-handle {
+    background: var(--color-fat);
+}
+
+#fat-knob:hover .knob-handle {
+    background: var(--color-fat-hover);
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+#fat-knob.knob-dragging .knob-handle {
+    background: var(--color-fat-hover);
     transform: translate(-50%, -50%) scale(1.3);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -397,6 +573,7 @@
 .goals-commit-btn {
     background: var(--color-primary);
     color: var(--color-text);
+    transition: all var(--transition-base);
 }
 
 .goals-commit-btn:hover {
@@ -407,6 +584,20 @@
 
 .goals-commit-btn:active {
     transform: translateY(0);
+}
+
+/* Dimmed state for commit button */
+.goals-commit-btn.dimmed {
+    background: var(--color-disabled-bg);
+    color: var(--color-disabled-text);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.goals-commit-btn.dimmed:hover {
+    background: var(--color-disabled-bg);
+    transform: none;
+    box-shadow: none;
 }
 
 /* Responsive Knob */

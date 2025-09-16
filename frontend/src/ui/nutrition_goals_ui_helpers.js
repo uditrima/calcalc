@@ -18,20 +18,76 @@ export function setKnobValue(knob, value, label) {
     knob.setAttribute('data-value', value);
     
     // Update display
-    const formattedValue = formatNumber(value);
+    let formattedValue = formatNumber(value);
+    
+    // Add "g" suffix for macro nutrients
+    if (MACRO_LABELS.includes(label)) {
+        formattedValue = `${formattedValue}g`;
+    }
     
     // Update goal amount display
     const goalItem = knob.closest('.goal-item');
     if (goalItem) {
         const goalAmount = goalItem.querySelector('.goal-amount');
         if (goalAmount) {
-            goalAmount.textContent = formattedValue;
+            if (label === 'Kalorier') {
+                // Update calories amount spans
+                const amountNumber = goalAmount.querySelector('.amount-number');
+                if (amountNumber) {
+                    amountNumber.textContent = formattedValue;
+                }
+            } else {
+                // Update macro amount normally
+                goalAmount.textContent = formattedValue;
+            }
             goalAmount.setAttribute('data-original-value', formattedValue);
+        }
+        
+        // Update calories display for macros
+        if (MACRO_LABELS.includes(label)) {
+            const goalCalories = goalItem.querySelector('.goal-calories');
+            if (goalCalories) {
+                const caloriesPerGram = label === 'Fedt' ? 9 : 4;
+                const calories = value * caloriesPerGram;
+                
+                // Update the calories number span
+                const caloriesNumber = goalCalories.querySelector('.calories-number');
+                if (caloriesNumber) {
+                    caloriesNumber.textContent = calories;
+                }
+            }
         }
     }
     
     // Update the knob's internal currentValue
     knob._currentValue = value;
+    
+    // Activate commit button when changes are made
+    const commitBtn = document.querySelector('.goals-commit-btn');
+    if (commitBtn) {
+        commitBtn.classList.remove('dimmed');
+    }
+}
+
+// Helper function to calculate percentage color
+function calculatePercentageColor(percentage) {
+    // Clamp percentage between 0 and 100
+    const clampedPercentage = Math.max(0, Math.min(100, percentage));
+    
+    // Convert percentage to 0-1 range
+    const normalizedPercentage = clampedPercentage / 100;
+    
+    // Interpolate between orange (0%) and green (100%)
+    // Orange: rgb(171, 116, 72)
+    // Green: rgb(108, 152, 122)
+    const orangeR = 171, orangeG = 116, orangeB = 72;
+    const greenR = 108, greenG = 152, greenB = 122;
+    
+    const r = Math.round(orangeR + (greenR - orangeR) * normalizedPercentage);
+    const g = Math.round(orangeG + (greenG - orangeG) * normalizedPercentage);
+    const b = Math.round(orangeB + (greenB - orangeB) * normalizedPercentage);
+    
+    return `rgb(${r}, ${g}, ${b})`;
 }
 
 export function updateGoalPercentages(goals) {
@@ -56,7 +112,13 @@ export function updateGoalPercentages(goals) {
                 case 'Kulhydrater': percentage = percentages.carbs; break;
                 case 'Fedt': percentage = percentages.fat; break;
             }
+            
             goalPercentage.textContent = `${percentage}%`;
+            goalPercentage.setAttribute('data-percentage', percentage);
+            
+            // Set CSS custom property for color
+            const color = calculatePercentageColor(percentage);
+            goalPercentage.style.setProperty('--percentage-color', color);
         }
     });
 }
