@@ -63,6 +63,9 @@ export function AddFood(container) {
     const addFoodComponent = {
         setFood: (food) => {
             currentFood = food;
+            // Set currentServings to last_portion from database, default to 1.0 if not available
+            currentServings = food.last_portion || 1.0;
+            updateServingsDisplay();
             updateSelectedFood();
             updateSummary();
             updateDailyGoals();
