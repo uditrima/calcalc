@@ -363,8 +363,8 @@ export function AddFood(container) {
         const formattedGoals = goalsState.getFormattedGoals();
         const caloriesGoal = createGoalItem('Calories', '0%', formattedGoals?.calories.formatted || '1,500', 0);
         const carbsGoal = createGoalItem('Carbs', '0%', formattedGoals?.carbs.formatted || '1.6g', 0);
-        const proteinGoal = createGoalItem('Protein', '0%', formattedGoals?.fat.formatted || '1.6g', 0);
-        const fatGoal = createGoalItem('Fedt', '0%', formattedGoals?.protein.formatted || '1.6g', 0);
+        const proteinGoal = createGoalItem('Protein', '0%', formattedGoals?.protein.formatted || '1.6g', 0);
+        const fatGoal = createGoalItem('Fedt', '0%', formattedGoals?.fat.formatted || '1.6g', 0);
         
         goalsContainer.appendChild(caloriesGoal);
         goalsContainer.appendChild(carbsGoal);
