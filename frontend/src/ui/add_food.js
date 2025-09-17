@@ -148,6 +148,22 @@ export function AddFood(container) {
             const option = document.createElement('option');
             option.value = meal.value;
             option.textContent = meal.label;
+            
+            // Add theme colors based on meal type
+            const mealColorMap = {
+                'morgenmad': 'var(--meal-morgenmad)',
+                'frokost': 'var(--meal-frokost)',
+                'aftensmad': 'var(--meal-aftensmad)',
+                'mellemm1': 'var(--meal-mellemm1)',
+                'mellemm2': 'var(--meal-mellemm2)'
+            };
+            
+            const mealColor = mealColorMap[meal.value];
+            if (mealColor) {
+                option.style.color = mealColor;
+                option.style.backgroundColor = 'var(--color-bg)';
+            }
+            
             if (meal.value === currentMealType) {
                 option.selected = true;
             }
@@ -198,7 +214,7 @@ export function AddFood(container) {
         });
         servingsDisplay.addEventListener('blur', () => {
             const newValue = parseFloat(servingsDisplay.textContent);
-            if (!isNaN(newValue) && newValue > 0 && newValue <= 10) {
+            if (!isNaN(newValue) && newValue > 0) {
                 currentServings = newValue;
                 updateServingsDisplay();
                 updateSummary();
@@ -219,7 +235,7 @@ export function AddFood(container) {
         increaseBtn.className = 'portion-btn increase-btn';
         increaseBtn.innerHTML = '+';
         increaseBtn.addEventListener('click', () => {
-            currentServings = Math.min(10, currentServings + 0.1);
+            currentServings = currentServings + 0.1;
             updateServingsDisplay();
             updateSummary();
             updateDailyGoals();
