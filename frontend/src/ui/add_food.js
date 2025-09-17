@@ -451,15 +451,15 @@ export function AddFood(container) {
             carbsItem.querySelector('.macro-percentage').textContent = `${carbsPercent}%`;
             carbsItem.querySelector('.macro-amount').textContent = `${totalCarbs}g`;
             
-            // Update fat
-            const fatItem = macroItems[1];
-            fatItem.querySelector('.macro-percentage').textContent = `${fatPercent}%`;
-            fatItem.querySelector('.macro-amount').textContent = `${totalFat}g`;
-            
             // Update protein
-            const proteinItem = macroItems[2];
+            const proteinItem = macroItems[1];
             proteinItem.querySelector('.macro-percentage').textContent = `${proteinPercent}%`;
             proteinItem.querySelector('.macro-amount').textContent = `${totalProtein}g`;
+            
+            // Update fat
+            const fatItem = macroItems[2];
+            fatItem.querySelector('.macro-percentage').textContent = `${fatPercent}%`;
+            fatItem.querySelector('.macro-amount').textContent = `${totalFat}g`;
         }
     }
     
