@@ -268,12 +268,12 @@ export function AddFood(container) {
         macrosContainer.className = 'macros-container';
         
         const carbsMacro = createMacroItem('Carbs', '15%', '0.4g', 'carbs');
-        const fatMacro = createMacroItem('Fat', '22%', '0.3g', 'fat');
         const proteinMacro = createMacroItem('Protein', '63%', '1.6g', 'protein');
+        const fatMacro = createMacroItem('Fedt', '22%', '0.3g', 'fat');
         
         macrosContainer.appendChild(carbsMacro);
-        macrosContainer.appendChild(fatMacro);
         macrosContainer.appendChild(proteinMacro);
+        macrosContainer.appendChild(fatMacro);
         
         summaryContent.appendChild(gaugeContainer);
         summaryContent.appendChild(macrosContainer);
@@ -325,13 +325,13 @@ export function AddFood(container) {
         const formattedGoals = goalsState.getFormattedGoals();
         const caloriesGoal = createGoalItem('Calories', '0%', formattedGoals?.calories.formatted || '1,500', 0);
         const carbsGoal = createGoalItem('Carbs', '0%', formattedGoals?.carbs.formatted || '1.6g', 0);
-        const fatGoal = createGoalItem('Fat', '0%', formattedGoals?.fat.formatted || '1.6g', 0);
         const proteinGoal = createGoalItem('Protein', '0%', formattedGoals?.protein.formatted || '1.6g', 0);
+        const fatGoal = createGoalItem('Fedt', '0%', formattedGoals?.fat.formatted || '1.6g', 0);
         
         goalsContainer.appendChild(caloriesGoal);
         goalsContainer.appendChild(carbsGoal);
-        goalsContainer.appendChild(fatGoal);
         goalsContainer.appendChild(proteinGoal);
+        goalsContainer.appendChild(fatGoal);
         
         section.appendChild(goalsContainer);
         
