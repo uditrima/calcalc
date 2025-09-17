@@ -154,8 +154,8 @@ export function AddFood(container) {
                 'morgenmad': 'var(--meal-morgenmad)',
                 'frokost': 'var(--meal-frokost)',
                 'aftensmad': 'var(--meal-aftensmad)',
-                'mellemm1': 'var(--meal-mellemm1)',
-                'mellemm2': 'var(--meal-mellemm2)'
+                'mellemmaaltid1': 'var(--meal-mellemm1)',
+                'mellemmaaltid2': 'var(--meal-mellemm2)'
             };
             
             const mealColor = mealColorMap[meal.value];
@@ -172,14 +172,33 @@ export function AddFood(container) {
         
         mealDropdown.addEventListener('change', (e) => {
             currentMealType = e.target.value;
+            updateMealDropdownColor(mealDropdown, currentMealType);
         });
         
         mealSelector.appendChild(mealDropdown);
+        
+        // Set initial color
+        updateMealDropdownColor(mealDropdown, currentMealType);
         
         section.appendChild(mealLabel);
         section.appendChild(mealSelector);
         
         return section;
+    }
+    
+    function updateMealDropdownColor(dropdown, mealType) {
+        const mealColorMap = {
+            'morgenmad': 'var(--meal-morgenmad)',
+            'frokost': 'var(--meal-frokost)',
+            'aftensmad': 'var(--meal-aftensmad)',
+            'mellemmaaltid1': 'var(--meal-mellemm1)',
+            'mellemmaaltid2': 'var(--meal-mellemm2)'
+        };
+        
+        const mealColor = mealColorMap[mealType];
+        if (mealColor) {
+            dropdown.style.color = mealColor;
+        }
     }
     
     function createPortionSection() {
