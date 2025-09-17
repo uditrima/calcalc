@@ -49,6 +49,20 @@ export function Dashboard(container) {
         console.log('Dashboard initial update completed');
     }, 0);
     
+    // Listen for goals changes to update dashboard automatically
+    const handleGoalsChange = () => {
+        console.log('Goals changed, updating dashboard');
+        updateDashboard();
+    };
+    
+    // Subscribe to goals changes in AppState
+    AppState.subscribe('goals', handleGoalsChange);
+    
+    // Return cleanup function
+    return () => {
+        AppState.unsubscribe('goals', handleGoalsChange);
+    };
+    
     function updateDashboard() {
         // Dashboard should always show today's data, not the selected date from diary
         const today = new Date().toISOString().split('T')[0];
@@ -331,8 +345,6 @@ export function Dashboard(container) {
         // Update on resize
         window.addEventListener('resize', updateScrollbar);
     }
-    
-    return dashboard;
 }
 
 function createCaloriesGauge() {
