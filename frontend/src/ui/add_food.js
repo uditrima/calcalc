@@ -1,7 +1,6 @@
 // Add Food UI component
 import { AppState } from '../state/app_state.js';
 import { getMealOptions } from '../data/meal_types.js';
-import { goalsState } from '../state/goals_state.js';
 import { PortionConverter } from '../utils/portion_converter.js';
 
 export function AddFood(container) {
@@ -360,7 +359,7 @@ export function AddFood(container) {
         goalsContainer.className = 'goals-container';
         
         // Get goals data or use defaults
-        const formattedGoals = goalsState.getFormattedGoals();
+        const formattedGoals = AppState.getFormattedGoals();
         const caloriesGoal = createGoalItem('Calories', '0%', formattedGoals?.calories.formatted || '1,500', 0);
         const carbsGoal = createGoalItem('Carbs', '0%', formattedGoals?.carbs.formatted || '1.6g', 0);
         const proteinGoal = createGoalItem('Protein', '0%', formattedGoals?.protein.formatted || '1.6g', 0);
@@ -505,7 +504,7 @@ export function AddFood(container) {
         if (!currentFood) return;
         
         // Get goals data
-        const formattedGoals = goalsState.getFormattedGoals();
+        const formattedGoals = AppState.getFormattedGoals();
         if (!formattedGoals) return;
         
         // Convert currentServings (portions) to grams for calculation

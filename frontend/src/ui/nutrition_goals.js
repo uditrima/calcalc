@@ -1,5 +1,5 @@
 // Nutrition Goals UI component
-import { goalsState } from '../state/goals_state.js';
+import { AppState } from '../state/app_state.js';
 import { createLoadingSection, createErrorSection, createGoalsSection } from './nutrition_goals_view.js';
 import { commitChanges } from './nutrition_goals_controllers.js';
 
@@ -7,23 +7,34 @@ export function NutritionGoals(container) {
     // Clear container
     container.innerHTML = '';
     
-    // Expose goalsState globally for access from other modules
-    window.goalsState = goalsState;
+    // Create a mock goalsState object for compatibility
+    const mockGoalsState = {
+        isCommitButtonDimmed: () => true,
+        setCommitButtonDimmed: (dimmed) => {
+            // This will be handled by the commit button itself
+        }
+    };
     
-    // Subscribe to goals state changes
-    const unsubscribe = goalsState.subscribe((goals, isLoading, error) => {
-        render(container, goals, isLoading, error);
-    });
+    // Expose mock goalsState globally for access from other modules
+    window.goalsState = mockGoalsState;
+    
+    // Subscribe to AppState goals changes
+    const handleGoalsChange = () => {
+        const goals = AppState.getGoals();
+        render(container, goals, false, null);
+    };
+    
+    AppState.subscribe('goals', handleGoalsChange);
     
     // Load goals initially
-    goalsState.loadGoals();
+    AppState.loadGoals();
     
     // Add event listeners for custom events
-    const handleRetry = () => goalsState.loadGoals();
-    const handleReload = () => goalsState.loadGoals();
+    const handleRetry = () => AppState.loadGoals();
+    const handleReload = () => AppState.loadGoals();
     const handleCommit = () => commitChanges();
-    const handleActivateCommitButton = () => goalsState.setCommitButtonDimmed(false);
-    const handleDimCommitButton = () => goalsState.setCommitButtonDimmed(true);
+    const handleActivateCommitButton = () => mockGoalsState.setCommitButtonDimmed(false);
+    const handleDimCommitButton = () => mockGoalsState.setCommitButtonDimmed(true);
     
     window.addEventListener('retryGoals', handleRetry);
     window.addEventListener('reloadGoals', handleReload);
@@ -33,7 +44,7 @@ export function NutritionGoals(container) {
     
     // Return cleanup function
     return () => {
-        unsubscribe();
+        AppState.unsubscribe('goals', handleGoalsChange);
         window.removeEventListener('retryGoals', handleRetry);
         window.removeEventListener('reloadGoals', handleReload);
         window.removeEventListener('commitGoals', handleCommit);
@@ -56,7 +67,7 @@ function render(container, goals, isLoading, error) {
         container.appendChild(errorSection);
     } else if (goals) {
         console.log('Showing goals section with goals:', goals);
-        const formattedGoals = goalsState.getFormattedGoals();
+        const formattedGoals = AppState.getFormattedGoals();
         console.log('Formatted goals:', formattedGoals);
         const goalsSection = createGoalsSection(formattedGoals);
         container.appendChild(goalsSection);

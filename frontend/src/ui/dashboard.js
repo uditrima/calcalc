@@ -1,6 +1,5 @@
 // Dashboard UI component
 import { AppState } from '../state/app_state.js';
-import { goalsState } from '../state/goals_state.js';
 
 export function Dashboard(container) {
     console.log('Dashboard component called with container:', container);
@@ -485,7 +484,7 @@ function createCaloriesGauge() {
     statsContainer.className = 'calories-stats';
     
     // Get goals data or use default
-    const formattedGoals = goalsState.getFormattedGoals();
+    const formattedGoals = AppState.getFormattedGoals();
     const baseGoal = createStatItem('🏁', 'Base Mål', formattedGoals?.calories.formatted || '1,500');
     const food = createStatItem('🍴', 'Mad', '1,712');
     const exercise = createStatItem('🔥', 'Motion', '500');

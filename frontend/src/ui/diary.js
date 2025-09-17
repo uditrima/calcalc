@@ -1,6 +1,5 @@
 // Diary UI component
 import { AppState } from '../state/app_state.js';
-import { goalsState } from '../state/goals_state.js';
 import { EXTENDED_MEAL_TYPES, getMealDisplayName } from '../data/meal_types.js';
 import { PortionConverter } from '../utils/portion_converter.js';
 
@@ -108,7 +107,7 @@ export function Diary(container) {
     const goalCalories = document.createElement('div');
     goalCalories.className = 'summary-number goal-calories';
     // Get goals data or use default
-    const formattedGoals = goalsState.getFormattedGoals();
+    const formattedGoals = AppState.getFormattedGoals();
     goalCalories.textContent = formattedGoals?.calories.formatted || '1,500';
     const goalLabel = document.createElement('div');
     goalLabel.className = 'summary-label';
@@ -164,7 +163,7 @@ export function Diary(container) {
     const remainingCalories = document.createElement('div');
     remainingCalories.className = 'summary-number remaining-calories';
     // Get goals data or use default
-    const formattedGoalsRemaining = goalsState.getFormattedGoals();
+    const formattedGoalsRemaining = AppState.getFormattedGoals();
     remainingCalories.textContent = formattedGoalsRemaining?.calories.formatted || '1,500';
     const remainingLabel = document.createElement('div');
     remainingLabel.className = 'summary-label';

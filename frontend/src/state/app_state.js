@@ -180,5 +180,88 @@ export const AppState = {
     
     getGoals() {
         return { ...this.state.goals };
+    },
+    
+    // Get formatted goals for display
+    getFormattedGoals() {
+        if (!this.state.goals || Object.keys(this.state.goals).length === 0) return null;
+
+        const MACRO_CALORIES_PER_GRAM = {
+            protein: 4,
+            carbs: 4,
+            fat: 9
+        };
+
+        // Keep original values as floats, only round for display formatting
+        const calories = this.state.goals.daily_calories;
+        const protein = this.state.goals.protein_target;
+        const carbs = this.state.goals.carbs_target;
+        const fat = this.state.goals.fat_target;
+
+        // Calculate macro percentages using total calories
+        const proteinCalories = protein * MACRO_CALORIES_PER_GRAM.protein;
+        const carbsCalories = carbs * MACRO_CALORIES_PER_GRAM.carbs;
+        const fatCalories = fat * MACRO_CALORIES_PER_GRAM.fat;
+
+        const proteinPercentage = Math.round((proteinCalories / calories) * 100);
+        const carbsPercentage = Math.round((carbsCalories / calories) * 100);
+        const fatPercentage = Math.round((fatCalories / calories) * 100);
+
+        return {
+            calories: {
+                value: calories,
+                formatted: calories % 1 === 0 ? calories.toLocaleString() : calories.toFixed(1)
+            },
+            protein: {
+                value: protein,
+                formatted: protein % 1 === 0 ? `${protein}g` : `${protein.toFixed(1)}g`,
+                percentage: `${proteinPercentage}%`
+            },
+            carbs: {
+                value: carbs,
+                formatted: carbs % 1 === 0 ? `${carbs}g` : `${carbs.toFixed(1)}g`,
+                percentage: `${carbsPercentage}%`
+            },
+            fat: {
+                value: fat,
+                formatted: fat % 1 === 0 ? `${fat}g` : `${fat.toFixed(1)}g`,
+                percentage: `${fatPercentage}%`
+            }
+        };
+    },
+    
+    // Calculate macros from calories
+    calculateMacrosFromCalories(calories, currentProtein, currentCarbs, currentFat) {
+        const MACRO_CALORIES_PER_GRAM = {
+            protein: 4,
+            carbs: 4,
+            fat: 9
+        };
+        
+        // Calculate current macro calories
+        const currentProteinCalories = currentProtein * MACRO_CALORIES_PER_GRAM.protein;
+        const currentCarbsCalories = currentCarbs * MACRO_CALORIES_PER_GRAM.carbs;
+        const currentFatCalories = currentFat * MACRO_CALORIES_PER_GRAM.fat;
+        const totalCurrentMacroCalories = currentProteinCalories + currentCarbsCalories + currentFatCalories;
+
+        // If no current macros, use default distribution
+        if (totalCurrentMacroCalories === 0) {
+            return {
+                protein: calories * 0.25 / MACRO_CALORIES_PER_GRAM.protein, // 25% protein
+                carbs: calories * 0.50 / MACRO_CALORIES_PER_GRAM.carbs,      // 50% carbs
+                fat: calories * 0.25 / MACRO_CALORIES_PER_GRAM.fat           // 25% fat
+            };
+        }
+
+        // Calculate new macros maintaining current proportions
+        const proteinRatio = currentProteinCalories / totalCurrentMacroCalories;
+        const carbsRatio = currentCarbsCalories / totalCurrentMacroCalories;
+        const fatRatio = currentFatCalories / totalCurrentMacroCalories;
+
+        return {
+            protein: (calories * proteinRatio) / MACRO_CALORIES_PER_GRAM.protein,
+            carbs: (calories * carbsRatio) / MACRO_CALORIES_PER_GRAM.carbs,
+            fat: (calories * fatRatio) / MACRO_CALORIES_PER_GRAM.fat
+        };
     }
 };

@@ -1,5 +1,5 @@
 // Nutrition Goals Controllers
-import { goalsState } from '../state/goals_state.js';
+import { AppState } from '../state/app_state.js';
 import { LABEL_TO_FIELD_MAP, MACRO_LABELS } from './nutrition_goals_constants.js';
 import { parseNumeric } from './nutrition_goals_formatters.js';
 import { calculateTotalCaloriesFromMacros, calculateMacroPercentages } from './nutrition_goals_calculations.js';
@@ -55,10 +55,10 @@ function updateCaloriesKnob() {
 }
 
 function updateMacroKnobs(caloriesValue) {
-    const currentGoals = goalsState.getGoals();
+    const currentGoals = AppState.getGoals();
     if (!currentGoals) return;
     
-    const newMacros = goalsState.calculateMacrosFromCalories(
+    const newMacros = calculateMacrosFromCalories(
         caloriesValue,
         currentGoals.protein_target,
         currentGoals.carbs_target,
@@ -90,11 +90,12 @@ export function commitChanges() {
         }
     });
     
-    goalsState.updateGoals(currentValues);
+    // Update goals via AppState
+    AppState.setGoals(currentValues);
 }
 
 export function updateGoalValue(label, newValue) {
-    const currentGoals = goalsState.getGoals();
+    const currentGoals = AppState.getGoals();
     if (!currentGoals) return;
     
     const numericValue = parseNumeric(newValue);
@@ -120,7 +121,7 @@ export function updateGoalValue(label, newValue) {
         updatedGoals.daily_calories = newCalories;
         updateCaloriesKnob();
     } else if (fieldName === 'daily_calories') {
-        const newMacros = goalsState.calculateMacrosFromCalories(
+        const newMacros = AppState.calculateMacrosFromCalories(
             numericValue,
             currentGoals.protein_target,
             currentGoals.carbs_target,
@@ -134,5 +135,5 @@ export function updateGoalValue(label, newValue) {
         updateMacroKnobs(numericValue);
     }
     
-    goalsState.updateGoals(updatedGoals);
+    AppState.setGoals(updatedGoals);
 }

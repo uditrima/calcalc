@@ -113,9 +113,9 @@ class GoalsState {
 
         // Keep original values as floats, only round for display formatting
         const calories = this.goals.daily_calories;
-        const protein = this.goals.fat_target;  // Database has protein data in fat_target
+        const protein = this.goals.protein_target;
         const carbs = this.goals.carbs_target;
-        const fat = this.goals.protein_target;  // Database has fat data in protein_target
+        const fat = this.goals.fat_target;
 
         // Calculate macro percentages using total calories
         const proteinCalories = protein * MACRO_CALORIES_PER_GRAM.protein;
