@@ -1,6 +1,7 @@
 // Goals State Management
 import { ApiClient } from '../data/api.js';
 import { MACRO_CALORIES_PER_GRAM } from '../ui/nutrition_goals_constants.js';
+import { AppState } from './app_state.js';
 
 class GoalsState {
     constructor() {
@@ -42,27 +43,38 @@ class GoalsState {
                 console.log('Setting goals from API:', response.data);
                 this.goals = response.data;
                 this.error = null;
+                
+                // Also update AppState to keep dashboard in sync
+                AppState.setGoals(response.data);
             } else {
                 console.log('API response invalid, using fallback goals');
                 // Fallback to default goals if API fails
-                this.goals = {
+                const fallbackGoals = {
                     daily_calories: 2000,
                     protein_target: 150,
                     carbs_target: 250,
                     fat_target: 70
                 };
+                this.goals = fallbackGoals;
                 this.error = null;
+                
+                // Also update AppState to keep dashboard in sync
+                AppState.setGoals(fallbackGoals);
             }
         } catch (error) {
             console.log('API error, using fallback goals:', error);
             // Fallback to default goals if API fails
-            this.goals = {
+            const fallbackGoals = {
                 daily_calories: 2000,
                 protein_target: 150,
                 carbs_target: 250,
                 fat_target: 70
             };
+            this.goals = fallbackGoals;
             this.error = null;
+            
+            // Also update AppState to keep dashboard in sync
+            AppState.setGoals(fallbackGoals);
         } finally {
             this.isLoading = false;
             console.log('Goals loading complete, notifying listeners');
@@ -223,6 +235,9 @@ class GoalsState {
             if (response.success && response.data) {
                 this.goals = response.data;
                 this.error = null;
+                
+                // Also update AppState to keep dashboard in sync
+                AppState.setGoals(response.data);
             } else {
                 this.error = 'Kunne ikke opdatere mål';
             }
