@@ -285,27 +285,33 @@ function addKnobInteractions(knob, label) {
             formattedValue = `${formattedValue}g`;
         }
         
-        // Update the goal amount display (if it exists)
+        // Update the goal amount display (if it exists) - ONLY in goals-section
         const goalItem = knob.closest('.goal-item');
         if (goalItem) {
-            const goalAmount = goalItem.querySelector('.goal-amount');
-            if (goalAmount) {
-                console.log(`Updating goal-amount for ${label}: ${formattedValue}`);
-                
-                if (label === 'Kalorier') {
-                    // Update calories amount spans
-                    const amountNumber = goalAmount.querySelector('.amount-number');
-                    if (amountNumber) {
-                        amountNumber.textContent = formattedValue;
+            // Only update if this goal-item is within a goals-section (not add-food-section)
+            const goalsSection = goalItem.closest('.goals-section');
+            if (goalsSection) {
+                const goalAmount = goalItem.querySelector('.goal-amount');
+                if (goalAmount) {
+                    console.log(`Updating goal-amount for ${label}: ${formattedValue}`);
+                    
+                    if (label === 'Kalorier') {
+                        // Update calories amount spans
+                        const amountNumber = goalAmount.querySelector('.amount-number');
+                        if (amountNumber) {
+                            amountNumber.textContent = formattedValue;
+                        }
+                    } else {
+                        // Update macro amount normally
+                        goalAmount.textContent = formattedValue;
                     }
+                    
+                    goalAmount.setAttribute('data-original-value', formattedValue);
                 } else {
-                    // Update macro amount normally
-                    goalAmount.textContent = formattedValue;
+                    console.log(`No goal-amount found for ${label}`);
                 }
-                
-                goalAmount.setAttribute('data-original-value', formattedValue);
             } else {
-                console.log(`No goal-amount found for ${label}`);
+                console.log(`Goal-item for ${label} is not in goals-section, skipping update`);
             }
         } else {
             console.log(`No goal-item found for ${label}`);

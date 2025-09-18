@@ -25,22 +25,26 @@ export function setKnobValue(knob, value, label) {
         formattedValue = `${formattedValue}g`;
     }
     
-    // Update goal amount display
+    // Update goal amount display - ONLY in goals-section
     const goalItem = knob.closest('.goal-item');
     if (goalItem) {
-        const goalAmount = goalItem.querySelector('.goal-amount');
-        if (goalAmount) {
-            if (label === 'Kalorier') {
-                // Update calories amount spans
-                const amountNumber = goalAmount.querySelector('.amount-number');
-                if (amountNumber) {
-                    amountNumber.textContent = formattedValue;
+        // Only update if this goal-item is within a goals-section (not add-food-section)
+        const goalsSection = goalItem.closest('.goals-section');
+        if (goalsSection) {
+            const goalAmount = goalItem.querySelector('.goal-amount');
+            if (goalAmount) {
+                if (label === 'Kalorier') {
+                    // Update calories amount spans
+                    const amountNumber = goalAmount.querySelector('.amount-number');
+                    if (amountNumber) {
+                        amountNumber.textContent = formattedValue;
+                    }
+                } else {
+                    // Update macro amount normally
+                    goalAmount.textContent = formattedValue;
                 }
-            } else {
-                // Update macro amount normally
-                goalAmount.textContent = formattedValue;
+                goalAmount.setAttribute('data-original-value', formattedValue);
             }
-            goalAmount.setAttribute('data-original-value', formattedValue);
         }
         
         // Update calories display for macros
