@@ -43,7 +43,7 @@ export function AddFood(container) {
     // 6. Daily Goal Summary Section
     const dailyGoalSection = createDailyGoalSection();
     addFoodSection.appendChild(dailyGoalSection);
-    
+        
     // 7. Fold Out Section (placeholder)
     const foldOutSection = createFoldOutSection();
     addFoodSection.appendChild(foldOutSection);
@@ -363,6 +363,10 @@ export function AddFood(container) {
         const caloriesGoal = createGoalItem('Calories', '0%', formattedGoals?.calories.formatted || '1,500', 0);
         const carbsGoal = createGoalItem('Carbs', '0%', formattedGoals?.carbs.formatted || '1.6g', 0);
         const proteinGoal = createGoalItem('Protein', '0%', formattedGoals?.protein.formatted || '1.6g', 0);
+        console.log('proteinGoal:', proteinGoal);
+        console.log('proteinGoal.textContent:', proteinGoal.textContent);
+        console.log('proteinGoal.outerHTML:', proteinGoal.outerHTML);
+        console.log('proteinGoal.querySelector:', proteinGoal.querySelector('.goal-amount'));
         const fatGoal = createGoalItem('Fedt', '0%', formattedGoals?.fat.formatted || '1.6g', 0);
         
         goalsContainer.appendChild(caloriesGoal);
@@ -371,7 +375,7 @@ export function AddFood(container) {
         goalsContainer.appendChild(fatGoal);
         
         section.appendChild(goalsContainer);
-        
+
         return section;
     }
     
@@ -522,6 +526,12 @@ export function AddFood(container) {
         const fatPercentage = Math.round((parseFloat(totalFat) / formattedGoals.fat.value) * 100);
         const proteinPercentage = Math.round((parseFloat(totalProtein) / formattedGoals.protein.value) * 100);
         
+
+        console.log('formattedGoals.calories.formatted:', formattedGoals.calories.formatted);
+        console.log('formattedGoals.carbs.formatted:', formattedGoals.carbs.formatted);
+        console.log('formattedGoals.fat.formatted:', formattedGoals.fat.formatted);
+        console.log('formattedGoals.protein.formatted:', formattedGoals.protein.formatted);
+
         // Update goal items
         const goalItems = addFoodSection.querySelectorAll('.goal-item');
         if (goalItems.length >= 4) {
@@ -535,15 +545,15 @@ export function AddFood(container) {
             carbsItem.querySelector('.goal-percentage').textContent = `${carbsPercentage}%`;
             carbsItem.querySelector('.goal-amount').textContent = formattedGoals.carbs.formatted;
             
-            // Update fat
-            const fatItem = goalItems[2];
-            fatItem.querySelector('.goal-percentage').textContent = `${fatPercentage}%`;
-            fatItem.querySelector('.goal-amount').textContent = formattedGoals.fat.formatted;
-            
-            // Update protein
-            const proteinItem = goalItems[3];
+            // Update protein (index 2)
+            const proteinItem = goalItems[2];
             proteinItem.querySelector('.goal-percentage').textContent = `${proteinPercentage}%`;
             proteinItem.querySelector('.goal-amount').textContent = formattedGoals.protein.formatted;
+            
+            // Update fat (index 3)
+            const fatItem = goalItems[3];
+            fatItem.querySelector('.goal-percentage').textContent = `${fatPercentage}%`;
+            fatItem.querySelector('.goal-amount').textContent = formattedGoals.fat.formatted;
         }
     }
     
