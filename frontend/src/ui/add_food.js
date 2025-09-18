@@ -289,11 +289,11 @@ export function AddFood(container) {
         gauge.innerHTML = `
             <svg width="120" height="120" viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-bg-secondary)" stroke-width="20"></circle>
-                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-gauge-remaining)" stroke-width="20" 
+                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-calories)" stroke-width="20" 
                         stroke-dasharray="502.4" stroke-dashoffset="0" stroke-linecap="round" 
                         transform="rotate(-90 100 100)" class="calories-remaining"></circle>
                 <g text-anchor="middle">
-                    <text x="100" y="90" font-size="20" font-weight="bold" fill="var(--color-text)" class="calories-text">0</text>
+                    <text x="100" y="90" font-size="20" font-weight="bold" fill="var(--color-calories)" class="calories-text">0</text>
                     <text x="100" y="115" font-size="12" fill="var(--color-text-muted)">Cal</text>
                 </g>
             </svg>
