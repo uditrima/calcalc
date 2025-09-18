@@ -539,25 +539,33 @@ export function AddFood(container) {
             const caloriesItem = goalItems[0];
             caloriesItem.querySelector('.goal-percentage').textContent = `${caloriesPercentage}%`;
             caloriesItem.querySelector('.goal-amount').textContent = formattedGoals.calories.formatted;
-            caloriesItem.querySelector('.progress-fill').style.width = `${Math.min(caloriesPercentage, 100)}%`;
+            const caloriesProgressFill = caloriesItem.querySelector('.progress-fill');
+            caloriesProgressFill.style.width = `${Math.min(caloriesPercentage, 100)}%`;
+            caloriesProgressFill.style.background = 'var(--color-calories)';
             
             // Update carbs
             const carbsItem = goalItems[1];
             carbsItem.querySelector('.goal-percentage').textContent = `${carbsPercentage}%`;
             carbsItem.querySelector('.goal-amount').textContent = formattedGoals.carbs.formatted;
-            carbsItem.querySelector('.progress-fill').style.width = `${Math.min(carbsPercentage, 100)}%`;
+            const carbsProgressFill = carbsItem.querySelector('.progress-fill');
+            carbsProgressFill.style.width = `${Math.min(carbsPercentage, 100)}%`;
+            carbsProgressFill.style.background = 'var(--color-carbs)';
             
             // Update protein (index 2)
             const proteinItem = goalItems[2];
             proteinItem.querySelector('.goal-percentage').textContent = `${proteinPercentage}%`;
             proteinItem.querySelector('.goal-amount').textContent = formattedGoals.protein.formatted;
-            proteinItem.querySelector('.progress-fill').style.width = `${Math.min(proteinPercentage, 100)}%`;
+            const proteinProgressFill = proteinItem.querySelector('.progress-fill');
+            proteinProgressFill.style.width = `${Math.min(proteinPercentage, 100)}%`;
+            proteinProgressFill.style.background = 'var(--color-protein)';
             
             // Update fat (index 3)
             const fatItem = goalItems[3];
             fatItem.querySelector('.goal-percentage').textContent = `${fatPercentage}%`;
             fatItem.querySelector('.goal-amount').textContent = formattedGoals.fat.formatted;
-            fatItem.querySelector('.progress-fill').style.width = `${Math.min(fatPercentage, 100)}%`;
+            const fatProgressFill = fatItem.querySelector('.progress-fill');
+            fatProgressFill.style.width = `${Math.min(fatPercentage, 100)}%`;
+            fatProgressFill.style.background = 'var(--color-fat)';
         }
     }
     
