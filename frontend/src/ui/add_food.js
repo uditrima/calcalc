@@ -756,9 +756,22 @@ function createCustomScrollbar(container) {
         isDragging = false;
     });
     
-    // Initial update
-    updateScrollbar();
+    // Initial update - delay to ensure content is rendered
+    setTimeout(() => {
+        updateScrollbar();
+    }, 100);
     
     // Update on resize
     window.addEventListener('resize', updateScrollbar);
+    
+    // Update when content changes
+    const observer = new MutationObserver(() => {
+        setTimeout(updateScrollbar, 50);
+    });
+    observer.observe(container, { 
+        childList: true, 
+        subtree: true, 
+        attributes: true,
+        attributeFilter: ['style', 'class']
+    });
 }
