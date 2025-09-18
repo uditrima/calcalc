@@ -1,5 +1,6 @@
 // Application state management
 import { ApiClient } from '../data/api.js';
+import { MACRO_CALORIES_PER_GRAM } from '../ui/nutrition_goals_constants.js';
 
 // Initialize API client
 const api = new ApiClient('http://localhost:5000/api');
@@ -150,6 +151,7 @@ export const AppState = {
             const response = await api.getGoals();
             if (response.success) {
                 this.setGoals(response.data);
+                console.log('Goals loaded:', response.data);
             }
         } catch (error) {
             console.error('Failed to load goals:', error);
@@ -185,12 +187,6 @@ export const AppState = {
     // Get formatted goals for display
     getFormattedGoals() {
         if (!this.state.goals || Object.keys(this.state.goals).length === 0) return null;
-
-        const MACRO_CALORIES_PER_GRAM = {
-            protein: 4,
-            carbs: 4,
-            fat: 9
-        };
 
         // Keep original values as floats, only round for display formatting
         const calories = this.state.goals.daily_calories;
@@ -232,11 +228,6 @@ export const AppState = {
     
     // Calculate macros from calories
     calculateMacrosFromCalories(calories, currentProtein, currentCarbs, currentFat) {
-        const MACRO_CALORIES_PER_GRAM = {
-            protein: 4,
-            carbs: 4,
-            fat: 9
-        };
         
         // Calculate current macro calories
         const currentProteinCalories = currentProtein * MACRO_CALORIES_PER_GRAM.protein;
