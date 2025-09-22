@@ -496,7 +496,17 @@
     background: var(--color-surface);
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
-    transition: all var(--transition-base);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    touch-action: pan-x;
+    cursor: grab;
+    will-change: transform, background-color;
+}
+
+.food-item:active {
+    cursor: grabbing;
 }
 
 .food-item:hover {
@@ -504,17 +514,30 @@
     border-color: var(--color-border-hover);
 }
 
+.food-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    min-width: 0;
+}
+
 .food-name {
     color: var(--color-text);
     font-size: var(--font-size-base);
     font-weight: 500;
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: var(--space-sm);
 }
 
 .food-portion {
     color: var(--color-text-muted);
     font-size: var(--font-size-sm);
     margin: 0 var(--space-sm);
+    white-space: nowrap;
 }
 
 .food-calories {
@@ -523,6 +546,52 @@
     font-weight: 600;
     min-width: 60px;
     text-align: right;
+    white-space: nowrap;
+}
+
+/* Food Item Actions */
+.food-item-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-left: var(--space-md);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.delete-btn {
+    background: var(--color-danger, #e74c3c);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+}
+
+.delete-btn:hover {
+    background: var(--color-danger-hover, #c0392b);
+    transform: scale(1.05);
+}
+
+.delete-btn:active {
+    transform: scale(0.95);
+}
+
+/* Swipe Animation */
+.food-item.swiping {
+    transition: none;
+}
+
+.food-item.swipe-complete {
+    transform: translateX(-100%);
+    opacity: 0;
 }
 
 

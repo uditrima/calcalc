@@ -1,7 +1,11 @@
 // Diary UI component
 import { AppState } from '../state/app_state.js';
+import { ApiClient } from '../data/api.js';
 import { EXTENDED_MEAL_TYPES, getMealDisplayName } from '../data/meal_types.js';
 import { PortionConverter } from '../utils/portion_converter.js';
+
+// Initialize API client
+const api = new ApiClient('http://localhost:5000/api');
 
 export function Diary(container) {
     if (!container) {
@@ -210,6 +214,115 @@ export function Diary(container) {
     // Initial update
     updateMealSections();
     
+    // Force complete refresh on load to ensure clean state
+    setTimeout(async () => {
+        console.log('=== INITIAL STATE REFRESH ===');
+        const currentDate = new Date();
+        const dateString = currentDate.toISOString().split('T')[0];
+        
+        // Clear any existing state and reload from backend
+        AppState.setDiary({ date: dateString, entries: [] });
+        await AppState.loadDiary(dateString);
+        
+        console.log('Initial state loaded:', AppState.getState().diary);
+        
+        // Check for any UI elements that don't match current state
+        const currentState = AppState.getState();
+        const stateEntryIds = new Set(currentState.diary.entries.map(e => e.id));
+        const uiElements = document.querySelectorAll('[data-entry-id]');
+        
+        uiElements.forEach(element => {
+            const elementEntryId = parseInt(element.getAttribute('data-entry-id'));
+            if (!stateEntryIds.has(elementEntryId)) {
+                console.log('Removing UI element with non-existent entry ID:', elementEntryId);
+                element.remove();
+            }
+        });
+    }, 500);
+    
+    // Force refresh diary data to sync with backend
+    async function forceRefreshDiary() {
+        try {
+            const currentDate = new Date();
+            const dateString = currentDate.toISOString().split('T')[0];
+            console.log('Force refreshing diary data for:', dateString);
+            await AppState.loadDiary(dateString);
+        } catch (error) {
+            console.error('Error force refreshing diary:', error);
+        }
+    }
+    
+    // Expose force refresh function for external use
+    diary.forceRefresh = forceRefreshDiary;
+    
+    // Check for state mismatches and sync with backend
+    async function checkAndSyncState() {
+        try {
+            const currentDate = new Date();
+            const dateString = currentDate.toISOString().split('T')[0];
+            
+            // Get current frontend state
+            const frontendState = AppState.getState();
+            const frontendEntries = frontendState.diary.entries || [];
+            
+            // Get backend data directly
+            const backendEntries = await api.getDiaryEntries(dateString);
+            
+            // Check if there are mismatches
+            const frontendIds = new Set(frontendEntries.map(e => e.id));
+            const backendIds = new Set(backendEntries.map(e => e.id));
+            
+            const hasMismatch = frontendIds.size !== backendIds.size || 
+                               [...frontendIds].some(id => !backendIds.has(id));
+            
+            if (hasMismatch) {
+                console.log('State mismatch detected, syncing with backend');
+                console.log('Frontend IDs:', [...frontendIds]);
+                console.log('Backend IDs:', [...backendIds]);
+                
+                // Clear current state and reload from backend
+                AppState.setDiary({ date: dateString, entries: [] });
+                await AppState.loadDiary(dateString);
+                
+                console.log('State synced with backend');
+            }
+        } catch (error) {
+            console.error('Error checking state sync:', error);
+        }
+    }
+    
+    // Expose sync function
+    diary.checkAndSyncState = checkAndSyncState;
+    
+    // Force complete UI cleanup and state sync
+    async function forceCompleteSync() {
+        try {
+            console.log('=== FORCE COMPLETE SYNC ===');
+            const currentDate = new Date();
+            const dateString = currentDate.toISOString().split('T')[0];
+            
+            // Clear all UI elements with data-entry-id
+            const uiElements = document.querySelectorAll('[data-entry-id]');
+            uiElements.forEach(element => {
+                if (element._cleanupSwipe) {
+                    element._cleanupSwipe();
+                }
+                element.remove();
+            });
+            
+            // Clear state and reload from backend
+            AppState.setDiary({ date: dateString, entries: [] });
+            await AppState.loadDiary(dateString);
+            
+            console.log('Complete sync finished, new state:', AppState.getState().diary);
+        } catch (error) {
+            console.error('Error in force complete sync:', error);
+        }
+    }
+    
+    // Expose force complete sync function
+    diary.forceCompleteSync = forceCompleteSync;
+    
     function updateMealSections(state = null) {
         const currentState = state || AppState.getState();
         const entries = currentState.diary.entries || [];
@@ -244,6 +357,9 @@ export function Diary(container) {
         
         // Update summary section
         updateSummarySection(currentState);
+        
+        // Update meal section content with actual entries
+        updateMealSectionsFromEntries(currentState);
     }
     
     function updateSummarySection(state) {
@@ -334,7 +450,7 @@ export function Diary(container) {
         updateSummaryDetails(state, dateString);
         
         // Update meal sections with diary entries for selected date
-        updateMealSections(state);
+        updateMealSectionsFromEntries(state, dateString);
         
         // Update exercise section with exercises for selected date
         updateExerciseSection(state);
@@ -355,12 +471,15 @@ export function Diary(container) {
         });
     }
     
-    function updateMealSections(state, dateString) {
+    function updateMealSectionsFromEntries(state, dateString) {
         if (!state) {
-            console.log('State is undefined in updateMealSections');
+            console.log('State is undefined in updateMealSectionsFromEntries');
             return;
         }
         const diaryEntries = (state.diary && state.diary.entries) || [];
+        
+        console.log('updateMealSectionsFromEntries - Current diary entries:', diaryEntries);
+        console.log('Entry IDs in state:', diaryEntries.map(e => e.id));
         
         // Group entries by meal type
         const entriesByMeal = {};
@@ -378,6 +497,20 @@ export function Diary(container) {
             const mealType = mealSection.getAttribute('data-meal');
             const entries = entriesByMeal[mealType] || [];
             updateMealSectionContent(mealSection, entries);
+        });
+        
+        // Clean up any UI elements that don't match current state
+        const stateEntryIds = new Set(diaryEntries.map(e => e.id));
+        const uiElements = document.querySelectorAll('[data-entry-id]');
+        uiElements.forEach(element => {
+            const elementEntryId = parseInt(element.getAttribute('data-entry-id'));
+            if (!stateEntryIds.has(elementEntryId)) {
+                console.log('Removing UI element with non-existent entry ID:', elementEntryId);
+                if (element._cleanupSwipe) {
+                    element._cleanupSwipe();
+                }
+                element.remove();
+            }
         });
     }
     
@@ -438,6 +571,14 @@ export function Diary(container) {
         const item = document.createElement('div');
         item.className = 'food-item';
         
+        // Add entry ID as data attribute for deletion
+        if (entry.id) {
+            item.setAttribute('data-entry-id', entry.id);
+            console.log('Set data-entry-id to:', entry.id, 'for food:', entry.food_name);
+        } else {
+            console.warn('No entry.id found for entry:', entry);
+        }
+        
         // Add food ID as data attribute if available
         if (entry.food_id) {
             item.setAttribute('data-food-id', entry.food_id);
@@ -448,10 +589,19 @@ export function Diary(container) {
         const portionGrams = PortionConverter.formatPortion(grams / 100.0, true); // Convert grams to portions
         
         item.innerHTML = `
-            <div class="food-name">${entry.food_name || 'Ukendt fødevare'}</div>
-            <div class="food-portion">${portionGrams}</div>
-            <div class="food-calories">${Math.round(entry.calories || 0)} cal</div>
+            <div class="food-item-content">
+                <div class="food-name">${entry.food_name || 'Ukendt fødevare'}</div>
+                <div class="food-portion">${portionGrams}</div>
+                <div class="food-calories">${Math.round(entry.calories || 0)} cal</div>
+            </div>
+            <div class="food-item-actions">
+                <button class="delete-btn" title="Slet fødevare">🗑️</button>
+            </div>
         `;
+        
+        // Add swipe functionality - pass the item itself so we can get data-entry-id
+        addSwipeToDelete(item);
+        
         return item;
     }
     
@@ -640,6 +790,274 @@ export function Diary(container) {
         return section;
     }
     
+    function addSwipeToDelete(item) {
+        // Get entry ID from data attribute
+        const entryId = item.getAttribute('data-entry-id');
+        if (!entryId) {
+            console.warn('No data-entry-id found on food item, skipping swipe functionality');
+            return;
+        }
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let hasMoved = false;
+        let startTime = 0;
+        const threshold = 50; // Minimum swipe distance to trigger delete
+        const maxSwipe = 80; // Maximum swipe distance
+        const minSwipeTime = 100; // Minimum swipe time in ms
+        
+        function resetItem() {
+            item.style.transition = 'all 0.3s ease';
+            item.style.transform = 'translateX(0)';
+            item.style.backgroundColor = '';
+            
+            const deleteBtn = item.querySelector('.delete-btn');
+            if (deleteBtn) {
+                deleteBtn.style.opacity = '0';
+                deleteBtn.style.transition = 'opacity 0.3s ease';
+            }
+            
+            isDragging = false;
+            hasMoved = false;
+        }
+        
+        function handleSwipeEnd() {
+            if (!isDragging) return;
+            
+            const deltaX = currentX - startX;
+            const swipeTime = Date.now() - startTime;
+            
+            // Only trigger delete if swiped left enough and took reasonable time
+            if (hasMoved && deltaX < -threshold && swipeTime > minSwipeTime) {
+                // Start smooth delete animation and let it complete
+                item.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                item.style.transform = 'translateX(-100%)';
+                item.style.opacity = '0';
+                
+                // Wait for animation to complete before starting delete process
+                setTimeout(() => {
+                    deleteFoodItem(item);
+                }, 400); // Match the animation duration
+            } else {
+                resetItem();
+            }
+        }
+        
+        // Touch events
+        item.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startTime = Date.now();
+            isDragging = true;
+            hasMoved = false;
+            item.style.transition = 'none';
+            e.preventDefault(); // Prevent scrolling
+        }, { passive: false });
+        
+        item.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.touches[0].clientX;
+            const deltaX = currentX - startX;
+            
+            // Only allow left swipe (negative deltaX)
+            if (deltaX < 0) {
+                const swipeDistance = Math.min(Math.abs(deltaX), maxSwipe);
+                item.style.transform = `translateX(-${swipeDistance}px)`;
+                hasMoved = true;
+                
+                // Show delete button when swiped enough with smooth transition
+                const deleteBtn = item.querySelector('.delete-btn');
+                if (deleteBtn) {
+                    const opacity = Math.min(swipeDistance / threshold, 1);
+                    deleteBtn.style.opacity = opacity;
+                    deleteBtn.style.transition = 'opacity 0.1s ease';
+                }
+                
+                // Add visual feedback - change background color based on swipe distance
+                const swipeProgress = Math.min(swipeDistance / threshold, 1);
+                item.style.backgroundColor = `rgba(231, 76, 60, ${swipeProgress * 0.1})`;
+                
+                e.preventDefault(); // Prevent scrolling
+            }
+        }, { passive: false });
+        
+        item.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            handleSwipeEnd();
+        }, { passive: false });
+        
+        item.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            resetItem();
+        }, { passive: false });
+        
+        // Mouse events for desktop
+        item.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            startTime = Date.now();
+            isDragging = true;
+            hasMoved = false;
+            item.style.transition = 'none';
+            e.preventDefault();
+        });
+        
+        // Use document for mouse events to handle mouse leaving the element
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.clientX;
+            const deltaX = currentX - startX;
+            
+            if (deltaX < 0) {
+                const swipeDistance = Math.min(Math.abs(deltaX), maxSwipe);
+                item.style.transform = `translateX(-${swipeDistance}px)`;
+                hasMoved = true;
+                
+                // Show delete button when swiped enough with smooth transition
+                const deleteBtn = item.querySelector('.delete-btn');
+                if (deleteBtn) {
+                    const opacity = Math.min(swipeDistance / threshold, 1);
+                    deleteBtn.style.opacity = opacity;
+                    deleteBtn.style.transition = 'opacity 0.1s ease';
+                }
+                
+                // Add visual feedback - change background color based on swipe distance
+                const swipeProgress = Math.min(swipeDistance / threshold, 1);
+                item.style.backgroundColor = `rgba(231, 76, 60, ${swipeProgress * 0.1})`;
+            }
+        });
+        
+        document.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            handleSwipeEnd();
+        });
+        
+        // Click delete button
+        const deleteBtn = item.querySelector('.delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteFoodItem(item);
+            });
+        }
+        
+        // Cleanup function to remove document listeners when item is removed
+        item._cleanupSwipe = () => {
+            document.removeEventListener('mousemove', handleSwipeEnd);
+            document.removeEventListener('mouseup', handleSwipeEnd);
+        };
+    }
+    
+    async function deleteFoodItem(itemElement) {
+        try {
+            // Get entry ID from data attribute - this is the single source of truth
+            const entryId = itemElement.getAttribute('data-entry-id');
+            
+            console.log('=== DELETE ATTEMPT ===');
+            console.log('Attempting to delete entry with ID:', entryId);
+            console.log('Current state entries:', AppState.getState().diary.entries);
+            console.log('Current state entry IDs:', AppState.getState().diary.entries.map(e => e.id));
+            
+            if (!entryId) {
+                throw new Error('No data-entry-id found on food item');
+            }
+            
+            // First, check if entry exists in current state
+            const currentState = AppState.getState();
+            const entryExists = currentState.diary.entries.some(entry => entry.id === parseInt(entryId));
+            
+            if (!entryExists) {
+                console.log('Entry', entryId, 'not found in current state, removing from UI immediately');
+                // Entry doesn't exist in state, just remove from UI immediately
+                if (itemElement._cleanupSwipe) {
+                    itemElement._cleanupSwipe();
+                }
+                itemElement.remove();
+                return;
+            }
+            
+            // Show loading state
+            itemElement.style.opacity = '0.5';
+            itemElement.style.pointerEvents = 'none';
+            
+            // Call delete API with the entry ID from data attribute
+            const response = await api.deleteDiaryEntry(entryId);
+            
+            if (response && response.message) {
+                // Animation is already running, just wait for it to complete
+                console.log('Delete successful, animation already running');
+                
+                setTimeout(async () => {
+                    // Cleanup swipe listeners
+                    if (itemElement._cleanupSwipe) {
+                        itemElement._cleanupSwipe();
+                    }
+                    
+                    itemElement.remove();
+                    
+                    // Force complete reload from backend to ensure state sync
+                    const currentDate = new Date();
+                    const dateString = currentDate.toISOString().split('T')[0];
+                    
+                    console.log('=== FORCE RELOAD ===');
+                    console.log('Reloading diary data from backend for date:', dateString);
+                    
+                    // Clear current state and reload from backend
+                    AppState.setDiary({ date: dateString, entries: [] });
+                    await AppState.loadDiary(dateString);
+                    
+                    console.log('Reloaded state:', AppState.getState().diary);
+                }, 100); // Short delay to ensure animation is complete
+            } else {
+                throw new Error(response?.error || 'Delete failed');
+            }
+        } catch (error) {
+            console.error('Error deleting food item:', error);
+            
+            // If it's a 404 error, the entry might already be deleted
+            if (error.message.includes('404')) {
+                console.log('Entry not found (404) - animation already running, letting it complete');
+                
+                // Animation is already running, just wait for it to complete
+                setTimeout(async () => {
+                    // Cleanup swipe listeners
+                    if (itemElement._cleanupSwipe) {
+                        itemElement._cleanupSwipe();
+                    }
+                    
+                    itemElement.remove();
+                    
+                    // Force complete reload from backend to ensure state sync
+                    const currentDate = new Date();
+                    const dateString = currentDate.toISOString().split('T')[0];
+                    
+                    // Get entry ID from data attribute
+                    const entryId = itemElement.getAttribute('data-entry-id');
+                    
+                    console.log('=== 404 FORCE RELOAD ===');
+                    console.log('Entry', entryId, 'not found in backend, reloading state');
+                    
+                    // Clear current state and reload from backend
+                    AppState.setDiary({ date: dateString, entries: [] });
+                    await AppState.loadDiary(dateString);
+                    
+                    console.log('404 - Reloaded state:', AppState.getState().diary);
+                }, 100); // Short delay to ensure animation is complete
+                
+                return;
+            }
+            
+            // Reset item state for other errors
+            itemElement.style.opacity = '1';
+            itemElement.style.pointerEvents = 'auto';
+            itemElement.style.transition = 'transform 0.3s ease';
+            itemElement.style.transform = 'translateX(0)';
+            
+            alert(`Fejl ved sletning: ${error.message}`);
+        }
+    }
+
     function createCustomScrollbar(container) {
         console.log('Creating custom scrollbar for container:', container);
         
