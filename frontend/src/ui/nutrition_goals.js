@@ -32,7 +32,7 @@ export function NutritionGoals(container) {
     // Add event listeners for custom events
     const handleRetry = () => AppState.loadGoals();
     const handleReload = () => AppState.loadGoals();
-    const handleCommit = () => commitChanges();
+    const handleCommit = async () => await commitChanges();
     const handleActivateCommitButton = () => mockGoalsState.setCommitButtonDimmed(false);
     const handleDimCommitButton = () => mockGoalsState.setCommitButtonDimmed(true);
     

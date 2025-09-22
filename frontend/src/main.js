@@ -1,5 +1,77 @@
 // Main application entry point
 import { AppState } from './state/app_state.js';
+
+// Make AppState globally available for debugging
+window.AppState = AppState;
+
+// Development: Live state monitoring
+if (window.location.hostname === 'localhost') {
+    // Create live state viewer
+    const stateViewer = document.createElement('div');
+    stateViewer.id = 'state-viewer';
+    stateViewer.style.cssText = `
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        width: 300px;
+        max-height: 400px;
+        background: rgba(0,0,0,0.9);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 10000;
+        overflow-y: auto;
+        border: 1px solid #333;
+        display: none;
+    `;
+    document.body.appendChild(stateViewer);
+    
+    // Toggle with Ctrl+Shift+S
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+            const viewer = document.getElementById('state-viewer');
+            viewer.style.display = viewer.style.display === 'none' ? 'block' : 'none';
+        }
+    });
+    
+    // Update state viewer every 500ms
+    setInterval(() => {
+        const viewer = document.getElementById('state-viewer');
+        if (viewer.style.display !== 'none') {
+            const state = AppState.getState();
+            const formattedGoals = AppState.getFormattedGoals();
+            
+            viewer.innerHTML = `
+                <div style="color: #4CAF50; font-weight: bold; margin-bottom: 10px;">
+                    🔍 Live AppState (Ctrl+Shift+S to toggle)
+                </div>
+                <div><strong>Foods:</strong> ${state.foods.length} items</div>
+                <div><strong>Diary:</strong> ${state.diary.entries.length} entries</div>
+                <div><strong>Exercises:</strong> ${state.exercises.length} items</div>
+                <div><strong>Weights:</strong> ${state.weights.length} items</div>
+                <div style="margin-top: 8px; color: #FF9800;">
+                    <strong>Goals:</strong>
+                </div>
+                <div style="margin-left: 10px;">
+                    <div>Calories: ${formattedGoals?.calories.formatted || 'N/A'}</div>
+                    <div>Protein: ${formattedGoals?.protein.formatted || 'N/A'}</div>
+                    <div>Carbs: ${formattedGoals?.carbs.formatted || 'N/A'}</div>
+                    <div>Fat: ${formattedGoals?.fat.formatted || 'N/A'}</div>
+                </div>
+                <div style="margin-top: 10px; color: #FFC107;">
+                    <strong>Last Update:</strong> ${new Date().toLocaleTimeString()}
+                </div>
+                <div style="margin-top: 5px; color: #9E9E9E; font-size: 10px;">
+                    Console: AppState.getState() for full data
+                </div>
+            `;
+        }
+    }, 500);
+    
+    console.log('🔍 Live AppState monitoring enabled! Press Ctrl+Shift+S to toggle viewer');
+}
 import { ApiClient } from './data/api.js';
 import { Dashboard } from './ui/dashboard.js';
 import { FoodForm } from './ui/food_form.js';
@@ -23,7 +95,26 @@ class CalorieTrackerApp {
         this.components = {};
         this.api = new ApiClient(API_BASE_URL);
         this.navigationHistory = [];
+        this.setupGlobalErrorHandling();
         this.init();
+    }
+    
+    setupGlobalErrorHandling() {
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            console.warn('Unhandled promise rejection:', event.reason);
+            // Prevent the default behavior (which would log to console)
+            event.preventDefault();
+        });
+        
+        // Handle general errors
+        window.addEventListener('error', (event) => {
+            // Only log errors that are not related to browser extensions
+            if (!event.message.includes('message channel closed') && 
+                !event.message.includes('listener indicated an asynchronous response')) {
+                console.error('Global error:', event.error);
+            }
+        });
     }
     
     getCurrentDateInDanish() {
@@ -310,6 +401,11 @@ class CalorieTrackerApp {
             if (event.detail && event.detail.mealType && this.components.foodForm) {
                 this.components.foodForm.setMealType(event.detail.mealType);
             }
+            
+            // Also set meal type in add-food component if available
+            if (event.detail && event.detail.mealType && this.components.addFood) {
+                this.components.addFood.setMealType(event.detail.mealType);
+            }
         });
         
         // Food section events
@@ -336,9 +432,30 @@ class CalorieTrackerApp {
             console.log('Add food item:', event.detail);
             const food = event.detail;
             
-            // Navigate to add food view with selected food
+            // Get current meal type from food-section title
+            const foodSection = document.getElementById('food-section');
+            let mealType = 'morgenmad'; // default
+            
+            if (foodSection) {
+                const mealTitle = foodSection.querySelector('.meal-title');
+                if (mealTitle) {
+                    const titleText = mealTitle.textContent.toLowerCase();
+                    // Map Danish meal titles to meal types
+                    const mealTypeMap = {
+                        'morgenmad': 'morgenmad',
+                        'frokost': 'frokost', 
+                        'aftensmad': 'aftensmad',
+                        'mellemmaaltid 1': 'mellemmaaltid1',
+                        'mellemmaaltid 2': 'mellemmaaltid2'
+                    };
+                    mealType = mealTypeMap[titleText] || 'morgenmad';
+                }
+            }
+            
+            // Navigate to add food view with selected food and meal type
             if (this.components.addFood) {
                 this.components.addFood.setFood(food);
+                this.components.addFood.setMealType(mealType);
                 this.showView('add-food', 'food');
             }
         });

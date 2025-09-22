@@ -284,8 +284,25 @@ image.pngimage.png
     min-width: 40px;
 }
 
+/* Theme colors for goal percentages based on nutrition type */
+.goal-item:nth-child(1) .goal-percentage {
+    color: var(--color-calories);
+}
+
+.goal-item:nth-child(2) .goal-percentage {
+    color: var(--color-carbs);
+}
+
+.goal-item:nth-child(3) .goal-percentage {
+    color: var(--color-protein);
+}
+
+.goal-item:nth-child(4) .goal-percentage {
+    color: var(--color-fat);
+}
+
 .goal-amount {
-    color: var(--color-text);
+    color: var(--color-text) !important;
     font-size: 14px;
     font-weight: 600;
     min-width: 60px;

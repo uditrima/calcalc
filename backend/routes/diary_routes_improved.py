@@ -87,13 +87,19 @@ def add_diary_entry():
         if not food:
             return jsonify({'error': 'Food not found'}), 404
         
-        # Create diary entry
+        # Calculate nutritional values
+        multiplier = data['amount_grams'] / 100.0
+        calc_calories = food.calories * multiplier
+        calc_protein = food.protein * multiplier
+        calc_carbs = food.carbohydrates * multiplier
+        calc_fat = food.fat * multiplier
+        
+        # Create diary entry (simple model only has grams field)
         entry = DiaryEntry(
             date=target_date,
             meal_type=data['meal_type'],
             food_id=data['food_id'],
-            grams=data['amount_grams'],
-            notes=data.get('notes')
+            grams=data['amount_grams']  # Simple model uses 'grams' field
         )
         
         # Add to database
@@ -105,25 +111,18 @@ def add_diary_entry():
         
         db.session.commit()
         
-        # Calculate nutritional values for response
-        multiplier = entry.grams / 100.0
-        calc_calories = food.calories * multiplier
-        calc_protein = food.protein * multiplier
-        calc_carbs = food.carbohydrates * multiplier
-        calc_fat = food.fat * multiplier
-        
         return jsonify({
+            'success': True,
             'id': entry.id,
             'date': entry.date.isoformat(),
             'meal_type': entry.meal_type,
             'food_id': entry.food_id,
             'food_name': food.name,
-            'amount_grams': entry.grams,
+            'amount_grams': entry.grams,  # Simple model uses 'grams' field
             'calories': calc_calories,
             'protein': calc_protein,
             'carbohydrates': calc_carbs,
             'fat': calc_fat,
-            'notes': entry.notes,
             'created_at': datetime.now().isoformat()
         }), 201
     

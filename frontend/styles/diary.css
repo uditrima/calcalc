@@ -477,8 +477,54 @@
     color: var(--color-text);
     font-size: var(--font-size-base);
     font-weight: 500;
-    margin-bottom: var(--space-xs);
 }
+
+/* Food List Styles */
+.food-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin: var(--space-sm) 0;
+    padding: 0 var(--space-sm);
+}
+
+.food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-base);
+}
+
+.food-item:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+}
+
+.food-name {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    flex: 1;
+}
+
+.food-portion {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin: 0 var(--space-sm);
+}
+
+.food-calories {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    min-width: 60px;
+    text-align: right;
+}
+
 
 .water-amount {
     color: var(--color-text);

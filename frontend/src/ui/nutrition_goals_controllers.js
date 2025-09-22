@@ -1,9 +1,13 @@
 // Nutrition Goals Controllers
 import { AppState } from '../state/app_state.js';
+import { ApiClient } from '../data/api.js';
 import { LABEL_TO_FIELD_MAP, MACRO_LABELS } from './nutrition_goals_constants.js';
 import { parseNumeric } from './nutrition_goals_formatters.js';
 import { calculateTotalCaloriesFromMacros, calculateMacroPercentages } from './nutrition_goals_calculations.js';
 import { setKnobValue, updateGoalPercentages, getKnobById, getAllKnobs } from './nutrition_goals_ui_helpers.js';
+
+// Initialize API client
+const api = new ApiClient('http://localhost:5000/api');
 
 // Flag to track if calories knob was clicked by user
 let caloriesKnobClicked = false;
@@ -58,7 +62,7 @@ function updateMacroKnobs(caloriesValue) {
     const currentGoals = AppState.getGoals();
     if (!currentGoals) return;
     
-    const newMacros = calculateMacrosFromCalories(
+    const newMacros = AppState.calculateMacrosFromCalories(
         caloriesValue,
         currentGoals.protein_target,
         currentGoals.carbs_target,
@@ -77,7 +81,7 @@ function updateMacroKnobs(caloriesValue) {
     updateGoalPercentages(currentGoals);
 }
 
-export function commitChanges() {
+export async function commitChanges() {
     const currentValues = {};
     const knobs = getAllKnobs();
     
@@ -90,8 +94,20 @@ export function commitChanges() {
         }
     });
     
-    // Update goals via AppState
-    AppState.setGoals(currentValues);
+    try {
+        // Save to database via API
+        const response = await api.setGoals(currentValues);
+        
+        if (response && response.success) {
+            // Update local state only after successful database save
+            AppState.setGoals(currentValues);
+            console.log('Goals saved successfully:', currentValues);
+        } else {
+            console.error('Failed to save goals to database:', response);
+        }
+    } catch (error) {
+        console.error('Error saving goals:', error);
+    }
 }
 
 export function updateGoalValue(label, newValue) {

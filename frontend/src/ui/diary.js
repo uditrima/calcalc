@@ -372,12 +372,12 @@ export function Diary(container) {
             entriesByMeal[mealType].push(entry);
         });
         
-        // Update each meal section
-        Object.keys(entriesByMeal).forEach(mealType => {
-            const mealSection = document.querySelector(`[data-meal="${mealType}"]`);
-            if (mealSection) {
-                updateMealSectionContent(mealSection, entriesByMeal[mealType]);
-            }
+        // Update all meal sections (including empty ones)
+        const allMealSections = document.querySelectorAll('[data-meal]');
+        allMealSections.forEach(mealSection => {
+            const mealType = mealSection.getAttribute('data-meal');
+            const entries = entriesByMeal[mealType] || [];
+            updateMealSectionContent(mealSection, entries);
         });
     }
     
@@ -397,9 +397,9 @@ export function Diary(container) {
         
         // Update meal totals
         const totalCalories = entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
-        const totalElement = mealSection.querySelector('.meal-total');
-        if (totalElement) {
-            totalElement.textContent = `${Math.round(totalCalories)} cal`;
+        const caloriesElement = mealSection.querySelector('.meal-calories');
+        if (caloriesElement) {
+            caloriesElement.textContent = `${Math.round(totalCalories)}`;
         }
     }
     
@@ -438,8 +438,14 @@ export function Diary(container) {
         const item = document.createElement('div');
         item.className = 'food-item';
         
-        // Convert servings to grams for display
-        const portionGrams = PortionConverter.formatPortion(entry.servings || 1.0, true);
+        // Add food ID as data attribute if available
+        if (entry.food_id) {
+            item.setAttribute('data-food-id', entry.food_id);
+        }
+        
+        // Format grams for display
+        const grams = entry.amount_grams || entry.grams || 0;
+        const portionGrams = PortionConverter.formatPortion(grams / 100.0, true); // Convert grams to portions
         
         item.innerHTML = `
             <div class="food-name">${entry.food_name || 'Ukendt fødevare'}</div>
@@ -509,6 +515,11 @@ export function Diary(container) {
         line1.appendChild(rightSection);
         
         section.appendChild(line1);
+        
+        // Line 2: Food list container
+        const foodList = document.createElement('div');
+        foodList.className = 'food-list';
+        section.appendChild(foodList);
         
         return section;
     }

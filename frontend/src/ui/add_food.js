@@ -1,7 +1,11 @@
 // Add Food UI component
 import { AppState } from '../state/app_state.js';
+import { ApiClient } from '../data/api.js';
 import { getMealOptions } from '../data/meal_types.js';
 import { PortionConverter } from '../utils/portion_converter.js';
+
+// Initialize API client
+const api = new ApiClient('http://localhost:5000/api');
 
 export function AddFood(container) {
     if (!container) {
@@ -72,7 +76,11 @@ export function AddFood(container) {
         },
         getFood: () => currentFood,
         getServings: () => currentServings,
-        getMealType: () => currentMealType
+        getMealType: () => currentMealType,
+        setMealType: (mealType) => {
+            currentMealType = mealType;
+            updateMealDropdown();
+        }
     };
     
     function createFoodHeader() {
@@ -197,6 +205,14 @@ export function AddFood(container) {
         const mealColor = mealColorMap[mealType];
         if (mealColor) {
             dropdown.style.color = mealColor;
+        }
+    }
+    
+    function updateMealDropdown() {
+        const mealDropdown = addFoodSection.querySelector('.meal-dropdown');
+        if (mealDropdown) {
+            mealDropdown.value = currentMealType;
+            updateMealDropdownColor(mealDropdown, currentMealType);
         }
     }
     
@@ -584,7 +600,7 @@ export function AddFood(container) {
         }
     }
     
-    function handleAcceptFood() {
+    async function handleAcceptFood() {
         if (!currentFood) {
             console.log('Ingen fødevare valgt');
             return;
@@ -594,41 +610,70 @@ export function AddFood(container) {
         const portionInGrams = PortionConverter.portionToGrams(currentServings);
         const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
         
-        const foodData = {
-            food: currentFood,
-            servings: currentServings,
-            mealType: currentMealType,
-            amount_grams: portionInGrams, // Send grams to backend
-            calories: Math.round(nutrition.calories),
-            carbs: nutrition.carbohydrates,
-            fat: nutrition.fat,
-            protein: nutrition.protein
+        // Get current date
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Prepare diary entry data for database
+        const diaryEntryData = {
+            food_id: currentFood.id,
+            amount_grams: portionInGrams,  // Backend expects 'amount_grams', not 'grams'
+            meal_type: currentMealType,
+            date: today
+            // Backend calculates calories and macros from food data
         };
         
-        console.log('Accepting food:', foodData);
+        console.log('Saving diary entry:', diaryEntryData);
         
-        // Dispatch event to add food to diary
-        const customEvent = new CustomEvent('onAcceptFood', {
-            detail: foodData,
-            bubbles: true
-        });
-        // Dispatch on the app container instead of document
-        const appContainer = document.querySelector('#app');
-        if (appContainer) {
-            appContainer.dispatchEvent(customEvent);
-        } else {
-            document.dispatchEvent(customEvent);
-        }
-        
-        // Go back to food view
-        const goBackEvent = new CustomEvent('onGoBackToFood', {
-            bubbles: true
-        });
-        // Dispatch on the app container instead of document
-        if (appContainer) {
-            appContainer.dispatchEvent(goBackEvent);
-        } else {
-            document.dispatchEvent(goBackEvent);
+        try {
+            // Save to database via API
+            console.log('Sending API request to:', 'http://localhost:5000/api/diary/entries');
+            console.log('Request data:', diaryEntryData);
+            
+            const response = await api.addDiaryEntry(diaryEntryData);
+            console.log('API response:', response);
+            
+            if (response && response.success) {
+                console.log('Diary entry saved successfully:', response);
+                
+                // Reload diary data to show updated entries
+                await AppState.loadDiary(today);
+                
+                // Update last_used timestamp for the food
+                if (currentFood.id) {
+                    try {
+                        const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp
+                        await api.updateFood(currentFood.id, { last_used: currentTime });
+                        
+                        // Reload foods to get updated data
+                        await AppState.loadFoods();
+                    } catch (error) {
+                        console.error('Failed to update food last_used:', error);
+                    }
+                }
+                
+                // Go back to food view
+                const goBackEvent = new CustomEvent('onGoBackToFood', {
+                    bubbles: true
+                });
+                const appContainer = document.querySelector('#app');
+                if (appContainer) {
+                    appContainer.dispatchEvent(goBackEvent);
+                } else {
+                    document.dispatchEvent(goBackEvent);
+                }
+                
+            } else {
+                console.error('Failed to save diary entry - no success flag:', response);
+                alert(`Fejl ved gemning af fødevare: ${response?.error || 'Ukendt fejl'}`);
+            }
+        } catch (error) {
+            console.error('Error saving diary entry:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
+            alert(`Fejl ved gemning af fødevare: ${error.message}`);
         }
     }
     

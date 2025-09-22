@@ -526,6 +526,11 @@ function createFoodItem(food) {
     const foodItem = document.createElement('div');
     foodItem.className = 'food-item';
     
+    // Add food ID as data attribute
+    if (food.id) {
+        foodItem.setAttribute('data-food-id', food.id);
+    }
+    
     // Format food details for display
     const brandText = food.brand ? `${food.brand} - ` : '';
     const calories = Math.round(food.calories || 0);
