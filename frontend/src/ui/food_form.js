@@ -248,34 +248,151 @@ function createSearchSection() {
     
     section.appendChild(searchContainer);
     
+    // Add category filters
+    const categoryFilters = createCategoryFilters();
+    section.appendChild(categoryFilters);
+    
     function handleSearch(e) {
         const query = e.target.value.toLowerCase().trim();
         console.log('Searching for:', query);
         
-        // Get all foods from state
-        const allFoods = AppState.getFoods();
+        // Get selected categories
+        const selectedCategories = Array.from(
+            document.querySelectorAll('.category-checkbox:checked')
+        ).map(checkbox => checkbox.value);
         
-        if (!query) {
-            // If no query, show all foods sorted by recent
-            renderFoodItems(allFoods, 'recent');
-            return;
-        }
-        
-        // Filter foods based on search query (only on food name/title)
-        const filteredFoods = allFoods.filter(food => {
-            const foodName = (food.name || '').toLowerCase();
-            return foodName.includes(query);
-        });
-        
-        // Render filtered foods
-        if (filteredFoods.length === 0) {
-            renderNoResults(query);
-        } else {
-            renderFoodItems(filteredFoods, 'recent');
-        }
+        // Apply both search and category filters
+        applyFilters(query, selectedCategories);
     }
     
     return section;
+}
+
+function createCategoryFilters() {
+    const filtersContainer = document.createElement('div');
+    filtersContainer.className = 'category-filters';
+    
+    // Create toggle button
+    const toggleButton = document.createElement('button');
+    toggleButton.className = 'category-toggle-btn';
+    toggleButton.innerHTML = `
+        <span class="toggle-icon">▼</span>
+        <span class="toggle-text">Kategorier</span>
+    `;
+    
+    // Create collapsible content
+    const collapsibleContent = document.createElement('div');
+    collapsibleContent.className = 'category-content';
+    collapsibleContent.style.display = 'none'; // Initially hidden
+    
+    // Define categories based on database
+    const categories = [
+        'bagværk', 'brød', 'condiments', 'frost', 'frugt', 'grønt', 
+        'konserves', 'korn og gryn', 'krydderier', 'kød', 'kød og fisk', 
+        'mejeri', 'pasta og ris', 'pålæg', 'ris og pasta', 'slik', 
+        'slik og kager', 'snacks', 'take away', 'vin og øl', 'øl og vin'
+    ];
+    
+    // Create filter row
+    const filterRow = document.createElement('div');
+    filterRow.className = 'filter-row';
+    
+    categories.forEach(category => {
+        const filterItem = document.createElement('div');
+        filterItem.className = 'filter-item';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `filter-${category.replace(/\s+/g, '-')}`;
+        checkbox.value = category;
+        checkbox.className = 'category-checkbox';
+        
+        const label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = category;
+        label.className = 'category-label';
+        
+        // Add change event listener
+        checkbox.addEventListener('change', handleCategoryFilter);
+        
+        filterItem.appendChild(checkbox);
+        filterItem.appendChild(label);
+        filterRow.appendChild(filterItem);
+    });
+    
+    collapsibleContent.appendChild(filterRow);
+    
+    // Add toggle functionality
+    toggleButton.addEventListener('click', () => {
+        const isVisible = collapsibleContent.style.display !== 'none';
+        collapsibleContent.style.display = isVisible ? 'none' : 'block';
+        
+        const toggleIcon = toggleButton.querySelector('.toggle-icon');
+        toggleIcon.textContent = isVisible ? '▼' : '▲';
+        
+        // Add/remove expanded class for styling
+        filtersContainer.classList.toggle('expanded', !isVisible);
+    });
+    
+    // Assemble the container
+    filtersContainer.appendChild(toggleButton);
+    filtersContainer.appendChild(collapsibleContent);
+    
+    function handleCategoryFilter() {
+        const selectedCategories = Array.from(
+            filtersContainer.querySelectorAll('.category-checkbox:checked')
+        ).map(checkbox => checkbox.value);
+        
+        console.log('Selected categories:', selectedCategories);
+        
+        // Get current search query
+        const searchInput = document.querySelector('.search-input');
+        const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        
+        // Apply both search and category filters
+        applyFilters(searchQuery, selectedCategories);
+    }
+    
+    return filtersContainer;
+}
+
+// Function to apply both search and category filters
+function applyFilters(searchQuery, selectedCategories) {
+    // Get all foods from state
+    const allFoods = AppState.getFoods();
+    
+    let filteredFoods = allFoods;
+    
+    // Apply search filter if query exists
+    if (searchQuery) {
+        const searchWords = searchQuery.split(/\s+/).filter(word => word.length > 0);
+        filteredFoods = filteredFoods.filter(food => {
+            const foodName = (food.name || '').toLowerCase();
+            // At least one search word must be found in the food name
+            return searchWords.some(word => foodName.includes(word));
+        });
+    }
+    
+    // Apply category filter if categories are selected
+    if (selectedCategories.length > 0) {
+        filteredFoods = filteredFoods.filter(food => {
+            const foodCategory = (food.category || '').toLowerCase();
+            // Food must be in one of the selected categories
+            return selectedCategories.some(category => 
+                foodCategory === category.toLowerCase()
+            );
+        });
+    }
+    
+    console.log('Filtered foods count:', filteredFoods.length);
+    console.log('Filtered foods:', filteredFoods.map(f => f.name));
+    
+    // Render filtered foods
+    if (filteredFoods.length === 0) {
+        renderNoResults(searchQuery || 'selected categories');
+    } else {
+        renderFoodItems(filteredFoods, 'recent');
+    }
 }
 
 // Function to render no results message
