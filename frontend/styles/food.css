@@ -67,8 +67,8 @@
 
 .meal-title {
     color: var(--color-text);
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     margin: 0;
     transition: color 0.2s ease;
 }
@@ -767,6 +767,20 @@
     color: var(--color-text-muted);
     font-size: 14px;
     line-height: 1.4;
+}
+
+.food-calories {
+    color: var(--color-calories);
+    font-weight: 500;
+}
+
+.food-calories-suffix {
+    color: var(--color-calories);
+    font-weight: 500;
+}
+
+.food-other {
+    color: var(--color-text-muted);
 }
 
 .food-actions {

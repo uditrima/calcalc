@@ -32,6 +32,10 @@ body {
     /* Typography */
     --font-family: 'Segoe UI', 'Roboto', sans-serif;
     --font-size-base: 14px;
+    --font-size-sm: 10px;
+    --font-size-lg: 16px;
+    --font-size-xl: 20px;
+    --font-size-2xl: 24px;
     --font-size-heading: 20px;
     
     /* Glassmorphism Shadows */

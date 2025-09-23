@@ -100,7 +100,8 @@ function createFoodHeader() {
     
     const title = document.createElement('h2');
     title.textContent = 'Morgenmad';
-    title.className = 'meal-title';
+    title.className = 'meal-title-addFood';
+    title.dataset.mealtype = 'morgenmad';
     titleContainer.appendChild(title);
     
     const dropdownArrow = document.createElement('span');
@@ -123,6 +124,7 @@ function createFoodHeader() {
         option.className = 'meal-option';
         option.textContent = meal.label;
         option.dataset.value = meal.value;
+        option.dataset.mealtype = meal.value;
         option.addEventListener('click', () => selectMeal(meal.value, meal.label));
         mealDropdown.appendChild(option);
     });
@@ -181,11 +183,12 @@ function createFoodHeader() {
         dropdownArrow.style.transform = 'rotate(0deg)';
         
         // Remove dropdown-open class to restore normal opacity
+        const mealTitleAddFood = document.querySelector('.meal-title-addFood');
         const foodSection = document.querySelector('.food-section');
-        if (foodSection) {
+        if (mealTitleAddFood) {
             foodSection.classList.remove('dropdown-open');
             // Set data attribute for CSS styling
-            foodSection.setAttribute('data-current-meal', mealValue);
+            mealTitleAddFood.setAttribute('data-mealtype', mealValue);
         }
         
         // Store current meal type for later use
@@ -197,7 +200,6 @@ function createFoodHeader() {
         });
         document.dispatchEvent(mealChangeEvent);
         
-        console.log('Meal selected:', mealValue, mealLabel);
     }
     
     // Close dropdown when clicking outside
@@ -254,7 +256,6 @@ function createSearchSection() {
     
     function handleSearch(e) {
         const query = e.target.value.toLowerCase().trim();
-        console.log('Searching for:', query);
         
         // Get selected categories
         const selectedCategories = Array.from(
@@ -344,7 +345,6 @@ function createCategoryFilters() {
             filtersContainer.querySelectorAll('.category-checkbox:checked')
         ).map(checkbox => checkbox.value);
         
-        console.log('Selected categories:', selectedCategories);
         
         // Get current search query
         const searchInput = document.querySelector('.search-input');
@@ -385,8 +385,6 @@ function applyFilters(searchQuery, selectedCategories) {
         });
     }
     
-    console.log('Filtered foods count:', filteredFoods.length);
-    console.log('Filtered foods:', filteredFoods.map(f => f.name));
     
     // Render filtered foods
     if (filteredFoods.length === 0) {
@@ -456,7 +454,6 @@ function createMenuSection() {
         });
         // Add active class to clicked item
         event.target.classList.add('active');
-        console.log('Selected menu:', label);
     }
     
     return section;
@@ -489,7 +486,6 @@ function createCarouselSection() {
     section.appendChild(carouselContainer);
     
     function selectCarouselItem(label) {
-        console.log('Selected carousel item:', label);
     }
     
     return section;
@@ -653,13 +649,18 @@ function createFoodItem(food) {
     const brandText = food.brand ? `${food.brand} - ` : '';
     const calories = Math.round(food.calories || 0);
     const lastPortionGrams = PortionConverter.formatPortion(food.last_portion || 1.0, true);
-    const details = `${calories} cal, ${brandText}${food.category || 'ukendt'}, ${lastPortionGrams}`;
+    const category = food.category || 'ukendt';
+    
     
     foodItem.innerHTML = `
         <div class="food-item-content">
             <div class="food-details">
                 <div class="food-name">${food.name}</div>
-                <div class="food-info">${details}</div>
+                <div class="food-info">
+                    <span class="food-calories">${calories}</span>
+                    <span class="food-calories-suffix"> cal</span>
+                    <span class="food-other">, ${brandText}${category}, ${lastPortionGrams}</span>
+                </div>
             </div>
         </div>
         <div class="food-actions">
@@ -693,7 +694,6 @@ function createFoodItem(food) {
 
 // Custom scrollbar function
 function createCustomScrollbar(container) {
-    console.log('Creating custom scrollbar for container:', container);
     
     // Color interpolation function
     function interpolateColor(color1, color2, ratio) {
@@ -748,7 +748,6 @@ function createCustomScrollbar(container) {
         const scrollHeight = container.scrollHeight;
         const clientHeight = container.clientHeight;
         
-        console.log('Updating scrollbar:', { scrollTop, scrollHeight, clientHeight });
         
         // Always show scrollbar for testing
         scrollbar.style.display = 'block';
@@ -774,18 +773,15 @@ function createCustomScrollbar(container) {
     
     // Add scroll listener
     container.addEventListener('scroll', () => {
-        console.log('Container scrolled, updating scrollbar');
         updateScrollbar();
     });
     
     // Add click event listener to scrollbar track
     scrollbar.addEventListener('click', (e) => {
-        console.log('Scrollbar track clicked');
         const rect = scrollbar.getBoundingClientRect();
         const clickY = e.clientY - rect.top;
         const percentage = clickY / rect.height;
         const scrollTop = percentage * (container.scrollHeight - container.clientHeight);
-        console.log('Scrolling to:', scrollTop);
         container.scrollTop = scrollTop;
     });
     
@@ -800,7 +796,6 @@ function createCustomScrollbar(container) {
     let startScrollTop = 0;
     
     thumb.addEventListener('mousedown', (e) => {
-        console.log('Thumb mousedown');
         isDragging = true;
         startY = e.clientY;
         startScrollTop = container.scrollTop;

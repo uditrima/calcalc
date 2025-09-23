@@ -243,7 +243,7 @@
 }
 
 .summary-details .remaining-calories {
-    color: var(--color-accent);
+    color: var(--color-calories);
     font-weight: bold;
 }
 
@@ -258,7 +258,7 @@
 }
 
 .meal-section {
-    padding: var(--space-lg);
+    padding: var(--space-md);
     background: var(--color-surface);
     backdrop-filter: var(--blur-glass);
     -webkit-backdrop-filter: var(--blur-glass);
@@ -356,32 +356,11 @@
     gap: var(--space-sm);
 }
 
-.meal-title {
+.meal-title-diary {
     color: var(--color-text);
     font-size: var(--font-size-base);
-    font-weight: 500;
+    font-weight: 700;
     transition: color 0.2s ease;
-}
-
-/* Meal-specific title colors */
-.meal-section[data-meal-type="morgenmad"] .meal-title {
-    color: var(--meal-morgenmad);
-}
-
-.meal-section[data-meal-type="frokost"] .meal-title {
-    color: var(--meal-frokost);
-}
-
-.meal-section[data-meal-type="aftensmad"] .meal-title {
-    color: var(--meal-aftensmad);
-}
-
-.meal-section[data-meal-type="mellemmaaltid1"] .meal-title {
-    color: var(--meal-mellemm1);
-}
-
-.meal-section[data-meal-type="mellemmaaltid2"] .meal-title {
-    color: var(--meal-mellemm2);
 }
 
 .meal-calories {
@@ -392,13 +371,14 @@
 
 .add-food-link {
     color: var(--color-text-muted);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: all var(--transition-base);
     border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
 }
 
 .add-food-link:hover {
@@ -479,20 +459,20 @@
     font-weight: 500;
 }
 
-/* Food List Styles */
-.food-list {
+/* Diary Food List Styles */
+.diary-food-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    margin: var(--space-sm) 0;
+    gap: var(--space-xs);
+    margin: var(--space-xs) 0;
     padding: 0 var(--space-sm);
 }
 
-.food-item {
+.diary-food-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
     background: var(--color-surface);
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
@@ -505,16 +485,16 @@
     will-change: transform, background-color;
 }
 
-.food-item:active {
+.diary-food-item:active {
     cursor: grabbing;
 }
 
-.food-item:hover {
+.diary-food-item:hover {
     background: var(--color-surface-hover);
     border-color: var(--color-border-hover);
 }
 
-.food-item-content {
+.diary-food-item-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -522,7 +502,7 @@
     min-width: 0;
 }
 
-.food-name {
+.diary-food-name {
     color: var(--color-text);
     font-size: var(--font-size-base);
     font-weight: 500;
@@ -533,14 +513,14 @@
     margin-right: var(--space-sm);
 }
 
-.food-portion {
+.diary-food-portion {
     color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     margin: 0 var(--space-sm);
     white-space: nowrap;
 }
 
-.food-calories {
+.diary-food-calories {
     color: var(--color-text);
     font-size: var(--font-size-base);
     font-weight: 600;
@@ -549,8 +529,25 @@
     white-space: nowrap;
 }
 
-/* Food Item Actions */
-.food-item-actions {
+.diary-food-item-calories {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    min-width: 60px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.diary-food-total-calories {
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    min-width: 60px;
+    white-space: nowrap;
+}
+
+/* Diary Food Item Actions */
+.diary-food-item-actions {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
@@ -585,11 +582,11 @@
 }
 
 /* Swipe Animation */
-.food-item.swiping {
+.diary-food-item.swiping {
     transition: none;
 }
 
-.food-item.swipe-complete {
+.diary-food-item.swipe-complete {
     transform: translateX(-100%);
     opacity: 0;
 }

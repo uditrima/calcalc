@@ -111,8 +111,11 @@ export const AppState = {
     async loadDiary(date) {
         try {
             const response = await api.getDiaryEntries(date);
+            console.log('loadDiary API response:', response);
+            
             // Backend returns array directly for diary entries
             if (Array.isArray(response)) {
+                console.log('Setting diary entries:', response);
                 this.setDiary({ date, entries: response });
             } else {
                 console.error('Unexpected diary response format:', response);

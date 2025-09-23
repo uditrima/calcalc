@@ -1,0 +1,21 @@
+
+/* Meal-specific title colors */
+[data-mealtype="morgenmad"] {
+    color: var(--meal-morgenmad);
+}
+
+[data-mealtype="frokost"] {
+    color: var(--meal-frokost);
+}
+
+[data-mealtype="aftensmad"] {
+    color: var(--meal-aftensmad);
+}
+
+[data-mealtype="mellemmaaltid1"] {
+    color: var(--meal-mellemm1);
+}
+
+[data-mealtype="mellemmaaltid2"] {
+    color: var(--meal-mellemm2);
+}

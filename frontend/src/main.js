@@ -416,6 +416,7 @@ class CalorieTrackerApp {
         
         this.appContainer.addEventListener('onGoBackToFood', (event) => {
             console.log('Go back to food clicked');
+            console.log('Current state before going back to food:', AppState.getState());
             this.showView('food');
         });
         

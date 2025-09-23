@@ -129,7 +129,7 @@ export function Diary(container) {
     const foodItem = document.createElement('div');
     foodItem.className = 'summary-item';
     const foodCalories = document.createElement('div');
-    foodCalories.className = 'summary-number food-calories';
+    foodCalories.className = 'summary-number diary-food-total-calories';
     foodCalories.textContent = '0';
     const foodLabel = document.createElement('div');
     foodLabel.className = 'summary-label';
@@ -216,7 +216,6 @@ export function Diary(container) {
     
     // Force complete refresh on load to ensure clean state
     setTimeout(async () => {
-        console.log('=== INITIAL STATE REFRESH ===');
         const currentDate = new Date();
         const dateString = currentDate.toISOString().split('T')[0];
         
@@ -224,7 +223,6 @@ export function Diary(container) {
         AppState.setDiary({ date: dateString, entries: [] });
         await AppState.loadDiary(dateString);
         
-        console.log('Initial state loaded:', AppState.getState().diary);
         
         // Check for any UI elements that don't match current state
         const currentState = AppState.getState();
@@ -234,7 +232,6 @@ export function Diary(container) {
         uiElements.forEach(element => {
             const elementEntryId = parseInt(element.getAttribute('data-entry-id'));
             if (!stateEntryIds.has(elementEntryId)) {
-                console.log('Removing UI element with non-existent entry ID:', elementEntryId);
                 element.remove();
             }
         });
@@ -245,7 +242,6 @@ export function Diary(container) {
         try {
             const currentDate = new Date();
             const dateString = currentDate.toISOString().split('T')[0];
-            console.log('Force refreshing diary data for:', dateString);
             await AppState.loadDiary(dateString);
         } catch (error) {
             console.error('Error force refreshing diary:', error);
@@ -276,15 +272,11 @@ export function Diary(container) {
                                [...frontendIds].some(id => !backendIds.has(id));
             
             if (hasMismatch) {
-                console.log('State mismatch detected, syncing with backend');
-                console.log('Frontend IDs:', [...frontendIds]);
-                console.log('Backend IDs:', [...backendIds]);
                 
                 // Clear current state and reload from backend
                 AppState.setDiary({ date: dateString, entries: [] });
                 await AppState.loadDiary(dateString);
                 
-                console.log('State synced with backend');
             }
         } catch (error) {
             console.error('Error checking state sync:', error);
@@ -297,7 +289,6 @@ export function Diary(container) {
     // Force complete UI cleanup and state sync
     async function forceCompleteSync() {
         try {
-            console.log('=== FORCE COMPLETE SYNC ===');
             const currentDate = new Date();
             const dateString = currentDate.toISOString().split('T')[0];
             
@@ -314,7 +305,6 @@ export function Diary(container) {
             AppState.setDiary({ date: dateString, entries: [] });
             await AppState.loadDiary(dateString);
             
-            console.log('Complete sync finished, new state:', AppState.getState().diary);
         } catch (error) {
             console.error('Error in force complete sync:', error);
         }
@@ -367,14 +357,16 @@ export function Diary(container) {
         const exercises = state.exercises || [];
         const goals = state.goals || {};
         
+        
         const totalFoodCalories = entries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
         const totalExerciseCalories = exercises.reduce((sum, ex) => sum + (ex.calories_burned || 0), 0);
         const goalCalories = goals.daily_calories || 2000;
         const remainingCalories = goalCalories - totalFoodCalories + totalExerciseCalories;
         
+        
         // Update summary display
         const goalElement = document.querySelector('.goal-calories');
-        const foodElement = document.querySelector('.food-calories');
+        const foodElement = document.querySelector('.diary-food-total-calories');
         const exerciseElement = document.querySelector('.exercise-calories');
         const remainingElement = document.querySelector('.remaining-calories');
         
@@ -394,14 +386,12 @@ export function Diary(container) {
         currentDate.setDate(currentDate.getDate() - 1);
         dateDisplay.textContent = formatDate(currentDate);
         loadDiaryForDate(currentDate);
-        console.log('Previous day:', formatDate(currentDate));
     });
     
     nextButton.addEventListener('click', () => {
         currentDate.setDate(currentDate.getDate() + 1);
         dateDisplay.textContent = formatDate(currentDate);
         loadDiaryForDate(currentDate);
-        console.log('Next day:', formatDate(currentDate));
     });
     
     function formatDate(date) {
@@ -416,7 +406,6 @@ export function Diary(container) {
     async function loadDiaryForDate(date) {
         try {
             const dateString = date.toISOString().split('T')[0];
-            console.log('Loading diary data for date:', dateString);
             
             // Load diary entries for the selected date
             await AppState.loadDiary(dateString);
@@ -426,12 +415,10 @@ export function Diary(container) {
             
             // Get updated state
             const state = AppState.getState();
-            console.log('State after loading:', state);
             
             // Update the diary display with new data
             updateDiaryDisplay(dateString);
             
-            console.log('Diary data loaded successfully for:', dateString);
         } catch (error) {
             console.error('Error loading diary data:', error);
         }
@@ -439,10 +426,8 @@ export function Diary(container) {
     
     function updateDiaryDisplay(dateString) {
         const state = AppState.getState();
-        console.log('Updating diary display with state:', state);
         
         if (!state) {
-            console.log('State is undefined in updateDiaryDisplay');
             return;
         }
         
@@ -458,28 +443,21 @@ export function Diary(container) {
     
     function updateSummaryDetails(state, dateString) {
         if (!state) {
-            console.log('State is undefined in updateSummaryDetails');
             return;
         }
         
         // Use the existing updateSummarySection function which has the correct selectors
         updateSummarySection(state);
         
-        console.log('Summary details updated for date:', dateString, {
-            totalCalories: (state.diary && state.diary.entries) ? state.diary.entries.reduce((sum, entry) => sum + (entry.calories || 0), 0) : 0,
-            totalExercise: (state.exercises || []).reduce((sum, ex) => sum + (ex.calories_burned || 0), 0)
-        });
     }
     
     function updateMealSectionsFromEntries(state, dateString) {
         if (!state) {
-            console.log('State is undefined in updateMealSectionsFromEntries');
             return;
         }
         const diaryEntries = (state.diary && state.diary.entries) || [];
         
-        console.log('updateMealSectionsFromEntries - Current diary entries:', diaryEntries);
-        console.log('Entry IDs in state:', diaryEntries.map(e => e.id));
+        
         
         // Group entries by meal type
         const entriesByMeal = {};
@@ -505,7 +483,6 @@ export function Diary(container) {
         uiElements.forEach(element => {
             const elementEntryId = parseInt(element.getAttribute('data-entry-id'));
             if (!stateEntryIds.has(elementEntryId)) {
-                console.log('Removing UI element with non-existent entry ID:', elementEntryId);
                 if (element._cleanupSwipe) {
                     element._cleanupSwipe();
                 }
@@ -516,7 +493,7 @@ export function Diary(container) {
     
     function updateMealSectionContent(mealSection, entries) {
         // Find the food list container
-        const foodList = mealSection.querySelector('.food-list');
+        const foodList = mealSection.querySelector('.diary-food-list');
         if (!foodList) return;
         
         // Clear existing content
@@ -539,7 +516,6 @@ export function Diary(container) {
     function updateExerciseSection(state = null) {
         const currentState = state || AppState.getState();
         if (!currentState) {
-            console.log('State is undefined in updateExerciseSection');
             return;
         }
         const exercises = currentState.exercises || [];
@@ -569,14 +545,13 @@ export function Diary(container) {
     
     function createFoodItem(entry) {
         const item = document.createElement('div');
-        item.className = 'food-item';
+        item.className = 'diary-food-item';
+        
         
         // Add entry ID as data attribute for deletion
         if (entry.id) {
             item.setAttribute('data-entry-id', entry.id);
-            console.log('Set data-entry-id to:', entry.id, 'for food:', entry.food_name);
         } else {
-            console.warn('No entry.id found for entry:', entry);
         }
         
         // Add food ID as data attribute if available
@@ -589,12 +564,12 @@ export function Diary(container) {
         const portionGrams = PortionConverter.formatPortion(grams / 100.0, true); // Convert grams to portions
         
         item.innerHTML = `
-            <div class="food-item-content">
-                <div class="food-name">${entry.food_name || 'Ukendt fødevare'}</div>
-                <div class="food-portion">${portionGrams}</div>
-                <div class="food-calories">${Math.round(entry.calories || 0)} cal</div>
+            <div class="diary-food-item-content">
+                <div class="diary-food-name">${entry.food_name || 'Ukendt fødevare'}</div>
+                <div class="diary-food-portion">${portionGrams}</div>
+                <div class="diary-food-item-calories">${Math.round(entry.calories || 0)} cal</div>
             </div>
-            <div class="food-item-actions">
+            <div class="diary-food-item-actions">
                 <button class="delete-btn" title="Slet fødevare">🗑️</button>
             </div>
         `;
@@ -630,7 +605,8 @@ export function Diary(container) {
         leftSection.className = 'meal-left-section';
         
         const mealTitle = document.createElement('span');
-        mealTitle.className = 'meal-title';
+        mealTitle.className = 'meal-title-diary';
+        mealTitle.dataset.mealtype = mealType;
         mealTitle.textContent = title;
         leftSection.appendChild(mealTitle);
         
@@ -668,7 +644,7 @@ export function Diary(container) {
         
         // Line 2: Food list container
         const foodList = document.createElement('div');
-        foodList.className = 'food-list';
+        foodList.className = 'diary-food-list';
         section.appendChild(foodList);
         
         return section;
@@ -684,7 +660,7 @@ export function Diary(container) {
         line1.className = 'meal-line-1';
         
         const exerciseTitle = document.createElement('span');
-        exerciseTitle.className = 'meal-title';
+        exerciseTitle.className = 'meal-title-diary';
         exerciseTitle.textContent = title;
         line1.appendChild(exerciseTitle);
         
@@ -794,7 +770,6 @@ export function Diary(container) {
         // Get entry ID from data attribute
         const entryId = item.getAttribute('data-entry-id');
         if (!entryId) {
-            console.warn('No data-entry-id found on food item, skipping swipe functionality');
             return;
         }
         
@@ -954,10 +929,6 @@ export function Diary(container) {
             // Get entry ID from data attribute - this is the single source of truth
             const entryId = itemElement.getAttribute('data-entry-id');
             
-            console.log('=== DELETE ATTEMPT ===');
-            console.log('Attempting to delete entry with ID:', entryId);
-            console.log('Current state entries:', AppState.getState().diary.entries);
-            console.log('Current state entry IDs:', AppState.getState().diary.entries.map(e => e.id));
             
             if (!entryId) {
                 throw new Error('No data-entry-id found on food item');
@@ -968,7 +939,6 @@ export function Diary(container) {
             const entryExists = currentState.diary.entries.some(entry => entry.id === parseInt(entryId));
             
             if (!entryExists) {
-                console.log('Entry', entryId, 'not found in current state, removing from UI immediately');
                 // Entry doesn't exist in state, just remove from UI immediately
                 if (itemElement._cleanupSwipe) {
                     itemElement._cleanupSwipe();
@@ -986,7 +956,6 @@ export function Diary(container) {
             
             if (response && response.message) {
                 // Animation is already running, just wait for it to complete
-                console.log('Delete successful, animation already running');
                 
                 setTimeout(async () => {
                     // Cleanup swipe listeners
@@ -1000,14 +969,11 @@ export function Diary(container) {
                     const currentDate = new Date();
                     const dateString = currentDate.toISOString().split('T')[0];
                     
-                    console.log('=== FORCE RELOAD ===');
-                    console.log('Reloading diary data from backend for date:', dateString);
                     
                     // Clear current state and reload from backend
                     AppState.setDiary({ date: dateString, entries: [] });
                     await AppState.loadDiary(dateString);
                     
-                    console.log('Reloaded state:', AppState.getState().diary);
                 }, 100); // Short delay to ensure animation is complete
             } else {
                 throw new Error(response?.error || 'Delete failed');
@@ -1017,7 +983,6 @@ export function Diary(container) {
             
             // If it's a 404 error, the entry might already be deleted
             if (error.message.includes('404')) {
-                console.log('Entry not found (404) - animation already running, letting it complete');
                 
                 // Animation is already running, just wait for it to complete
                 setTimeout(async () => {
@@ -1035,14 +1000,11 @@ export function Diary(container) {
                     // Get entry ID from data attribute
                     const entryId = itemElement.getAttribute('data-entry-id');
                     
-                    console.log('=== 404 FORCE RELOAD ===');
-                    console.log('Entry', entryId, 'not found in backend, reloading state');
                     
                     // Clear current state and reload from backend
                     AppState.setDiary({ date: dateString, entries: [] });
                     await AppState.loadDiary(dateString);
                     
-                    console.log('404 - Reloaded state:', AppState.getState().diary);
                 }, 100); // Short delay to ensure animation is complete
                 
                 return;
@@ -1059,7 +1021,6 @@ export function Diary(container) {
     }
 
     function createCustomScrollbar(container) {
-        console.log('Creating custom scrollbar for container:', container);
         
         // Color interpolation function
         function interpolateColor(color1, color2, ratio) {
@@ -1114,7 +1075,6 @@ export function Diary(container) {
             const scrollHeight = container.scrollHeight;
             const clientHeight = container.clientHeight;
             
-            console.log('Updating scrollbar:', { scrollTop, scrollHeight, clientHeight });
             
             // Always show scrollbar for testing
             scrollbar.style.display = 'block';
@@ -1140,18 +1100,15 @@ export function Diary(container) {
         
         // Add scroll listener
         container.addEventListener('scroll', () => {
-            console.log('Container scrolled, updating scrollbar');
             updateScrollbar();
         });
         
         // Add click event listener to scrollbar track
         scrollbar.addEventListener('click', (e) => {
-            console.log('Scrollbar track clicked');
             const rect = scrollbar.getBoundingClientRect();
             const clickY = e.clientY - rect.top;
             const percentage = clickY / rect.height;
             const scrollTop = percentage * (container.scrollHeight - container.clientHeight);
-            console.log('Scrolling to:', scrollTop);
             container.scrollTop = scrollTop;
         });
         
@@ -1166,7 +1123,6 @@ export function Diary(container) {
         let startScrollTop = 0;
         
         thumb.addEventListener('mousedown', (e) => {
-            console.log('Thumb mousedown');
             isDragging = true;
             startY = e.clientY;
             startScrollTop = container.scrollTop;

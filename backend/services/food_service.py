@@ -17,6 +17,11 @@ class FoodService:
         """Create a new food entry."""
         food = Food(
             name=data['name'],
+            category=data.get('category', 'ukendt'),
+            brand=data.get('brand'),
+            used=data.get('used', 0),
+            last_used=data.get('last_used'),
+            last_portion=data.get('last_portion', 1.0),
             calories=data.get('calories', 0.0),
             protein=data.get('protein', 0.0),
             carbohydrates=data.get('carbohydrates', 0.0),
@@ -86,6 +91,12 @@ class FoodService:
             food.vitamin_b12 = data['vitamin_b12']
         if 'magnesium' in data:
             food.magnesium = data['magnesium']
+        if 'last_used' in data:
+            food.last_used = data['last_used']
+        if 'last_portion' in data:
+            food.last_portion = data['last_portion']
+        if 'used' in data:
+            food.used = data['used']
         
         self.db.session.commit()
         return food

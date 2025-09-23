@@ -482,12 +482,13 @@ export function AddFood(container) {
         
         // Convert currentServings (portions) to grams for calculation
         const portionInGrams = PortionConverter.portionToGrams(currentServings);
-        const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
         
-        const totalCalories = Math.round(nutrition.calories);
-        const totalCarbs = nutrition.carbohydrates.toFixed(1);
-        const totalFat = nutrition.fat.toFixed(1);
-        const totalProtein = nutrition.protein.toFixed(1);
+        // Use same calculation as backend: multiplier = grams / 100.0
+        const multiplier = portionInGrams / 100.0;
+        const totalCalories = Math.round((currentFood.calories || 0) * multiplier);
+        const totalCarbs = ((currentFood.carbohydrates || 0) * multiplier).toFixed(1);
+        const totalFat = ((currentFood.fat || 0) * multiplier).toFixed(1);
+        const totalProtein = ((currentFood.protein || 0) * multiplier).toFixed(1);
         
         // Update calorie gauge
         const caloriesText = addFoodSection.querySelector('.calories-text');
@@ -529,12 +530,13 @@ export function AddFood(container) {
         
         // Convert currentServings (portions) to grams for calculation
         const portionInGrams = PortionConverter.portionToGrams(currentServings);
-        const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
         
-        const totalCalories = Math.round(nutrition.calories);
-        const totalCarbs = nutrition.carbohydrates.toFixed(1);
-        const totalFat = nutrition.fat.toFixed(1);
-        const totalProtein = nutrition.protein.toFixed(1);
+        // Use same calculation as backend: multiplier = grams / 100.0
+        const multiplier = portionInGrams / 100.0;
+        const totalCalories = Math.round((currentFood.calories || 0) * multiplier);
+        const totalCarbs = ((currentFood.carbohydrates || 0) * multiplier).toFixed(1);
+        const totalFat = ((currentFood.fat || 0) * multiplier).toFixed(1);
+        const totalProtein = ((currentFood.protein || 0) * multiplier).toFixed(1);
         
         // Calculate percentages
         const caloriesPercentage = Math.round((totalCalories / formattedGoals.calories.value) * 100);
@@ -608,7 +610,6 @@ export function AddFood(container) {
         
         // Convert currentServings (portions) to grams for backend
         const portionInGrams = PortionConverter.portionToGrams(currentServings);
-        const nutrition = PortionConverter.calculateNutritionForGrams(currentFood, portionInGrams);
         
         // Get current date
         const today = new Date().toISOString().split('T')[0];
@@ -638,16 +639,21 @@ export function AddFood(container) {
                 // Reload diary data to show updated entries
                 await AppState.loadDiary(today);
                 
-                // Update last_used timestamp for the food
+                // Update last_used timestamp, last_portion, and used counter for the food
                 if (currentFood.id) {
                     try {
                         const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp
-                        await api.updateFood(currentFood.id, { last_used: currentTime });
+                        const newUsedCount = (currentFood.used || 0) + 1;
+                        await api.updateFood(currentFood.id, { 
+                            last_used: currentTime,
+                            last_portion: currentServings,
+                            used: newUsedCount
+                        });
                         
                         // Reload foods to get updated data
                         await AppState.loadFoods();
                     } catch (error) {
-                        console.error('Failed to update food last_used:', error);
+                        console.error('Failed to update food last_used, last_portion, and used count:', error);
                     }
                 }
                 
