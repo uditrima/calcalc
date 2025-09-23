@@ -288,9 +288,9 @@ function createCategoryFilters() {
     // Define categories based on database
     const categories = [
         'bagværk', 'brød', 'condiments', 'frost', 'frugt', 'grønt', 
-        'konserves', 'korn og gryn', 'krydderier', 'kød', 'kød og fisk', 
-        'mejeri', 'pasta og ris', 'pålæg', 'ris og pasta', 'slik', 
-        'slik og kager', 'snacks', 'take away', 'vin og øl', 'øl og vin'
+        'konserves', 'korn og gryn', 'krydderier', 'kød', 'fisk', 
+        'mejeri', 'pålæg', 'ris og pasta', 'slik og kager', 'snacks', 
+        'take away', 'vin og øl'
     ];
     
     // Create filter row
@@ -310,7 +310,8 @@ function createCategoryFilters() {
         const label = document.createElement('label');
         label.htmlFor = checkbox.id;
         label.textContent = category;
-        label.className = 'category-label';
+        const categoryClass = category.replace(/\s+/g, '-').replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/å/g, 'aa');
+        label.className = `category-label category-${categoryClass}`;
         
         // Add change event listener
         checkbox.addEventListener('change', handleCategoryFilter);

@@ -240,10 +240,7 @@
 }
 
 .category-checkbox {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--color-primary);
-    cursor: pointer;
+    display: none; /* Hide the checkbox completely */
 }
 
 .category-label {
@@ -251,17 +248,277 @@
     color: var(--color-text);
     cursor: pointer;
     user-select: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    background: var(--color-glass);
+    border-left: 3px solid transparent;
+    position: relative;
 }
 
-.category-label:hover {
-    color: var(--color-primary);
+/* Category-specific styling */
+.category-bagvaerk {
+    border-left-color: var(--color-cat-bagværk);
+    background: var(--color-cat-bagværk-bg);
 }
 
+.category-bagvaerk:hover {
+    background: var(--color-cat-bagværk-hover);
+    color: var(--color-cat-bagværk);
+}
+
+.category-brod {
+    border-left-color: var(--color-cat-brød);
+    background: var(--color-cat-brød-bg);
+}
+
+.category-brod:hover {
+    background: var(--color-cat-brød-hover);
+    color: var(--color-cat-brød);
+}
+
+.category-condiments {
+    border-left-color: var(--color-cat-condiments);
+    background: var(--color-cat-condiments-bg);
+}
+
+.category-condiments:hover {
+    background: var(--color-cat-condiments-hover);
+    color: var(--color-cat-condiments);
+}
+
+.category-frost {
+    border-left-color: var(--color-cat-frost);
+    background: var(--color-cat-frost-bg);
+}
+
+.category-frost:hover {
+    background: var(--color-cat-frost-hover);
+    color: var(--color-cat-frost);
+}
+
+.category-frugt {
+    border-left-color: var(--color-cat-frugt);
+    background: var(--color-cat-frugt-bg);
+}
+
+.category-frugt:hover {
+    background: var(--color-cat-frugt-hover);
+    color: var(--color-cat-frugt);
+}
+
+.category-gront {
+    border-left-color: var(--color-cat-grønt);
+    background: var(--color-cat-grønt-bg);
+}
+
+.category-gront:hover {
+    background: var(--color-cat-grønt-hover);
+    color: var(--color-cat-grønt);
+}
+
+.category-konserves {
+    border-left-color: var(--color-cat-konserves);
+    background: var(--color-cat-konserves-bg);
+}
+
+.category-konserves:hover {
+    background: var(--color-cat-konserves-hover);
+    color: var(--color-cat-konserves);
+}
+
+.category-korn-og-gryn {
+    border-left-color: var(--color-cat-korn);
+    background: var(--color-cat-korn-bg);
+}
+
+.category-korn-og-gryn:hover {
+    background: var(--color-cat-korn-hover);
+    color: var(--color-cat-korn);
+}
+
+.category-krydderier {
+    border-left-color: var(--color-cat-krydderier);
+    background: var(--color-cat-krydderier-bg);
+}
+
+.category-krydderier:hover {
+    background: var(--color-cat-krydderier-hover);
+    color: var(--color-cat-krydderier);
+}
+
+.category-kod {
+    border-left-color: var(--color-cat-kød);
+    background: var(--color-cat-kød-bg);
+}
+
+.category-kod:hover {
+    background: var(--color-cat-kød-hover);
+    color: var(--color-cat-kød);
+}
+
+.category-fisk {
+    border-left-color: var(--color-cat-fisk);
+    background: var(--color-cat-fisk-bg);
+}
+
+.category-fisk:hover {
+    background: var(--color-cat-fisk-hover);
+    color: var(--color-cat-fisk);
+}
+
+.category-mejeri {
+    border-left-color: var(--color-cat-mejeri);
+    background: var(--color-cat-mejeri-bg);
+}
+
+.category-mejeri:hover {
+    background: var(--color-cat-mejeri-hover);
+    color: var(--color-cat-mejeri);
+}
+
+
+.category-paalaeg {
+    border-left-color: var(--color-cat-pålæg);
+    background: var(--color-cat-pålæg-bg);
+}
+
+.category-paalaeg:hover {
+    background: var(--color-cat-pålæg-hover);
+    color: var(--color-cat-pålæg);
+}
+
+.category-ris-og-pasta {
+    border-left-color: var(--color-cat-ris-pasta);
+    background: var(--color-cat-ris-pasta-bg);
+}
+
+.category-ris-og-pasta:hover {
+    background: var(--color-cat-ris-pasta-hover);
+    color: var(--color-cat-ris-pasta);
+}
+
+
+.category-slik-og-kager {
+    border-left-color: var(--color-cat-slik-kager);
+    background: var(--color-cat-slik-kager-bg);
+}
+
+.category-slik-og-kager:hover {
+    background: var(--color-cat-slik-kager-hover);
+    color: var(--color-cat-slik-kager);
+}
+
+.category-snacks {
+    border-left-color: var(--color-cat-snacks);
+    background: var(--color-cat-snacks-bg);
+}
+
+.category-snacks:hover {
+    background: var(--color-cat-snacks-hover);
+    color: var(--color-cat-snacks);
+}
+
+.category-take-away {
+    border-left-color: var(--color-cat-takeaway);
+    background: var(--color-cat-takeaway-bg);
+}
+
+.category-take-away:hover {
+    background: var(--color-cat-takeaway-hover);
+    color: var(--color-cat-takeaway);
+}
+
+.category-vin-og-ol {
+    border-left-color: var(--color-cat-vin-øl);
+    background: var(--color-cat-vin-øl-bg);
+}
+
+.category-vin-og-ol:hover {
+    background: var(--color-cat-vin-øl-hover);
+    color: var(--color-cat-vin-øl);
+}
+
+
+/* Checked state for all categories */
 .category-checkbox:checked + .category-label {
-    color: var(--color-primary);
     font-weight: 500;
 }
+
+.category-checkbox:checked + .category-bagvaerk {
+    color: var(--color-cat-bagværk);
+}
+
+.category-checkbox:checked + .category-brod {
+    color: var(--color-cat-brød);
+}
+
+.category-checkbox:checked + .category-condiments {
+    color: var(--color-cat-condiments);
+}
+
+.category-checkbox:checked + .category-frost {
+    color: var(--color-cat-frost);
+}
+
+.category-checkbox:checked + .category-frugt {
+    color: var(--color-cat-frugt);
+}
+
+.category-checkbox:checked + .category-gront {
+    color: var(--color-cat-grønt);
+}
+
+.category-checkbox:checked + .category-konserves {
+    color: var(--color-cat-konserves);
+}
+
+.category-checkbox:checked + .category-korn-og-gryn {
+    color: var(--color-cat-korn);
+}
+
+.category-checkbox:checked + .category-krydderier {
+    color: var(--color-cat-krydderier);
+}
+
+.category-checkbox:checked + .category-kod {
+    color: var(--color-cat-kød);
+}
+
+.category-checkbox:checked + .category-fisk {
+    color: var(--color-cat-fisk);
+}
+
+.category-checkbox:checked + .category-mejeri {
+    color: var(--color-cat-mejeri);
+}
+
+
+.category-checkbox:checked + .category-paalaeg {
+    color: var(--color-cat-pålæg);
+}
+
+.category-checkbox:checked + .category-ris-og-pasta {
+    color: var(--color-cat-ris-pasta);
+}
+
+
+.category-checkbox:checked + .category-slik-og-kager {
+    color: var(--color-cat-slik-kager);
+}
+
+.category-checkbox:checked + .category-snacks {
+    color: var(--color-cat-snacks);
+}
+
+.category-checkbox:checked + .category-take-away {
+    color: var(--color-cat-takeaway);
+}
+
+.category-checkbox:checked + .category-vin-og-ol {
+    color: var(--color-cat-vin-øl);
+}
+
 
 .search-container {
     position: relative;

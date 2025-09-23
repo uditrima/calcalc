@@ -43,6 +43,82 @@
     --color-info-hover: #2f3542;
     --color-info-light: #5352ed;
     --color-info-dark: #2c2e3e;
+    
+    /* Category Colors */
+    --color-cat-bagværk: #d28a6a;
+    --color-cat-bagværk-hover: #c47a5a;
+    --color-cat-bagværk-bg: rgba(210, 138, 106, 0.08);
+    
+    --color-cat-brød: #cfa86d;
+    --color-cat-brød-hover: #b8965a;
+    --color-cat-brød-bg: rgba(207, 168, 109, 0.08);
+    
+    --color-cat-condiments: #c47dd6;
+    --color-cat-condiments-hover: #b066c7;
+    --color-cat-condiments-bg: rgba(196, 125, 214, 0.08);
+    
+    --color-cat-frost: #7abcfb;
+    --color-cat-frost-hover: #5aa8f9;
+    --color-cat-frost-bg: rgba(122, 188, 251, 0.08);
+    
+    --color-cat-frugt: #f57c7c;
+    --color-cat-frugt-hover: #f26565;
+    --color-cat-frugt-bg: rgba(245, 124, 124, 0.08);
+    
+    --color-cat-grønt: #46ae98;
+    --color-cat-grønt-hover: #3a9b85;
+    --color-cat-grønt-bg: rgba(70, 174, 152, 0.08);
+    
+    --color-cat-konserves: #9b7c5c;
+    --color-cat-konserves-hover: #8a6b4a;
+    --color-cat-konserves-bg: rgba(155, 124, 92, 0.08);
+    
+    --color-cat-korn: #e6b84c;
+    --color-cat-korn-hover: #d4a63a;
+    --color-cat-korn-bg: rgba(230, 184, 76, 0.08);
+    
+    --color-cat-krydderier: #d96e3c;
+    --color-cat-krydderier-hover: #c55d2a;
+    --color-cat-krydderier-bg: rgba(217, 110, 60, 0.08);
+    
+    --color-cat-kød: #e05b5b;
+    --color-cat-kød-hover: #d44a4a;
+    --color-cat-kød-bg: rgba(224, 91, 91, 0.08);
+    
+    --color-cat-fisk: #5caed6;
+    --color-cat-fisk-hover: #4a9bc4;
+    --color-cat-fisk-bg: rgba(92, 174, 214, 0.08);
+    
+    --color-cat-mejeri: #f8b043;
+    --color-cat-mejeri-hover: #f6a02a;
+    --color-cat-mejeri-bg: rgba(248, 176, 67, 0.08);
+    
+    
+    --color-cat-pålæg: #b68cd9;
+    --color-cat-pålæg-hover: #a577c7;
+    --color-cat-pålæg-bg: rgba(182, 140, 217, 0.08);
+    
+    --color-cat-ris-pasta: #e6c46b;
+    --color-cat-ris-pasta-hover: #d4b259;
+    --color-cat-ris-pasta-bg: rgba(230, 196, 107, 0.08);
+    
+    
+    --color-cat-slik-kager: #ff9ecf;
+    --color-cat-slik-kager-hover: #ff87c4;
+    --color-cat-slik-kager-bg: rgba(255, 158, 207, 0.08);
+    
+    --color-cat-snacks: #f2a65a;
+    --color-cat-snacks-hover: #f09548;
+    --color-cat-snacks-bg: rgba(242, 166, 90, 0.08);
+    
+    --color-cat-takeaway: #e67e22;
+    --color-cat-takeaway-hover: #d46b1a;
+    --color-cat-takeaway-bg: rgba(230, 126, 34, 0.08);
+    
+    --color-cat-vin-øl: #8e44ad;
+    --color-cat-vin-øl-hover: #7d3a9b;
+    --color-cat-vin-øl-bg: rgba(142, 68, 173, 0.08);
+    
 }
 
 /* Background Colors */
