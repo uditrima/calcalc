@@ -19,23 +19,19 @@ export function FoodForm(container) {
     const foodHeader = createFoodHeader();
     foodSection.appendChild(foodHeader);
     
-    // 2. Search Section
-    const searchSection = createSearchSection();
-    foodSection.appendChild(searchSection);
-    
-    // 3. Menu Section
+    // 2. Menu Section
     const menuSection = createMenuSection();
     foodSection.appendChild(menuSection);
     
-    // 4. Carousel Menu Section
-    const carouselSection = createCarouselSection();
-    foodSection.appendChild(carouselSection);
+    // 3. Search Section
+    const searchSection = createSearchSection();
+    foodSection.appendChild(searchSection);
     
-    // 5. Sort By Section
+    // 4. Sort By Section
     const sortBySection = createSortBySection();
     foodSection.appendChild(sortBySection);
     
-    // 6. Food Items Section
+    // 5. Food Items Section
     const foodItemsSection = createFoodItemsSection();
     foodSection.appendChild(foodItemsSection);
     
@@ -407,6 +403,12 @@ function renderNoResults(query) {
     const foodItems = window.foodItemsSection.querySelectorAll('.food-item');
     foodItems.forEach(item => item.remove());
     
+    // Also clear any existing no-results message
+    const existingNoResults = window.foodItemsSection.querySelector('.no-results');
+    if (existingNoResults) {
+        existingNoResults.remove();
+    }
+    
     // Create no results message
     const noResultsDiv = document.createElement('div');
     noResultsDiv.className = 'no-results';
@@ -459,37 +461,6 @@ function createMenuSection() {
     return section;
 }
 
-function createCarouselSection() {
-    const section = document.createElement('div');
-    section.className = 'carousel-section';
-    
-    const carouselContainer = document.createElement('div');
-    carouselContainer.className = 'carousel-container';
-    
-    const carouselItems = [
-        { icon: '🎤', label: 'Voice Log', new: true },
-        { icon: '📱', label: 'Scan a Barcode' }
-    ];
-    
-    carouselItems.forEach(item => {
-        const carouselItem = document.createElement('div');
-        carouselItem.className = 'carousel-item';
-        carouselItem.innerHTML = `
-            <div class="carousel-icon">${item.icon}</div>
-            <div class="carousel-label">${item.label}</div>
-            ${item.new ? '<div class="new-badge">NEW</div>' : ''}
-        `;
-        carouselItem.addEventListener('click', () => selectCarouselItem(item.label));
-        carouselContainer.appendChild(carouselItem);
-    });
-    
-    section.appendChild(carouselContainer);
-    
-    function selectCarouselItem(label) {
-    }
-    
-    return section;
-}
 
 function createSortBySection() {
     const section = document.createElement('div');
@@ -590,6 +561,12 @@ function renderFoodItems(foods, sortBy = 'recent') {
     const foodItems = window.foodItemsSection.querySelectorAll('.food-item');
     foodItems.forEach(item => item.remove());
     
+    // Also clear any no-results message
+    const noResults = window.foodItemsSection.querySelector('.no-results');
+    if (noResults) {
+        noResults.remove();
+    }
+    
     // Sort foods based on sortBy parameter
     const sortedFoods = sortFoods(foods, sortBy);
     
@@ -658,8 +635,9 @@ function createFoodItem(food) {
                 <div class="food-name">${food.name}</div>
                 <div class="food-info">
                     <span class="food-calories">${calories}</span>
-                    <span class="food-calories-suffix"> cal</span>
-                    <span class="food-other">, ${brandText}${category}, ${lastPortionGrams}</span>
+                    <span class="food-calories-suffix">cal</span>
+                    <span class="food-category food-category-${category.replaceAll(' ', '-')}">${category}</span>
+                    <span class="food-amount">${lastPortionGrams}</span>
                 </div>
             </div>
         </div>

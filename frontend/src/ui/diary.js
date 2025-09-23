@@ -569,13 +569,30 @@ export function Diary(container) {
                 <div class="diary-food-portion">${portionGrams}</div>
                 <div class="diary-food-item-calories">${Math.round(entry.calories || 0)} cal</div>
             </div>
-            <div class="diary-food-item-actions">
-                <button class="delete-btn" title="Slet fødevare">🗑️</button>
-            </div>
         `;
         
         // Add swipe functionality - pass the item itself so we can get data-entry-id
         addSwipeToDelete(item);
+        
+        // Add click event listener for edit mode
+        item.addEventListener('click', (e) => {
+            // Get entry data from the item
+            const entryId = item.getAttribute('data-entry-id');
+            const foodId = item.getAttribute('data-food-id');
+            
+            if (entryId && foodId) {
+                // Dispatch edit event with entry data
+                const customEvent = new CustomEvent('onEditFood', {
+                    detail: { 
+                        entryId: parseInt(entryId),
+                        foodId: parseInt(foodId),
+                        mealType: entry.meal_type
+                    },
+                    bubbles: true
+                });
+                container.dispatchEvent(customEvent);
+            }
+        });
         
         return item;
     }
@@ -787,12 +804,6 @@ export function Diary(container) {
             item.style.transform = 'translateX(0)';
             item.style.backgroundColor = '';
             
-            const deleteBtn = item.querySelector('.delete-btn');
-            if (deleteBtn) {
-                deleteBtn.style.opacity = '0';
-                deleteBtn.style.transition = 'opacity 0.3s ease';
-            }
-            
             isDragging = false;
             hasMoved = false;
         }
@@ -841,13 +852,7 @@ export function Diary(container) {
                 item.style.transform = `translateX(-${swipeDistance}px)`;
                 hasMoved = true;
                 
-                // Show delete button when swiped enough with smooth transition
-                const deleteBtn = item.querySelector('.delete-btn');
-                if (deleteBtn) {
-                    const opacity = Math.min(swipeDistance / threshold, 1);
-                    deleteBtn.style.opacity = opacity;
-                    deleteBtn.style.transition = 'opacity 0.1s ease';
-                }
+                // Visual feedback for swipe
                 
                 // Add visual feedback - change background color based on swipe distance
                 const swipeProgress = Math.min(swipeDistance / threshold, 1);
@@ -889,13 +894,7 @@ export function Diary(container) {
                 item.style.transform = `translateX(-${swipeDistance}px)`;
                 hasMoved = true;
                 
-                // Show delete button when swiped enough with smooth transition
-                const deleteBtn = item.querySelector('.delete-btn');
-                if (deleteBtn) {
-                    const opacity = Math.min(swipeDistance / threshold, 1);
-                    deleteBtn.style.opacity = opacity;
-                    deleteBtn.style.transition = 'opacity 0.1s ease';
-                }
+                // Visual feedback for swipe
                 
                 // Add visual feedback - change background color based on swipe distance
                 const swipeProgress = Math.min(swipeDistance / threshold, 1);
@@ -908,14 +907,7 @@ export function Diary(container) {
             handleSwipeEnd();
         });
         
-        // Click delete button
-        const deleteBtn = item.querySelector('.delete-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deleteFoodItem(item);
-            });
-        }
+        // Delete functionality is now only available via swipe
         
         // Cleanup function to remove document listeners when item is removed
         item._cleanupSwipe = () => {

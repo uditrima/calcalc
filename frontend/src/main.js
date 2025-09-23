@@ -420,6 +420,11 @@ class CalorieTrackerApp {
             this.showView('food');
         });
         
+        this.appContainer.addEventListener('onGoBackToDiary', (event) => {
+            console.log('Go back to diary clicked');
+            this.showView('diary');
+        });
+        
         this.appContainer.addEventListener('onFoodSelect', (event) => {
             console.log('Food selected:', event.detail);
             // Navigate to add food view with selected food
@@ -458,6 +463,40 @@ class CalorieTrackerApp {
                 this.components.addFood.setFood(food);
                 this.components.addFood.setMealType(mealType);
                 this.showView('add-food', 'food');
+            }
+        });
+        
+        // Edit food event
+        this.appContainer.addEventListener('onEditFood', async (event) => {
+            console.log('Edit food clicked:', event.detail);
+            const { entryId, foodId, mealType } = event.detail;
+            
+            try {
+                // Load food data from database
+                const food = await this.api.getFoodById(foodId);
+                console.log('Loaded food for edit:', food);
+                
+                // Get current diary entry to get servings
+                const currentDate = new Date().toISOString().split('T')[0];
+                const diaryEntries = await this.api.getDiaryEntries(currentDate);
+                const entry = diaryEntries.find(e => e.id === entryId);
+                
+                if (entry && food) {
+                    // Convert grams to portions for display
+                    const servings = entry.amount_grams / 100.0; // Assuming 100g = 1 portion
+                    
+                    // Set edit mode in add-food component
+                    if (this.components.addFood) {
+                        this.components.addFood.setEditMode(entryId, food, mealType, servings);
+                        this.showView('add-food', 'diary');
+                    }
+                } else {
+                    console.error('Could not find entry or food data for edit');
+                    alert('Kunne ikke indlæse fødevare data til redigering');
+                }
+            } catch (error) {
+                console.error('Error loading food for edit:', error);
+                alert(`Fejl ved indlæsning af fødevare: ${error.message}`);
             }
         });
         

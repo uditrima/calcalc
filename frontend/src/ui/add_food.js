@@ -23,6 +23,9 @@ export function AddFood(container) {
     let currentFood = null;
     let currentServings = 1.0;
     let currentMealType = 'morgenmad';
+    let isEditMode = false;
+    let currentEntryId = null;
+    let cameFromDiary = false;
     
     // 1. Food Header
     const foodHeader = createFoodHeader();
@@ -80,7 +83,30 @@ export function AddFood(container) {
         setMealType: (mealType) => {
             currentMealType = mealType;
             updateMealDropdown();
-        }
+        },
+        setEditMode: (entryId, food, mealType, servings) => {
+            isEditMode = true;
+            currentEntryId = entryId;
+            currentFood = food;
+            currentMealType = mealType;
+            currentServings = servings;
+            cameFromDiary = true;
+            updateHeaderForEditMode();
+            updateServingsDisplay();
+            updateSelectedFood();
+            updateMealDropdown();
+            updateSummary();
+            updateDailyGoals();
+            loadPairedFoods();
+        },
+        clearEditMode: () => {
+            isEditMode = false;
+            currentEntryId = null;
+            cameFromDiary = false;
+            updateHeaderForAddMode();
+        },
+        isEditMode: () => isEditMode,
+        getCurrentEntryId: () => currentEntryId
     };
     
     function createFoodHeader() {
@@ -92,21 +118,35 @@ export function AddFood(container) {
         goBackBtn.className = 'go-back-btn';
         goBackBtn.innerHTML = '←';
         goBackBtn.addEventListener('click', () => {
-            const customEvent = new CustomEvent('onGoBackToFood', {
-                bubbles: true
-            });
-            // Dispatch on the app container instead of document
-            const appContainer = document.querySelector('#app');
-            if (appContainer) {
-                appContainer.dispatchEvent(customEvent);
+            if (cameFromDiary) {
+                // If we came from diary, go back to diary
+                const customEvent = new CustomEvent('onGoBackToDiary', {
+                    bubbles: true
+                });
+                const appContainer = document.querySelector('#app');
+                if (appContainer) {
+                    appContainer.dispatchEvent(customEvent);
+                } else {
+                    document.dispatchEvent(customEvent);
+                }
             } else {
-                document.dispatchEvent(customEvent);
+                // Normal navigation back to food
+                const customEvent = new CustomEvent('onGoBackToFood', {
+                    bubbles: true
+                });
+                const appContainer = document.querySelector('#app');
+                if (appContainer) {
+                    appContainer.dispatchEvent(customEvent);
+                } else {
+                    document.dispatchEvent(customEvent);
+                }
             }
         });
         header.appendChild(goBackBtn);
         
         // Title
         const title = document.createElement('h2');
+        title.className = 'add-food-title';
         title.textContent = 'Tilføj fødevare';
         header.appendChild(title);
         
@@ -213,6 +253,20 @@ export function AddFood(container) {
         if (mealDropdown) {
             mealDropdown.value = currentMealType;
             updateMealDropdownColor(mealDropdown, currentMealType);
+        }
+    }
+    
+    function updateHeaderForEditMode() {
+        const title = addFoodSection.querySelector('.add-food-title');
+        if (title) {
+            title.textContent = 'Rediger fødevare';
+        }
+    }
+    
+    function updateHeaderForAddMode() {
+        const title = addFoodSection.querySelector('.add-food-title');
+        if (title) {
+            title.textContent = 'Tilføj fødevare';
         }
     }
     
@@ -614,27 +668,36 @@ export function AddFood(container) {
         // Get current date
         const today = new Date().toISOString().split('T')[0];
         
-        // Prepare diary entry data for database
-        const diaryEntryData = {
-            food_id: currentFood.id,
-            amount_grams: portionInGrams,  // Backend expects 'amount_grams', not 'grams'
-            meal_type: currentMealType,
-            date: today
-            // Backend calculates calories and macros from food data
-        };
-        
-        console.log('Saving diary entry:', diaryEntryData);
-        
         try {
-            // Save to database via API
-            console.log('Sending API request to:', 'http://localhost:5000/api/diary/entries');
-            console.log('Request data:', diaryEntryData);
+            let response;
             
-            const response = await api.addDiaryEntry(diaryEntryData);
+            if (isEditMode && currentEntryId) {
+                // Edit existing entry
+                const updateData = {
+                    food_id: currentFood.id,
+                    amount_grams: portionInGrams,
+                    meal_type: currentMealType
+                };
+                
+                console.log('Updating diary entry:', currentEntryId, updateData);
+                response = await api.updateDiaryEntry(currentEntryId, updateData);
+            } else {
+                // Add new entry
+                const diaryEntryData = {
+                    food_id: currentFood.id,
+                    amount_grams: portionInGrams,
+                    meal_type: currentMealType,
+                    date: today
+                };
+                
+                console.log('Saving new diary entry:', diaryEntryData);
+                response = await api.addDiaryEntry(diaryEntryData);
+            }
+            
             console.log('API response:', response);
             
             if (response && response.success) {
-                console.log('Diary entry saved successfully:', response);
+                console.log('Diary entry saved/updated successfully:', response);
                 
                 // Reload diary data to show updated entries
                 await AppState.loadDiary(today);
@@ -657,23 +720,40 @@ export function AddFood(container) {
                     }
                 }
                 
-                // Go back to food view
-                const goBackEvent = new CustomEvent('onGoBackToFood', {
-                    bubbles: true
-                });
-                const appContainer = document.querySelector('#app');
-                if (appContainer) {
-                    appContainer.dispatchEvent(goBackEvent);
+                // Go back to appropriate view based on where we came from
+                if (cameFromDiary) {
+                    const goBackEvent = new CustomEvent('onGoBackToDiary', {
+                        bubbles: true
+                    });
+                    const appContainer = document.querySelector('#app');
+                    if (appContainer) {
+                        appContainer.dispatchEvent(goBackEvent);
+                    } else {
+                        document.dispatchEvent(goBackEvent);
+                    }
                 } else {
-                    document.dispatchEvent(goBackEvent);
+                    const goBackEvent = new CustomEvent('onGoBackToFood', {
+                        bubbles: true
+                    });
+                    const appContainer = document.querySelector('#app');
+                    if (appContainer) {
+                        appContainer.dispatchEvent(goBackEvent);
+                    } else {
+                        document.dispatchEvent(goBackEvent);
+                    }
+                }
+                
+                // Clear edit mode if we were in it (after navigation)
+                if (isEditMode) {
+                    addFoodComponent.clearEditMode();
                 }
                 
             } else {
-                console.error('Failed to save diary entry - no success flag:', response);
+                console.error('Failed to save/update diary entry - no success flag:', response);
                 alert(`Fejl ved gemning af fødevare: ${response?.error || 'Ukendt fejl'}`);
             }
         } catch (error) {
-            console.error('Error saving diary entry:', error);
+            console.error('Error saving/updating diary entry:', error);
             console.error('Error details:', {
                 message: error.message,
                 stack: error.stack,

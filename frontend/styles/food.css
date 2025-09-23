@@ -162,20 +162,23 @@
 
 /* 2. Search Section */
 .search-section {
+    background: var(--color-surface);
+    margin: 0 var(--space-lg) 0 var(--space-lg);
+    border: 1px solid var(--color-border);
     padding: var(--space-lg);
+    padding-bottom: var(--space-sm);
     background: var(--color-bg);
 }
 
 /* Category Filters */
 .category-filters {
     background: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
     transition: all 0.3s ease;
 }
 
 .category-toggle-btn {
     width: 100%;
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-md) var(--space-lg) var(--space-md) 0px;
     background: transparent;
     border: none;
     color: var(--color-text);
@@ -190,6 +193,7 @@
 
 .category-toggle-btn:hover {
     background: var(--color-surface);
+    border-radius: var(--radius-xl);
     color: var(--color-primary);
 }
 
@@ -204,7 +208,6 @@
 }
 
 .category-content {
-    padding: var(--space-md) var(--space-lg);
     background: var(--color-bg);
     border-top: 1px solid var(--color-border);
     animation: slideDown 0.3s ease;
@@ -222,7 +225,7 @@
 }
 
 .category-filters.expanded .category-toggle-btn {
-    background: var(--color-surface);
+    /* background: var(--color-surface);*/
     color: var(--color-primary);
 }
 
@@ -555,7 +558,12 @@
 .menu-section {
     display: flex;
     gap: 0;
-    padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+    padding: 0;
+    background: var(--color-surface);
+    margin: 0 var(--space-lg) 0 var(--space-lg);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -642,9 +650,17 @@
 /* 5. Sort By Section */
 .sort-by-section {
     display: flex;
+    margin: 0 var(--space-lg) 1px var(--space-lg);
     align-items: center;
     justify-content: space-between;
-    padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+    padding: var(--space-2xlg) 0 var(--space-md) 0;
+    background: var(--color-surface) !important;
+    backdrop-filter: var(--blur-glass) !important;
+    -webkit-backdrop-filter: var(--blur-glass) !important;
+    box-shadow: var(--shadow-glass) !important;
+    position: relative;
+    z-index: var(--z-base) !important;
+    
 }
 
 .sort-by-section h3 {
@@ -731,11 +747,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-md);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-xs);
     cursor: pointer;
     transition: all var(--transition-base);
     backdrop-filter: var(--blur-glass);
@@ -775,12 +791,13 @@
 }
 
 .food-calories-suffix {
-    color: var(--color-calories);
+    color: var(--color-text-muted);
     font-weight: 500;
+    margin-right: var(--space-xs);
 }
 
-.food-other {
-    color: var(--color-text-muted);
+.food-category {
+    margin-right: var(--space-xs);
 }
 
 .food-actions {
@@ -793,8 +810,8 @@
     color: var(--color-bg);
     border: none;
     border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -807,4 +824,77 @@
 .add-food-btn:hover {
     transform: scale(1.1);
     box-shadow: var(--shadow-glow);
+}
+
+/* Food Category-specific styling */
+.food-category-bagværk {
+    color: var(--color-cat-bagværk);
+}
+
+.food-category-brød {
+    color: var(--color-cat-brød);
+}
+
+.food-category-condiments {
+    color: var(--color-cat-condiments);
+}
+
+.food-category-frost {
+    color: var(--color-cat-frost);
+}
+
+.food-category-frugt {
+    color: var(--color-cat-frugt);
+}
+
+.food-category-grønt {
+    color: var(--color-cat-grønt);
+}
+
+.food-category-konserves {
+    color: var(--color-cat-konserves);
+}
+
+.food-category-korn-og-gryn {
+    color: var(--color-cat-korn);
+}
+
+.food-category-krydderier {
+    color: var(--color-cat-krydderier);
+}
+
+.food-category-kød {
+    color: var(--color-cat-kød);
+}
+
+.food-category-fisk {
+    color: var(--color-cat-fisk);
+}
+
+.food-category-mejeri {
+    color: var(--color-cat-mejeri);
+}
+
+.food-category-pålæg {
+    color: var(--color-cat-pålæg);
+}
+
+.food-category-ris-og-pasta {
+    color: var(--color-cat-ris-pasta);
+}
+
+.food-category-slik-og-kager {
+    color: var(--color-cat-slik-kager);
+}
+
+.food-category-snacks {
+    color: var(--color-cat-snacks);
+}
+
+.food-category-take-away {
+    color: var(--color-cat-takeaway);
+}
+
+.food-category-vin-og-øl {
+    color: var(--color-cat-vin-øl);
 }

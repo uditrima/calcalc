@@ -135,6 +135,8 @@ def update_diary_entry(entry_id):
     """Update a diary entry"""
     data = request.get_json()
     
+    print(f"Updating diary entry {entry_id} with data: {data}")
+    
     try:
         entry = DiaryEntry.query.filter(DiaryEntry.id == entry_id).first()
         if not entry:
@@ -148,6 +150,13 @@ def update_diary_entry(entry_id):
             if not MealType.is_valid(data['meal_type']):
                 return jsonify({'error': 'Invalid meal type'}), 400
             entry.meal_type = data['meal_type']
+        
+        if 'food_id' in data:
+            # Verify the food exists
+            food = Food.query.get(data['food_id'])
+            if not food:
+                return jsonify({'error': 'Food not found'}), 404
+            entry.food_id = data['food_id']
         
         if 'notes' in data:
             entry.notes = data['notes']
@@ -163,6 +172,7 @@ def update_diary_entry(entry_id):
         calc_fat = food.fat * multiplier if food else 0
         
         return jsonify({
+            'success': True,
             'id': entry.id,
             'date': entry.date.isoformat(),
             'meal_type': entry.meal_type,
@@ -178,6 +188,7 @@ def update_diary_entry(entry_id):
         })
     
     except Exception as e:
+        print(f"Error updating diary entry {entry_id}: {str(e)}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 

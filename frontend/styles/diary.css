@@ -117,7 +117,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-lg);
+    padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-lg);
     background: var(--color-surface);
     backdrop-filter: var(--blur-glass);
     -webkit-backdrop-filter: var(--blur-glass);

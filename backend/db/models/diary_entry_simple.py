@@ -19,6 +19,9 @@ class DiaryEntry(Base):
     # Amount consumed in grams
     grams = Column(Float, nullable=False, default=100.0)
     
+    # Optional notes
+    notes = Column(Text, nullable=True)
+    
     # Relationships
     food = relationship("Food", backref="diary_entries")
     
