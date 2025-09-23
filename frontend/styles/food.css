@@ -659,7 +659,7 @@
     -webkit-backdrop-filter: var(--blur-glass) !important;
     box-shadow: var(--shadow-glass) !important;
     position: relative;
-    z-index: var(--z-base) !important;
+    z-index: var(--z-base);
     
 }
 
@@ -737,6 +737,8 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     position: relative;
+    margin-top: -60px;
+    padding-top: 60px;
 }
 
 .food-items-section::-webkit-scrollbar {
