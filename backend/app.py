@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_migrate import Migrate
+
 from db.database import db, init_db
 from db.models.food import Food
 from db.models.diary_entry_simple import DiaryEntry
@@ -25,6 +27,9 @@ def create_app():
     
     # Initialize database
     init_db(app)
+
+    migrate = Migrate(app, db)
+
     
     # Register Blueprints with API prefix
     app.register_blueprint(food_bp, url_prefix='/api/foods')
