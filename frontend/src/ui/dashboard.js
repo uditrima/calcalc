@@ -1,5 +1,8 @@
 // Dashboard UI component
 import { AppState } from '../state/app_state.js';
+import { ApiClient } from '../data/api.js';
+const api = new ApiClient();
+
 
 export function Dashboard(container) {
     console.log('Dashboard component called with container:', container);
@@ -74,11 +77,11 @@ export function Dashboard(container) {
     async function loadTodaysDataForDashboard(today) {
         try {
             // Load today's diary entries
-            const diaryResponse = await fetch(`http://localhost:5000/api/diary/entries?date=${today}`);
+            const diaryResponse = await api.getDiaryEntries(today);
             const diaryData = await diaryResponse.json();
             
             // Load today's exercises
-            const exerciseResponse = await fetch(`http://localhost:5000/api/exercises/${today}`);
+            const exerciseResponse = await api.getExercises(today);
             const exerciseData = await exerciseResponse.json();
             
             // Get goals (these don't change by date)

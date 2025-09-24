@@ -3,7 +3,7 @@ import { ApiClient } from '../data/api.js';
 import { MACRO_CALORIES_PER_GRAM } from '../ui/nutrition_goals_constants.js';
 
 // Initialize API client
-const api = new ApiClient('http://localhost:5000/api');
+const api = new ApiClient();
 
 export const AppState = {
     // Initial state

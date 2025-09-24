@@ -8,7 +8,7 @@ export function ExerciseForm(container) {
     }
     
     // Initialize API client
-    const api = new ApiClient('http://localhost:5000/api');
+    const api = new ApiClient();
     
     // Clear container
     container.innerHTML = '';

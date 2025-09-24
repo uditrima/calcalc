@@ -5,7 +5,7 @@ import { getMealOptions } from '../data/meal_types.js';
 import { PortionConverter } from '../utils/portion_converter.js';
 
 // Initialize API client
-const api = new ApiClient('http://localhost:5000/api');
+const api = new ApiClient();
 
 export function AddFood(container) {
     if (!container) {

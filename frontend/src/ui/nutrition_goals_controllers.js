@@ -7,7 +7,7 @@ import { calculateTotalCaloriesFromMacros, calculateMacroPercentages } from './n
 import { setKnobValue, updateGoalPercentages, getKnobById, getAllKnobs } from './nutrition_goals_ui_helpers.js';
 
 // Initialize API client
-const api = new ApiClient('http://localhost:5000/api');
+const api = new ApiClient();
 
 // Flag to track if calories knob was clicked by user
 let caloriesKnobClicked = false;
