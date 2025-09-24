@@ -1,6 +1,6 @@
 // API client for backend communication
 export class ApiClient {
-    constructor(baseUrl = 'http://localhost:5000/api') {
+    constructor(baseUrl) {
         this.baseUrl =
             baseUrl ||
             (window.location.hostname === "localhost"
