@@ -77,12 +77,10 @@ export function Dashboard(container) {
     async function loadTodaysDataForDashboard(today) {
         try {
             // Load today's diary entries
-            const diaryResponse = await api.getDiaryEntries(today);
-            const diaryData = await diaryResponse.json();
+            const diaryData = await api.getDiaryEntries(today);
             
             // Load today's exercises
-            const exerciseResponse = await api.getExercises(today);
-            const exerciseData = await exerciseResponse.json();
+            const exerciseData = await api.getExercises(today);
             
             // Get goals (these don't change by date)
             const state = AppState.getState();
