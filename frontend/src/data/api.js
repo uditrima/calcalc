@@ -6,6 +6,7 @@ export class ApiClient {
             (window.location.hostname === "localhost"
                 ? "http://localhost:5000/api"
                 : "https://calcalc.onrender.com/api");
+            console.log("👉 ApiClient bruger baseUrl:", this.baseUrl);
     }
     
     // Helper method for making HTTP requests

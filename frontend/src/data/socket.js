@@ -13,6 +13,8 @@ const SOCKET_BASE_URL =
     ? "ws://localhost:5000"
     : "wss://calcalc.onrender.com";
 
+    
+
 
 export function initSocket(url = SOCKET_BASE_URL) {
     if (socket && socket.readyState === WebSocket.OPEN) {
