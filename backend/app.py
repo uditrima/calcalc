@@ -29,7 +29,17 @@ def create_app():
     init_db(app)
 
     migrate = Migrate(app, db)
-
+    
+    
+    @app.route("/reset-migrations")
+    def reset_migrations():
+        from sqlalchemy import text
+        try:
+            db.session.execute(text("DROP TABLE IF EXISTS alembic_version;"))
+            db.session.commit()
+            return "alembic_version dropped", 200
+        except Exception as e:
+            return str(e), 500
     
     # Register Blueprints with API prefix
     app.register_blueprint(food_bp, url_prefix='/api/foods')
