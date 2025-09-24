@@ -1,6 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 from db.database import db, init_db
 from db.models.food import Food
@@ -23,7 +28,14 @@ from routes.nutrient_routes import nutrient_bp
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
+    
+    # Configure Flask app from environment variables
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
+    app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+    
+    # Configure CORS
+    cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(',')
+    CORS(app, origins=cors_origins)
     
     # Initialize database
     init_db(app)
@@ -57,4 +69,10 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, port=5000)
+    
+    # Get host and port from environment variables
+    host = os.getenv('HOST', '127.0.0.1')
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+    
+    app.run(debug=debug, host=host, port=port)
