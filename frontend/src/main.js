@@ -83,16 +83,12 @@ import { Weight } from './ui/weight.js';
 import { EditSettings } from './ui/edit-profile-page.js';
 import { NutritionGoals } from './ui/nutrition_goals.js';
 
-const API_BASE_URL =
-    window.location.hostname === "localhost"
-        ? "http://localhost:5000/api"
-        : "https://calcalc.onrender.com/api";
 
 class CalorieTrackerApp {
     constructor() {
         this.appContainer = null;
         this.components = {};
-        this.api = new ApiClient(API_BASE_URL);
+        this.api = new ApiClient();
         this.navigationHistory = [];
         this.setupGlobalErrorHandling();
         this.init();
