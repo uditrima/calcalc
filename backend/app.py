@@ -35,7 +35,9 @@ def create_app():
     
     # Configure CORS
     cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(',')
-    CORS(app, origins=cors_origins)
+
+    CORS(app, resources={r"/api/*": {"origins": cors_origins}})
+
     
     # Initialize database
     init_db(app)

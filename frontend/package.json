@@ -4,13 +4,20 @@
   "description": "Kalorie Tracker Frontend - Modulær ES6 applikation",
   "type": "module",
   "scripts": {
-    "dev": "python -m http.server 3000",
-    "build": "echo 'No build step needed for vanilla JS'",
-    "start": "python -m http.server 3000"
-  },
-  "dependencies": {},
-  "devDependencies": {},
-  "keywords": ["calorie", "tracker", "nutrition", "fitness"],
+    "dev": "npx vite --host 0.0.0.0",
+    "build": "vite build",
+    "start": "vite preview --host 0.0.0.0"
+},
+  "keywords": [
+    "calorie",
+    "tracker",
+    "nutrition",
+    "fitness"
+  ],
   "author": "Systemarkitekt",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "vite": "^7.1.7"
+  },
+  "devDependencies": {}
 }

@@ -24,7 +24,7 @@ export function Diary(container) {
     header.className = 'diary-header';
     
     const title = document.createElement('h2');
-    title.textContent = 'Dagbog';
+      title.textContent = 'Dagbog';
     header.appendChild(title);
     
     // Right side links

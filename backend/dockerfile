@@ -1,0 +1,21 @@
+# Brug en officiel Python runtime
+FROM python:3.12.5-slim
+
+
+# Arbejdsmappe i containeren
+WORKDIR /app
+
+# Kopiér requirements først (så Docker kan cache dem)
+COPY requirements.txt .
+
+# Installer dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Kopiér resten af projektet
+COPY . .
+
+# Flask/gunicorn skal lytte på port 5000
+EXPOSE 5000
+
+# Start serveren med gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:create_app()"]

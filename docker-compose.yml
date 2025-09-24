@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: calcalc-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - HOST=0.0.0.0
+      - PORT=5000
+    volumes:
+      - ./backend:/app   # Hot reload til backend (hvis du kører flask direkte)
+    networks:
+      - appnet
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: calcalc-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src   # Hot reload kun for source filer
+      - ./frontend/styles:/app/styles
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.js:/app/vite.config.js
+      - ./frontend/package.json:/app/package.json
+    environment:
+      - NODE_ENV=development
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
