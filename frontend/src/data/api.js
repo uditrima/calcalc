@@ -1,7 +1,11 @@
 // API client for backend communication
 export class ApiClient {
     constructor(baseUrl = 'http://localhost:5000/api') {
-        this.baseUrl = baseUrl;
+        this.baseUrl =
+            baseUrl ||
+            (window.location.hostname === "localhost"
+                ? "http://localhost:5000/api"
+                : "https://calcalc.onrender.com/api");
     }
     
     // Helper method for making HTTP requests

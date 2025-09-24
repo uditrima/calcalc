@@ -7,7 +7,14 @@ let eventHandlers = new Map();
  * @param {string} url - WebSocket server URL (default: ws://localhost:5000)
  * @returns {WebSocket} - The WebSocket instance
  */
-export function initSocket(url = 'ws://localhost:5000') {
+
+const SOCKET_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "ws://localhost:5000"
+    : "wss://calcalc.onrender.com";
+
+
+export function initSocket(url = SOCKET_BASE_URL) {
     if (socket && socket.readyState === WebSocket.OPEN) {
         return socket;
     }
