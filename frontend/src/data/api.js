@@ -1,12 +1,22 @@
 // API client for backend communication
 export class ApiClient {
     constructor(baseUrl) {
+        const isLocal =
+            window.location.hostname === "localhost" ||
+            window.location.hostname === "127.0.0.1";
+
         this.baseUrl =
             baseUrl ||
-            (window.location.hostname === "localhost"
+            (isLocal
                 ? "http://localhost:5000/api"
                 : "https://calcalc.onrender.com/api");
-            console.log("👉 ApiClient bruger baseUrl:", this.baseUrl);
+
+        // Debug log – fjern den når du er sikker på at det virker
+        console.log(
+            "👉 ApiClient baseUrl valgt:",
+            this.baseUrl,
+            "hostname:",
+            window.location.hostname);
     }
     
     // Helper method for making HTTP requests
