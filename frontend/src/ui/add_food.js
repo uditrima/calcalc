@@ -169,8 +169,11 @@ export function AddFood(container) {
         const foodName = document.createElement('div');
         foodName.className = 'selected-food-name';
         foodName.textContent = 'Vælg en fødevare';
-        
+        //const foodCategory = document.createElement('span');
+        //foodCategory.className = 'food-category';
+        //foodCategory.textContent = 'ukendt';
         section.appendChild(foodName);
+        //foodName.appendChild(foodCategory);
         
         return section;
     }
@@ -516,9 +519,18 @@ export function AddFood(container) {
     
     function updateSelectedFood() {
         const foodNameElement = addFoodSection.querySelector('.selected-food-name');
+        const foodCategoryElement = addFoodSection.querySelector('.food-category');
+
         if (currentFood) {
-            const brandText = currentFood.brand ? `${currentFood.brand} - ` : '';
-            foodNameElement.textContent = `${currentFood.name} (${brandText}${currentFood.category || 'ukendt'})`;
+            const brandText = currentFood.brand ? `(${currentFood.brand}) ` : '';
+            //foodNameElement.textContent = `${currentFood.name} (${brandText}${currentFood.category || 'ukendt'})`;
+            foodNameElement.textContent = `${currentFood.name} - ${brandText}`;
+
+            // lav span-element
+            const span = document.createElement('span');
+            span.className = `text-subtitle food-category-${currentFood.category.replaceAll(' ', '-')} || ''}`;
+            span.textContent = currentFood.category || 'ukendt';
+            foodNameElement.appendChild(span);
         } else {
             foodNameElement.textContent = 'Vælg en fødevare';
         }

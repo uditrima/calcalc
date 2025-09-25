@@ -102,6 +102,17 @@ export async function commitChanges() {
             // Update local state only after successful database save
             AppState.setGoals(currentValues);
             console.log('Goals saved successfully:', currentValues);
+            
+            // Trigger global data refresh across the application
+            window.dispatchEvent(new CustomEvent('goalsCommitted', { 
+                detail: { goals: currentValues } 
+            }));
+            
+            // Dim the commit button after successful save
+            const commitBtn = document.querySelector('.goals-commit-btn');
+            if (commitBtn) {
+                commitBtn.classList.add('dimmed');
+            }
         } else {
             console.error('Failed to save goals to database:', response);
         }

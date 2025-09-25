@@ -57,12 +57,25 @@ export function Dashboard(container) {
         updateDashboard();
     };
     
+    // Listen for goals committed event to refresh data
+    const handleGoalsCommitted = async () => {
+        console.log('Goals committed, refreshing dashboard data...');
+        // Reload goals to ensure we have the latest data
+        await AppState.loadGoals();
+        // Update dashboard with fresh data
+        updateDashboard();
+    };
+    
     // Subscribe to goals changes in AppState
     AppState.subscribe('goals', handleGoalsChange);
+    
+    // Add event listener for goals committed
+    window.addEventListener('goalsCommitted', handleGoalsCommitted);
     
     // Return cleanup function
     return () => {
         AppState.unsubscribe('goals', handleGoalsChange);
+        window.removeEventListener('goalsCommitted', handleGoalsCommitted);
     };
     
     function updateDashboard() {

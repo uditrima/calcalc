@@ -172,11 +172,12 @@ function createGoalItem(label, amount, percentage) {
     if (percentage) {
         const percentageEl = document.createElement('div');
         percentageEl.className = 'goal-percentage';
-        percentageEl.textContent = percentage;
+        // Round percentage for display
+        const percentageValue = parseFloat(percentage.replace('%', ''));
+        percentageEl.textContent = `${Math.round(percentageValue)}%`;
         
         // Extract percentage value for color calculation
-        const percentageValue = parseFloat(percentage.replace('%', ''));
-        percentageEl.setAttribute('data-percentage', percentageValue);
+        percentageEl.setAttribute('data-percentage', Math.round(percentageValue));
         
         // Set CSS custom property for color
         const color = calculatePercentageColor(percentageValue);
@@ -299,14 +300,17 @@ function addKnobInteractions(knob, label) {
                         // Update calories amount spans
                         const amountNumber = goalAmount.querySelector('.amount-number');
                         if (amountNumber) {
+                            console.log(`Updating calories amount-number from ${amountNumber.textContent} to ${formattedValue}`);
                             amountNumber.textContent = formattedValue;
+                            goalAmount.setAttribute('data-original-value', formattedValue);
+                        } else {
+                            console.log('No amount-number found for calories');
                         }
                     } else {
                         // Update macro amount normally
                         goalAmount.textContent = formattedValue;
+                        goalAmount.setAttribute('data-original-value', formattedValue);
                     }
-                    
-                    goalAmount.setAttribute('data-original-value', formattedValue);
                 } else {
                     console.log(`No goal-amount found for ${label}`);
                 }
@@ -369,6 +373,108 @@ function addKnobInteractions(knob, label) {
                     fat_target: fat,
                     daily_calories: totalCalories
                 });
+            }
+            
+            // Update macros in real-time when calories knob is dragged
+            if (label === 'Kalorier') {
+                // Get current goals to calculate macro proportions
+                const currentGoals = AppState.getGoals();
+                if (currentGoals) {
+                    const newMacros = AppState.calculateMacrosFromCalories(
+                        value,
+                        currentGoals.protein_target,
+                        currentGoals.carbs_target,
+                        currentGoals.fat_target
+                    );
+                    
+                    // Update macro knobs in real-time during drag
+                    const proteinKnob = document.querySelector('#protein-knob');
+                    const carbsKnob = document.querySelector('#carbs-knob');
+                    const fatKnob = document.querySelector('#fat-knob');
+                    
+                    if (proteinKnob) {
+                        const proteinValue = Math.round(newMacros.protein);
+                        proteinKnob.setAttribute('data-value', proteinValue);
+                        proteinKnob.style.setProperty('--knob-position', `${((proteinValue - 0) / (500 - 0)) * 100}%`);
+                        
+                        // Update protein display
+                        const proteinGoalItem = proteinKnob.closest('.goal-item');
+                        if (proteinGoalItem) {
+                            const proteinAmount = proteinGoalItem.querySelector('.goal-amount');
+                            if (proteinAmount) {
+                                proteinAmount.textContent = `${proteinValue}g`;
+                                proteinAmount.setAttribute('data-original-value', `${proteinValue}g`);
+                            }
+                            
+                            // Update protein calories display
+                            const proteinCalories = proteinGoalItem.querySelector('.goal-calories');
+                            if (proteinCalories) {
+                                const caloriesNumber = proteinCalories.querySelector('.calories-number');
+                                if (caloriesNumber) {
+                                    caloriesNumber.textContent = proteinValue * 4;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (carbsKnob) {
+                        const carbsValue = Math.round(newMacros.carbs);
+                        carbsKnob.setAttribute('data-value', carbsValue);
+                        carbsKnob.style.setProperty('--knob-position', `${((carbsValue - 0) / (500 - 0)) * 100}%`);
+                        
+                        // Update carbs display
+                        const carbsGoalItem = carbsKnob.closest('.goal-item');
+                        if (carbsGoalItem) {
+                            const carbsAmount = carbsGoalItem.querySelector('.goal-amount');
+                            if (carbsAmount) {
+                                carbsAmount.textContent = `${carbsValue}g`;
+                                carbsAmount.setAttribute('data-original-value', `${carbsValue}g`);
+                            }
+                            
+                            // Update carbs calories display
+                            const carbsCalories = carbsGoalItem.querySelector('.goal-calories');
+                            if (carbsCalories) {
+                                const caloriesNumber = carbsCalories.querySelector('.calories-number');
+                                if (caloriesNumber) {
+                                    caloriesNumber.textContent = carbsValue * 4;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (fatKnob) {
+                        const fatValue = Math.round(newMacros.fat);
+                        fatKnob.setAttribute('data-value', fatValue);
+                        fatKnob.style.setProperty('--knob-position', `${((fatValue - 0) / (200 - 0)) * 100}%`);
+                        
+                        // Update fat display
+                        const fatGoalItem = fatKnob.closest('.goal-item');
+                        if (fatGoalItem) {
+                            const fatAmount = fatGoalItem.querySelector('.goal-amount');
+                            if (fatAmount) {
+                                fatAmount.textContent = `${fatValue}g`;
+                                fatAmount.setAttribute('data-original-value', `${fatValue}g`);
+                            }
+                            
+                            // Update fat calories display
+                            const fatCalories = fatGoalItem.querySelector('.goal-calories');
+                            if (fatCalories) {
+                                const caloriesNumber = fatCalories.querySelector('.calories-number');
+                                if (caloriesNumber) {
+                                    caloriesNumber.textContent = fatValue * 9;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Update percentages
+                    updateGoalPercentages({ 
+                        protein_target: newMacros.protein,
+                        carbs_target: newMacros.carbs,
+                        fat_target: newMacros.fat,
+                        daily_calories: value
+                    });
+                }
             }
         
         // Store value locally (don't save to backend yet)

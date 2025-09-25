@@ -13,9 +13,9 @@ export function calculateMacroPercentages(protein, carbs, fat, totalCalories) {
     const macroCalories = calculateMacroCalories(protein, carbs, fat);
     
     return {
-        protein: Math.round((macroCalories.protein / totalCalories) * 100),
-        carbs: Math.round((macroCalories.carbs / totalCalories) * 100),
-        fat: Math.round((macroCalories.fat / totalCalories) * 100)
+        protein: (macroCalories.protein / totalCalories) * 100,
+        carbs: (macroCalories.carbs / totalCalories) * 100,
+        fat: (macroCalories.fat / totalCalories) * 100
     };
 }
 

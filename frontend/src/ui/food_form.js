@@ -40,7 +40,7 @@ export function FoodForm(container) {
     
     // Subscribe to foods state changes
     AppState.subscribe('foods', (state) => {
-        renderFoodItems(state.foods, 'recent');
+        renderFoodItems(state.foods, 'frequent');
     });
     
     // Add to container
@@ -386,7 +386,7 @@ function applyFilters(searchQuery, selectedCategories) {
     if (filteredFoods.length === 0) {
         renderNoResults(searchQuery || 'selected categories');
     } else {
-        renderFoodItems(filteredFoods, 'recent');
+        renderFoodItems(filteredFoods, 'frequent');
     }
 }
 
@@ -475,7 +475,7 @@ function createSortBySection() {
     
     const dropdownBtn = document.createElement('button');
     dropdownBtn.className = 'sort-dropdown-btn';
-    dropdownBtn.innerHTML = 'Most Recent <span class="dropdown-arrow">⋮</span>';
+    dropdownBtn.innerHTML = 'Most Used <span class="dropdown-arrow">⋮</span>';
     dropdownBtn.addEventListener('click', toggleSortDropdown);
     dropdown.appendChild(dropdownBtn);
     
@@ -538,7 +538,7 @@ async function loadFoodsFromDatabase() {
     try {
         await AppState.loadFoods();
         const foods = AppState.getFoods();
-        renderFoodItems(foods, 'recent');
+        renderFoodItems(foods, 'frequent');
     } catch (error) {
         console.error('Failed to load foods:', error);
         // Show error message or fallback
@@ -549,7 +549,7 @@ async function loadFoodsFromDatabase() {
 }
 
 // Function to render food items
-function renderFoodItems(foods, sortBy = 'recent') {
+function renderFoodItems(foods, sortBy = 'frequent') {
     if (!window.foodItemsSection) {
         return;
     }
@@ -624,7 +624,9 @@ function createFoodItem(food) {
     
     // Format food details for display
     const brandText = food.brand ? `${food.brand} - ` : '';
-    const calories = Math.round(food.calories || 0);
+    // Calculate calories for the actual portion size instead of 100g
+    const portionNutrition = PortionConverter.calculateNutritionForPortion(food, food.last_portion || 1.0);
+    const calories = Math.round(portionNutrition.calories);
     const lastPortionGrams = PortionConverter.formatPortion(food.last_portion || 1.0, true);
     const category = food.category || 'ukendt';
     

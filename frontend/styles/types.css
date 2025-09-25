@@ -1,0 +1,15 @@
+.text-small {
+    font-size: var(--font-size-sm);
+}
+
+.text-medium {
+    font-size: var(--font-size-base);
+}
+
+.text-large {
+    font-size: var(--font-size-lg);
+}
+
+.text-subtitle {
+    font-size: var(--font-size-base);
+}

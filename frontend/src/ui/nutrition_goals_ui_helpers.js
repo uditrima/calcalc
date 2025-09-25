@@ -117,8 +117,8 @@ export function updateGoalPercentages(goals) {
                 case 'Fedt': percentage = percentages.fat; break;
             }
             
-            goalPercentage.textContent = `${percentage}%`;
-            goalPercentage.setAttribute('data-percentage', percentage);
+            goalPercentage.textContent = `${Math.round(percentage)}%`;
+            goalPercentage.setAttribute('data-percentage', Math.round(percentage));
             
             // Set CSS custom property for color
             const color = calculatePercentageColor(percentage);

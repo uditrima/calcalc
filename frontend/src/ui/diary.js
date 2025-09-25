@@ -210,6 +210,18 @@ export function Diary(container) {
     // Subscribe to state changes for meal sections
     AppState.subscribe('diary', updateMealSections);
     AppState.subscribe('foods', updateMealSections);
+    AppState.subscribe('goals', updateSummarySection);
+    
+    // Listen for goals committed event to refresh data
+    const handleGoalsCommitted = async () => {
+        console.log('Goals committed, refreshing diary data...');
+        // Reload goals to ensure we have the latest data
+        await AppState.loadGoals();
+        // Force refresh diary data to sync with backend
+        await forceRefreshDiary();
+    };
+    
+    window.addEventListener('goalsCommitted', handleGoalsCommitted);
     
     // Initial update
     updateMealSections();
@@ -250,6 +262,14 @@ export function Diary(container) {
     
     // Expose force refresh function for external use
     diary.forceRefresh = forceRefreshDiary;
+    
+    // Return cleanup function
+    return () => {
+        AppState.unsubscribe('diary', updateMealSections);
+        AppState.unsubscribe('foods', updateMealSections);
+        AppState.unsubscribe('goals', updateSummarySection);
+        window.removeEventListener('goalsCommitted', handleGoalsCommitted);
+    };
     
     // Check for state mismatches and sync with backend
     async function checkAndSyncState() {

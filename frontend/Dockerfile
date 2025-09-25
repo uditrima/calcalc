@@ -10,8 +10,10 @@ ENV NODE_ENV=development
 # Kopiér både package.json og package-lock.json
 COPY package.json package-lock.json ./
 
-RUN npm install --include=dev
-RUN npm install @rollup/rollup-linux-x64-gnu --include=dev
+# Ryd op i npm cache og installer dependencies
+RUN npm cache clean --force
+RUN rm -rf node_modules package-lock.json
+RUN npm install
 
 # Kopiér resten af frontend-projektet
 COPY . .

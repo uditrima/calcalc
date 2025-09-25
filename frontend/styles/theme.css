@@ -37,6 +37,7 @@ body {
     --font-size-xl: 20px;
     --font-size-2xl: 24px;
     --font-size-heading: 20px;
+    --font-size-subtitle: 12px;
     
     /* Glassmorphism Shadows */
     --shadow-glass: 0 8px 32px rgba(22, 23, 38, 0.4);

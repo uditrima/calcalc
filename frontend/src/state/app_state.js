@@ -202,9 +202,9 @@ export const AppState = {
         const carbsCalories = carbs * MACRO_CALORIES_PER_GRAM.carbs;
         const fatCalories = fat * MACRO_CALORIES_PER_GRAM.fat;
 
-        const proteinPercentage = Math.round((proteinCalories / calories) * 100);
-        const carbsPercentage = Math.round((carbsCalories / calories) * 100);
-        const fatPercentage = Math.round((fatCalories / calories) * 100);
+        const proteinPercentage = (proteinCalories / calories) * 100;
+        const carbsPercentage = (carbsCalories / calories) * 100;
+        const fatPercentage = (fatCalories / calories) * 100;
 
         return {
             calories: {
