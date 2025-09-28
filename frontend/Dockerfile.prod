@@ -1,26 +1,24 @@
-# Brug Node som base
-FROM node:20.19.0-slim
+# Stage 1: Build app with Node
+FROM node:20.19.0-slim AS build
 
-# Arbejdsmappe i containeren
 WORKDIR /app
 
-# Kopiér både package.json og package-lock.json
-COPY package.json package-lock.json ./
-
-# Ryd op i npm cache og installer dependencies
+COPY package*.json ./
 RUN npm install
 
-# Kopiér resten af frontend-projektet
 COPY . .
+RUN npm run build
 
-# Brug nginx som base
+# Stage 2: Serve med nginx
 FROM nginx:alpine
 
-# Kopiér buildet frontend fra build-container
+# Fjern default nginx static files
+RUN rm -rf /usr/share/nginx/html/*
+
+# Kopiér fra build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Eksponer porten nginx kører på
+# Eksponer port 80
 EXPOSE 80
 
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
