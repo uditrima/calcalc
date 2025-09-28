@@ -1,0 +1,26 @@
+# Brug Node som base
+FROM node:20.19.0-slim
+
+# Arbejdsmappe i containeren
+WORKDIR /app
+
+# Kopiér både package.json og package-lock.json
+COPY package.json package-lock.json ./
+
+# Ryd op i npm cache og installer dependencies
+RUN npm install
+
+# Kopiér resten af frontend-projektet
+COPY . .
+
+# Brug nginx som base
+FROM nginx:alpine
+
+# Kopiér buildet frontend fra build-container
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Eksponer porten nginx kører på
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

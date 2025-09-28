@@ -629,7 +629,8 @@ function createFoodItem(food) {
     const calories = Math.round(portionNutrition.calories);
     const lastPortionGrams = PortionConverter.formatPortion(food.last_portion || 1.0, true);
     const category = food.category || 'ukendt';
-    
+    const hoverClass = `food-item-bg-${category.replaceAll(' ', '-')}`;
+    foodItem.classList.add(hoverClass);
     
     foodItem.innerHTML = `
         <div class="food-item-content">

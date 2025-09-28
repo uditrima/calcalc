@@ -248,7 +248,7 @@
 
 .category-label {
     font-size: 12px;
-    color: var(--color-text);
+    color: var(--color-text-muted);
     cursor: pointer;
     user-select: none;
     transition: all 0.2s ease;
@@ -259,25 +259,33 @@
     position: relative;
 }
 
+.category-label:hover {
+    text-shadow: 
+    0 0 5px rgb(0, 255, 242),
+    0 0 10px rgb(0, 255, 255),
+    0 0 20px rgb(0, 255, 255),
+    0 0 40px rgb(0, 255, 255);
+    color: var(--color-accent);
+}
+
 /* Category-specific styling */
 .category-bagvaerk {
-    border-left-color: var(--color-cat-bagværk);
+    border-left-color: var(--color-cat-bagværk-opacity);
     background: var(--color-cat-bagværk-bg);
 }
 
 .category-bagvaerk:hover {
-    background: var(--color-cat-bagværk-hover);
-    color: var(--color-cat-bagværk);
+    border-left-color: var(--color-cat-bagværk);
 }
 
 .category-brod {
     border-left-color: var(--color-cat-brød);
-    background: var(--color-cat-brød-bg);
+    background: var(--color-cat-brød-bg);   
 }
 
 .category-brod:hover {
     background: var(--color-cat-brød-hover);
-    color: var(--color-cat-brød);
+    color: var(--color-bg);
 }
 
 .category-condiments {
@@ -287,7 +295,7 @@
 
 .category-condiments:hover {
     background: var(--color-cat-condiments-hover);
-    color: var(--color-cat-condiments);
+    color: var(--color-bg);
 }
 
 .category-frost {
@@ -297,7 +305,7 @@
 
 .category-frost:hover {
     background: var(--color-cat-frost-hover);
-    color: var(--color-cat-frost);
+    color: var(--color-bg);
 }
 
 .category-frugt {
@@ -307,7 +315,7 @@
 
 .category-frugt:hover {
     background: var(--color-cat-frugt-hover);
-    color: var(--color-cat-frugt);
+    color: var(--color-bg);
 }
 
 .category-gront {
@@ -317,7 +325,7 @@
 
 .category-gront:hover {
     background: var(--color-cat-grønt-hover);
-    color: var(--color-cat-grønt);
+    color: var(--color-bg);
 }
 
 .category-konserves {
@@ -327,7 +335,7 @@
 
 .category-konserves:hover {
     background: var(--color-cat-konserves-hover);
-    color: var(--color-cat-konserves);
+    color: var(--color-bg);
 }
 
 .category-korn-og-gryn {
@@ -337,7 +345,7 @@
 
 .category-korn-og-gryn:hover {
     background: var(--color-cat-korn-hover);
-    color: var(--color-cat-korn);
+    color: var(--color-bg);
 }
 
 .category-krydderier {
@@ -347,7 +355,7 @@
 
 .category-krydderier:hover {
     background: var(--color-cat-krydderier-hover);
-    color: var(--color-cat-krydderier);
+    color: var(--color-bg);
 }
 
 .category-kod {
@@ -357,7 +365,7 @@
 
 .category-kod:hover {
     background: var(--color-cat-kød-hover);
-    color: var(--color-cat-kød);
+    color: var(--color-bg);
 }
 
 .category-fisk {
@@ -367,7 +375,7 @@
 
 .category-fisk:hover {
     background: var(--color-cat-fisk-hover);
-    color: var(--color-cat-fisk);
+    color: var(--color-bg);
 }
 
 .category-mejeri {
@@ -377,7 +385,7 @@
 
 .category-mejeri:hover {
     background: var(--color-cat-mejeri-hover);
-    color: var(--color-cat-mejeri);
+    color: var(--color-bg);
 }
 
 
@@ -388,7 +396,7 @@
 
 .category-paalaeg:hover {
     background: var(--color-cat-pålæg-hover);
-    color: var(--color-cat-pålæg);
+    color: var(--color-bg);
 }
 
 .category-ris-og-pasta {
@@ -398,7 +406,7 @@
 
 .category-ris-og-pasta:hover {
     background: var(--color-cat-ris-pasta-hover);
-    color: var(--color-cat-ris-pasta);
+    color: var(--color-bg);
 }
 
 
@@ -409,7 +417,7 @@
 
 .category-slik-og-kager:hover {
     background: var(--color-cat-slik-kager-hover);
-    color: var(--color-cat-slik-kager);
+    color: var(--color-bg);
 }
 
 .category-snacks {
@@ -419,7 +427,7 @@
 
 .category-snacks:hover {
     background: var(--color-cat-snacks-hover);
-    color: var(--color-cat-snacks);
+    color: var(--color-bg);
 }
 
 .category-take-away {
@@ -429,7 +437,7 @@
 
 .category-take-away:hover {
     background: var(--color-cat-takeaway-hover);
-    color: var(--color-cat-takeaway);
+    color: var(--color-bg);
 }
 
 .category-vin-og-ol {
@@ -439,7 +447,7 @@
 
 .category-vin-og-ol:hover {
     background: var(--color-cat-vin-øl-hover);
-    color: var(--color-cat-vin-øl);
+    color: var(--color-bg);
 }
 
 
@@ -450,7 +458,20 @@
 
 .category-checkbox:checked + .category-bagvaerk {
     color: var(--color-cat-bagværk);
+    border-left-color: var(--color-cat-bagværk);
 }
+
+.category-checkbox:checked + .category-label:hover {
+    color: var(--color-bg);
+    font-weight: 1500;
+    text-decoration-color: rgba(255, 0, 0, 0.5);
+    text-decoration-line: line-through;
+    text-decoration-style: solid;
+    text-decoration-thickness: 2px;
+    border-left-color: red;
+
+}
+
 
 .category-checkbox:checked + .category-brod {
     color: var(--color-cat-brød);
