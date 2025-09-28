@@ -36,7 +36,12 @@ def create_app():
     # Configure CORS
     cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
 
-    CORS(app, resources={r"/api/*": {"origins": cors_origins}})
+    CORS(app, 
+         resources={r"/api/*": {
+             "origins": cors_origins,
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             "allow_headers": ["Content-Type", "Authorization"]
+         }})
 
     
     # Initialize database
@@ -73,7 +78,7 @@ if __name__ == "__main__":
     app = create_app()
     
     # Get host and port from environment variables
-    host = os.getenv('HOST', '0.0.0.0')
+    host = '0.0.0.0'  # Force host to 0.0.0.0 for Docker
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     

@@ -2,12 +2,15 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     container_name: calcalc-backend
     ports:
       - "5000:5000"
+    env_file:
+      - ./backend/.env.prod
     environment:
-      - FLASK_ENV=production
+      - HOST=0.0.0.0
+    restart: always
     networks:
       - appnet
 
@@ -18,9 +21,13 @@ services:
     container_name: calcalc-frontend
     ports:
       - "80:80"
+    env_file:
+      - ./frontend/.env.prod
+    restart: always
     networks:
       - appnet
 
 networks:
   appnet:
     driver: bridge
+
