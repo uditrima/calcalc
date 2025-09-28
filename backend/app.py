@@ -34,7 +34,7 @@ def create_app():
     app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     
     # Configure CORS
-    cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(',')
+    cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
 
     CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     app = create_app()
     
     # Get host and port from environment variables
-    host = os.getenv('HOST', '127.0.0.1')
+    host = os.getenv('HOST', '0.0.0.0')
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     

@@ -17,5 +17,5 @@ COPY . .
 # Flask/gunicorn skal lytte på port 5000
 EXPOSE 5000
 
-# Start serveren med gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:create_app()"]
+# Start serveren med Flask
+CMD ["python", "app.py"]
