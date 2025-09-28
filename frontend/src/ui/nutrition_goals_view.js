@@ -82,21 +82,45 @@ export function createGoalsSection(formattedGoals) {
     title.textContent = 'Dine Mål';
     section.appendChild(title);
     
-    // Calories goal
-    const caloriesGoal = createGoalItem('Kalorier', formattedGoals.calories.formatted, '');
-    section.appendChild(caloriesGoal);
-    
-    // Carbohydrates goal
-    const carbsGoal = createGoalItem('Kulhydrater', formattedGoals.carbs.formatted, formattedGoals.carbs.percentage);
-    section.appendChild(carbsGoal);
-    
-    // Protein goal
-    const proteinGoal = createGoalItem('Protein', formattedGoals.protein.formatted, formattedGoals.protein.percentage);
-    section.appendChild(proteinGoal);
-    
-    // Fat goal
-    const fatGoal = createGoalItem('Fedt', formattedGoals.fat.formatted, formattedGoals.fat.percentage);
-    section.appendChild(fatGoal);
+    // Check if formattedGoals is null or undefined
+    if (!formattedGoals) {
+        console.warn('formattedGoals is null, using fallback values');
+        // Use fallback values when goals are not loaded
+        const fallbackGoals = {
+            calories: { value: 1500, formatted: '1,500' },
+            protein: { value: 133, formatted: '133g', percentage: '30%' },
+            carbs: { value: 180, formatted: '180g', percentage: '45%' },
+            fat: { value: 20, formatted: '20g', percentage: '25%' }
+        };
+        
+        const caloriesGoal = createGoalItem('Kalorier', fallbackGoals.calories.formatted, '');
+        section.appendChild(caloriesGoal);
+        
+        const carbsGoal = createGoalItem('Kulhydrater', fallbackGoals.carbs.formatted, fallbackGoals.carbs.percentage);
+        section.appendChild(carbsGoal);
+        
+        const proteinGoal = createGoalItem('Protein', fallbackGoals.protein.formatted, fallbackGoals.protein.percentage);
+        section.appendChild(proteinGoal);
+        
+        const fatGoal = createGoalItem('Fedt', fallbackGoals.fat.formatted, fallbackGoals.fat.percentage);
+        section.appendChild(fatGoal);
+    } else {
+        // Calories goal
+        const caloriesGoal = createGoalItem('Kalorier', formattedGoals.calories.formatted, '');
+        section.appendChild(caloriesGoal);
+        
+        // Carbohydrates goal
+        const carbsGoal = createGoalItem('Kulhydrater', formattedGoals.carbs.formatted, formattedGoals.carbs.percentage);
+        section.appendChild(carbsGoal);
+        
+        // Protein goal
+        const proteinGoal = createGoalItem('Protein', formattedGoals.protein.formatted, formattedGoals.protein.percentage);
+        section.appendChild(proteinGoal);
+        
+        // Fat goal
+        const fatGoal = createGoalItem('Fedt', formattedGoals.fat.formatted, formattedGoals.fat.percentage);
+        section.appendChild(fatGoal);
+    }
     
     // Add action buttons
     const actionButtons = createActionButtons();

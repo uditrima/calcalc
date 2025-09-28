@@ -21,7 +21,12 @@ export function NutritionGoals(container) {
     // Subscribe to AppState goals changes
     const handleGoalsChange = () => {
         const goals = AppState.getGoals();
-        render(container, goals, false, null);
+        // Only render if goals are valid (not empty object)
+        if (goals && Object.keys(goals).length > 0) {
+            render(container, goals, false, null);
+        } else {
+            console.log('Goals not yet loaded, skipping render');
+        }
     };
     
     AppState.subscribe('goals', handleGoalsChange);
@@ -65,10 +70,13 @@ function render(container, goals, isLoading, error) {
         console.log('Showing error section:', error);
         const errorSection = createErrorSection(error);
         container.appendChild(errorSection);
-    } else if (goals) {
+    } else if (goals && Object.keys(goals).length > 0) {
         console.log('Showing goals section with goals:', goals);
         const formattedGoals = AppState.getFormattedGoals();
         console.log('Formatted goals:', formattedGoals);
+        
+        // Always pass formattedGoals to createGoalsSection, even if null
+        // createGoalsSection will handle null values with fallback
         const goalsSection = createGoalsSection(formattedGoals);
         container.appendChild(goalsSection);
     } else {

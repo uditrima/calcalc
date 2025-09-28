@@ -89,8 +89,20 @@ export const AppState = {
     },
     
     setGoals(data) {
-        this.state.goals = data || {};
-        this.notify('goals');
+        // Only update if data is valid, otherwise keep current goals
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+            this.state.goals = data;
+            this.notify('goals');
+        } else if (data === null || data === undefined) {
+            // If explicitly null/undefined, keep current goals (don't overwrite with empty object)
+            console.warn('setGoals called with null/undefined, keeping current goals');
+            // Still notify observers so they know goals loading failed
+            this.notify('goals');
+        } else {
+            // Invalid data, keep current goals but still notify
+            console.warn('setGoals called with invalid data, keeping current goals');
+            this.notify('goals');
+        }
     },
     
     // API integration methods
@@ -150,14 +162,42 @@ export const AppState = {
     },
     
     async loadGoals() {
+        // Prevent multiple simultaneous calls
+        if (this._loadingGoals) {
+            console.log('Goals already loading, skipping duplicate call');
+            return;
+        }
+        
+        this._loadingGoals = true;
+        
         try {
             const response = await api.getGoals();
-            if (response.success) {
+            if (response && response.success && response.data) {
                 this.setGoals(response.data);
                 console.log('Goals loaded:', response.data);
+            } else {
+                console.log('API response invalid, using fallback goals');
+                // Fallback to default goals if API fails
+                const fallbackGoals = {
+                    daily_calories: 2000,
+                    protein_target: 150,
+                    carbs_target: 250,
+                    fat_target: 70
+                };
+                this.setGoals(fallbackGoals);
             }
         } catch (error) {
             console.error('Failed to load goals:', error);
+            // Fallback to default goals if API fails
+            const fallbackGoals = {
+                daily_calories: 2000,
+                protein_target: 150,
+                carbs_target: 250,
+                fat_target: 70
+            };
+            this.setGoals(fallbackGoals);
+        } finally {
+            this._loadingGoals = false;
         }
     },
     
@@ -189,13 +229,22 @@ export const AppState = {
     
     // Get formatted goals for display
     getFormattedGoals() {
-        if (!this.state.goals || Object.keys(this.state.goals).length === 0) return null;
+        if (!this.state.goals || Object.keys(this.state.goals).length === 0) {
+            console.warn('getFormattedGoals: No goals data available, returning null');
+            return null;
+        }
 
         // Keep original values as floats, only round for display formatting
         const calories = this.state.goals.daily_calories;
         const protein = this.state.goals.protein_target;
         const carbs = this.state.goals.carbs_target;
         const fat = this.state.goals.fat_target;
+
+        // Validate that all required properties exist
+        if (calories === undefined || protein === undefined || carbs === undefined || fat === undefined) {
+            console.warn('getFormattedGoals: Incomplete goals data, returning null');
+            return null;
+        }
 
         // Calculate macro percentages using total calories
         const proteinCalories = protein * MACRO_CALORIES_PER_GRAM.protein;
