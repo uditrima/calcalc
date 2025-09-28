@@ -2,7 +2,8 @@
 export class ApiClient {
     constructor(baseUrl) {
         // Check if we're running in Docker by looking at the hostname
-        const isDocker = window.location.hostname === "calcalc-frontend";
+        const isDocker = window.location.hostname === "calcalc-frontend" || 
+                        window.location.hostname === "78.47.227.143";
         const isLocal = window.location.hostname === "localhost" || 
                        window.location.hostname === "127.0.0.1";
 
