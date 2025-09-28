@@ -1,16 +1,15 @@
 // API client for backend communication
 export class ApiClient {
     constructor(baseUrl) {
-        // Check if we're running in Docker by looking at the hostname
-        const isDocker = window.location.hostname === "calcalc-frontend" || 
-                        window.location.hostname === "78.47.227.143";
+        // Check if we're running on the server
+        const isServer = window.location.hostname === "78.47.227.143";
         const isLocal = window.location.hostname === "localhost" || 
                        window.location.hostname === "127.0.0.1";
 
         this.baseUrl =
             baseUrl ||
-            (isDocker
-                ? "http://calcalc-backend:5000/api"
+            (isServer
+                ? "http://78.47.227.143:5000/api"
                 : isLocal
                 ? "http://localhost:5000/api"
                 : "https://calcalc.onrender.com/api");
