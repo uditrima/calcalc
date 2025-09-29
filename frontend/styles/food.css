@@ -269,7 +269,7 @@
 }
 
 /* Category-specific styling */
-.category-bagvaerk {
+.category-bagvaerk { 
     border-left-color: var(--color-cat-bagværk-opacity);
     background: var(--color-cat-bagværk-bg);
 }

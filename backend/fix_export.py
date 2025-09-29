@@ -1,38 +1,10 @@
 #!/usr/bin/env python3
 """
-Database backup script
+Fix database export
 """
 import sqlite3
-import shutil
 import os
 from datetime import datetime
-
-def backup_database():
-    """Backup database fil direkte"""
-    
-    db_path = 'instance/calorie_tracker.db'
-    
-    if not os.path.exists(db_path):
-        print(f"Database ikke fundet: {db_path}")
-        return
-    
-    # Opret backup
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    backup_path = f"calorie_tracker_backup_{timestamp}.db"
-    
-    try:
-        shutil.copy2(db_path, backup_path)
-        print(f"✅ Database backup oprettet: {backup_path}")
-        
-        # Vis filstørrelse
-        size = os.path.getsize(backup_path)
-        print(f"📁 Størrelse: {size:,} bytes")
-        
-        return backup_path
-        
-    except Exception as e:
-        print(f"❌ Fejl under backup: {e}")
-        return None
 
 def export_to_sql():
     """Eksporter til SQL format"""
@@ -63,8 +35,8 @@ def export_to_sql():
             f.write("-- Database eksport\n")
             f.write(f"-- Eksporteret: {datetime.now()}\n\n")
             
-            for table_name, in tables:
-                table_name = table_name[0]
+            for table_tuple in tables:
+                table_name = table_tuple[0]  # Fix: table_tuple er en tuple
                 print(f"Eksporterer: {table_name}")
                 
                 # Hent data
@@ -111,20 +83,5 @@ def export_to_sql():
         conn.close()
 
 if __name__ == "__main__":
-    print("=== Database Backup ===")
-    backup_path = backup_database()
-    
-    print("\n=== SQL Export ===")
-    sql_path = export_to_sql()
-    
-    print(f"\n📋 Resultat:")
-    if backup_path:
-        print(f"  - Database backup: {backup_path}")
-    if sql_path:
-        print(f"  - SQL eksport: {sql_path}")
-    
-    print(f"\n🚀 Næste skridt:")
-    print(f"  1. Upload filerne til din server")
-    print(f"  2. På serveren: sqlite3 calorie_tracker.db < {sql_path}")
-    print(f"  3. Eller kopier {backup_path} til serveren")
+    export_to_sql()
 

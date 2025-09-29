@@ -614,6 +614,40 @@ export function Diary(container) {
             }
         });
         
+        // Add touch event listener for edit mode (backup for mobile)
+        let touchStartTime = 0;
+        let touchStartY = 0;
+        item.addEventListener('touchstart', (e) => {
+            touchStartTime = Date.now();
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        item.addEventListener('touchend', (e) => {
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchDistance = Math.abs(touchEndY - touchStartY);
+            
+            // Only trigger edit if it was a quick tap (not a swipe) and no swipe was detected
+            if (touchDuration < 300 && touchDistance < 10 && !hasMoved) {
+                const entryId = item.getAttribute('data-entry-id');
+                const foodId = item.getAttribute('data-food-id');
+                
+                if (entryId && foodId) {
+                    // Dispatch edit event with entry data
+                    const customEvent = new CustomEvent('onEditFood', {
+                        detail: { 
+                            entryId: parseInt(entryId),
+                            foodId: parseInt(foodId),
+                            mealType: entry.meal_type
+                        },
+                        bubbles: true
+                    });
+                    container.dispatchEvent(customEvent);
+                }
+            }
+        }, { passive: true });
+        
         return item;
     }
     
@@ -883,12 +917,18 @@ export function Diary(container) {
         }, { passive: false });
         
         item.addEventListener('touchend', (e) => {
-            e.preventDefault();
+            // Only prevent default if we actually swiped
+            if (hasMoved) {
+                e.preventDefault();
+            }
             handleSwipeEnd();
         }, { passive: false });
         
         item.addEventListener('touchcancel', (e) => {
-            e.preventDefault();
+            // Only prevent default if we were actually dragging
+            if (isDragging) {
+                e.preventDefault();
+            }
             resetItem();
         }, { passive: false });
         

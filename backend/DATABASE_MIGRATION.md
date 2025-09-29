@@ -86,3 +86,4 @@ Hvis der opstår problemer:
 2. Kør import scriptet
 3. Test at applikationen fungerer
 4. Verificer at alle data er tilgængelige
+

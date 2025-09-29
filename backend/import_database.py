@@ -7,7 +7,7 @@ import os
 import sys
 from datetime import datetime
 
-def import_sql_file(sql_file, db_path='calorie_tracker.db'):
+def import_sql_file(sql_file, db_path='calorie_trackerImport.db'):
     """Importerer SQL fil til database"""
     
     if not os.path.exists(sql_file):

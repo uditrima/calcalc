@@ -129,11 +129,115 @@ class CalorieTrackerApp {
     async init() {
         console.log('Kalorie Tracker App initialiseret');
         
+        // Skip service worker registration for now (PWA works without it)
+        // this.registerServiceWorker();
+        
         // Wait for DOM to be ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.setupApp());
         } else {
             this.setupApp();
+        }
+    }
+    
+    registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Try to register external service worker first
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                        
+                        // Fallback: Create inline service worker if external fails
+                        this.createInlineServiceWorker();
+                    });
+            });
+        }
+    }
+    
+    createInlineServiceWorker() {
+        try {
+            // Create service worker code as blob
+            const swCode = `
+                const CACHE_NAME = 'kalorie-tracker-v1';
+                const urlsToCache = [
+                    '/',
+                    '/index.html',
+                    '/src/main.js',
+                    '/styles/colors.css',
+                    '/styles/theme.css',
+                    '/styles/layout.css',
+                    '/styles/forms.css',
+                    '/styles/common.css',
+                    '/styles/gauge.css',
+                    '/styles/dashboard.css',
+                    '/styles/diary.css',
+                    '/styles/food.css',
+                    '/styles/meal-dropdown.css',
+                    '/styles/add-food.css',
+                    '/styles/add-menu.css',
+                    '/styles/settings.css',
+                    '/styles/edit-profile-page.css',
+                    '/styles/nutrition-goals.css',
+                    '/styles/animations.css',
+                    '/styles/data-tags.css',
+                    '/styles/types.css'
+                ];
+
+                self.addEventListener('install', (event) => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then((cache) => {
+                                console.log('Opened cache');
+                                return cache.addAll(urlsToCache);
+                            })
+                    );
+                });
+
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then((response) => {
+                                return response || fetch(event.request);
+                            }
+                        )
+                    );
+                });
+
+                self.addEventListener('activate', (event) => {
+                    event.waitUntil(
+                        caches.keys().then((cacheNames) => {
+                            return Promise.all(
+                                cacheNames.map((cacheName) => {
+                                    if (cacheName !== CACHE_NAME) {
+                                        console.log('Deleting old cache:', cacheName);
+                                        return caches.delete(cacheName);
+                                    }
+                                })
+                            );
+                        })
+                    );
+                });
+            `;
+            
+            // Create blob URL for service worker
+            const swBlob = new Blob([swCode], { type: 'text/javascript' });
+            const swUrl = URL.createObjectURL(swBlob);
+            
+            // Register inline service worker
+            navigator.serviceWorker.register(swUrl)
+                .then((registration) => {
+                    console.log('Inline SW registered: ', registration);
+                })
+                .catch((error) => {
+                    console.log('Inline SW registration also failed: ', error);
+                });
+                
+        } catch (error) {
+            console.log('Failed to create inline service worker: ', error);
         }
     }
     
@@ -167,6 +271,277 @@ class CalorieTrackerApp {
         // Load initial data
         this.loadInitialData();
         console.log('Initial data loaded');
+        
+        // Setup PWA install prompt
+        this.setupPWAInstallPrompt();
+    }
+    
+    setupPWAInstallPrompt() {
+        let deferredPrompt;
+        
+        // Detect Android
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        console.log('Android detected:', isAndroid);
+        
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('PWA install prompt available');
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            
+            // Show install button or banner
+            this.showInstallPrompt(deferredPrompt, isAndroid);
+        });
+        
+        // Listen for the appinstalled event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            // Hide install prompt
+            this.hideInstallPrompt();
+        });
+        
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('App is running in standalone mode');
+        }
+        
+        // Show manual install instructions for Android if no prompt appears
+        if (isAndroid && !deferredPrompt) {
+            setTimeout(() => {
+                this.showManualInstallInstructions();
+            }, 3000); // Show after 3 seconds if no prompt
+        }
+        
+        // Also show manual instructions for desktop if no prompt appears
+        if (!isAndroid && !deferredPrompt) {
+            setTimeout(() => {
+                this.showDesktopInstallInstructions();
+            }, 5000); // Show after 5 seconds if no prompt
+        }
+    }
+    
+    showInstallPrompt(deferredPrompt, isAndroid = false) {
+        // Create install banner
+        const installBanner = document.createElement('div');
+        installBanner.id = 'install-banner';
+        installBanner.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            z-index: 1000;
+            box-shadow: var(--shadow-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+        `;
+        
+        installBanner.innerHTML = `
+            <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                <div style="font-size: 24px;">🍎</div>
+                <div style="flex: 1;">
+                    <div style="color: var(--color-text); font-weight: 600; margin-bottom: 4px;">
+                        Installer Kalorie Tracker
+                    </div>
+                    <div style="color: var(--color-text-muted); font-size: 14px;">
+                        Få hurtig adgang til appen på din hjemmeskærm
+                        ${isAndroid ? `
+                        <br><small style="color: var(--color-text-muted); opacity: 0.8;">
+                            Android: Menu → "Tilføj til startskærm" eller "Installer app"
+                        </small>` : ''}
+                    </div>
+                </div>
+                <button id="install-btn" style="
+                    background: var(--color-primary);
+                    color: var(--color-bg);
+                    border: none;
+                    border-radius: var(--radius-md);
+                    padding: var(--space-sm) var(--space-md);
+                    font-weight: 600;
+                    cursor: pointer;
+                ">Installer</button>
+                <button id="dismiss-install" style="
+                    background: none;
+                    border: none;
+                    color: var(--color-text-muted);
+                    font-size: 20px;
+                    cursor: pointer;
+                    padding: var(--space-xs);
+                ">×</button>
+            </div>
+        `;
+        
+        document.body.appendChild(installBanner);
+        
+        // Add event listeners
+        document.getElementById('install-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                // Clear the deferredPrompt
+                deferredPrompt = null;
+                // Hide the install banner
+                this.hideInstallPrompt();
+            }
+        });
+        
+        document.getElementById('dismiss-install').addEventListener('click', () => {
+            this.hideInstallPrompt();
+        });
+    }
+    
+    hideInstallPrompt() {
+        const installBanner = document.getElementById('install-banner');
+        if (installBanner) {
+            installBanner.remove();
+        }
+    }
+    
+    showManualInstallInstructions() {
+        // Only show if not already installed and no other banner is showing
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            document.getElementById('install-banner') || 
+            document.getElementById('manual-install-banner')) {
+            return;
+        }
+        
+        const manualBanner = document.createElement('div');
+        manualBanner.id = 'manual-install-banner';
+        manualBanner.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            z-index: 1000;
+            box-shadow: var(--shadow-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+        `;
+        
+        manualBanner.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <div style="font-size: 24px;">📱</div>
+                <div style="flex: 1;">
+                    <div style="color: var(--color-text); font-weight: 600; margin-bottom: 8px;">
+                        Installer app på Android
+                    </div>
+                    <div style="color: var(--color-text-muted); font-size: 14px; line-height: 1.4;">
+                        1. Tryk på menu (⋮) i browseren<br>
+                        2. Vælg "Tilføj til startskærm"<br>
+                        3. Tryk "Tilføj" for at installere
+                    </div>
+                </div>
+                <button id="dismiss-manual-install" style="
+                    background: none;
+                    border: none;
+                    color: var(--color-text-muted);
+                    font-size: 20px;
+                    cursor: pointer;
+                    padding: var(--space-xs);
+                ">×</button>
+            </div>
+        `;
+        
+        document.body.appendChild(manualBanner);
+        
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+            this.hideManualInstallInstructions();
+        }, 10000);
+        
+        // Add dismiss event listener
+        document.getElementById('dismiss-manual-install').addEventListener('click', () => {
+            this.hideManualInstallInstructions();
+        });
+    }
+    
+    hideManualInstallInstructions() {
+        const manualBanner = document.getElementById('manual-install-banner');
+        if (manualBanner) {
+            manualBanner.remove();
+        }
+    }
+    
+    showDesktopInstallInstructions() {
+        // Only show if not already installed and no other banner is showing
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            document.getElementById('install-banner') || 
+            document.getElementById('manual-install-banner') ||
+            document.getElementById('desktop-install-banner')) {
+            return;
+        }
+        
+        const desktopBanner = document.createElement('div');
+        desktopBanner.id = 'desktop-install-banner';
+        desktopBanner.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            z-index: 1000;
+            box-shadow: var(--shadow-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+        `;
+        
+        desktopBanner.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                <div style="font-size: 24px;">💻</div>
+                <div style="flex: 1;">
+                    <div style="color: var(--color-text); font-weight: 600; margin-bottom: 8px;">
+                        Installer app på computer
+                    </div>
+                    <div style="color: var(--color-text-muted); font-size: 14px; line-height: 1.4;">
+                        Chrome/Edge: Klik på install ikon i adressebaren<br>
+                        Firefox: Menu → "Install"<br>
+                        Safari: Del → "Add to Home Screen"
+                    </div>
+                </div>
+                <button id="dismiss-desktop-install" style="
+                    background: none;
+                    border: none;
+                    color: var(--color-text-muted);
+                    font-size: 20px;
+                    cursor: pointer;
+                    padding: var(--space-xs);
+                ">×</button>
+            </div>
+        `;
+        
+        document.body.appendChild(desktopBanner);
+        
+        // Auto-hide after 15 seconds
+        setTimeout(() => {
+            this.hideDesktopInstallInstructions();
+        }, 15000);
+        
+        // Add dismiss event listener
+        document.getElementById('dismiss-desktop-install').addEventListener('click', () => {
+            this.hideDesktopInstallInstructions();
+        });
+    }
+    
+    hideDesktopInstallInstructions() {
+        const desktopBanner = document.getElementById('desktop-install-banner');
+        if (desktopBanner) {
+            desktopBanner.remove();
+        }
     }
     
     createAppStructure() {

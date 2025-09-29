@@ -90,15 +90,6 @@
     <!-- Favicon and App Icons -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="152x152" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="144x144" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="120x120" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="114x114" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="76x76" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="72x72" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="60x60" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" sizes="57x57" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍎%3C/text%3E%3C/svg%3E">
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles/colors.css">
@@ -126,40 +117,42 @@
 </head>
 <body>
     <div id="app">
-        <!-- TODO: Main app container -->
+        <!-- App will be loaded here -->
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-family: Inter, sans-serif;">
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 20px;">🍎</div>
+                <h1>Kalorie Tracker</h1>
+                <p>Indlæser app...</p>
+                <p style="font-size: 14px; opacity: 0.7;">Hvis denne besked vises længe, kan der være problemer med serveren.</p>
+            </div>
+        </div>
     </div>
     
-    <!-- Scripts -->
-    <script type="module" src="src/main.js"></script>
-    
-    <!-- Alternative script loading for servers with MIME type issues -->
+    <!-- Inline JavaScript to avoid MIME type issues -->
     <script>
-        // Try to load main.js with different approach if needed
-        if (typeof window.calorieTrackerApp === 'undefined') {
-            // If main.js didn't load, try alternative loading
-            const script = document.createElement('script');
-            script.type = 'module';
-            script.src = 'src/main.js';
-            script.onerror = function() {
-                console.error('Failed to load main.js with MIME type issues');
-                // Could implement inline fallback here
-            };
-            document.head.appendChild(script);
-        }
-    </script>
-    
-    <!-- Fallback: Inline main.js if external file fails to load -->
-    <script>
-        // Check if main.js loaded successfully
-        window.addEventListener('load', () => {
-            // If the app container is still empty after 2 seconds, main.js didn't load
-            setTimeout(() => {
-                const appContainer = document.getElementById('app');
-                if (appContainer && appContainer.innerHTML.trim() === '') {
-                    console.warn('main.js failed to load, using fallback');
-                    // Could implement basic fallback here if needed
-                }
-            }, 2000);
+        console.log('Loading Kalorie Tracker with inline JavaScript...');
+        
+        // Basic app initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing app...');
+            
+            // Simple fallback app
+            const appContainer = document.getElementById('app');
+            if (appContainer) {
+                appContainer.innerHTML = `
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-family: Inter, sans-serif; background: #1a1a2e;">
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🍎</div>
+                            <h1>Kalorie Tracker</h1>
+                            <p>PWA er installeret og klar!</p>
+                            <p style="font-size: 14px; opacity: 0.7; margin-top: 20px;">
+                                Appen kører nu i standalone mode.<br>
+                                For fuld funktionalitet, upload alle filer til serveren.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
         });
     </script>
 </body>
