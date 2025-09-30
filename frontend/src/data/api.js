@@ -9,7 +9,7 @@ export class ApiClient {
         this.baseUrl =
             baseUrl ||
             (isServer
-                ? "http://78.47.227.143:5000/api"
+                ? "https://78.47.227.143/api"
                 : isLocal
                 ? "http://localhost:5000/api"
                 : "https://calcalc.onrender.com/api");

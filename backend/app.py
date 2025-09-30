@@ -34,7 +34,7 @@ def create_app():
     app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     
     # Configure CORS
-    cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
+    cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000,https://78.47.227.143').split(',')
 
     CORS(app, 
          resources={r"/api/*": {
@@ -82,4 +82,18 @@ if __name__ == "__main__":
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     
-    app.run(debug=debug, host=host, port=port)
+    # Check if we should use HTTPS (for production)
+    use_https = os.getenv('USE_HTTPS', 'False').lower() == 'true'
+    ssl_context = None
+    
+    if use_https:
+        cert_path = os.getenv('SSL_CERT_PATH', '/etc/ssl/certs/calcalc-selfsigned.crt')
+        key_path = os.getenv('SSL_KEY_PATH', '/etc/ssl/private/calcalc-selfsigned.key')
+        
+        if os.path.exists(cert_path) and os.path.exists(key_path):
+            ssl_context = (cert_path, key_path)
+            print(f"🔒 Starting Flask with HTTPS on {host}:{port}")
+        else:
+            print(f"⚠️  SSL files not found, falling back to HTTP")
+    
+    app.run(debug=debug, host=host, port=port, ssl_context=ssl_context)
