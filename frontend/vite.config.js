@@ -3,6 +3,11 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   server: {
+    root: ".",   // projektrod (hvor index.html ligger)
+    build: {
+    outDir: "dist",   // hvor build skal ende
+    emptyOutDir: true // ryd dist før build
+  },
     port: 3000,
     host: "0.0.0.0",   // vigtigt i Docker så serveren lytter udenfor containeren
     strictPort: true,  // fejler i stedet for at skifte port
