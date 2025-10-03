@@ -8,12 +8,16 @@ import { PortionConverter } from '../utils/portion_converter.js';
 const api = new ApiClient();
 
 export function Diary(container) {
+    console.log('Diary component called with container:', container);
     if (!container) {
         throw new Error('Diary requires a container element');
     }
     
+    try {
+    
     // Clear container
     container.innerHTML = '';
+    console.log('Diary: Container cleared, creating structure...');
     
     // Create diary structure
     const diary = document.createElement('div');
@@ -81,11 +85,48 @@ export function Diary(container) {
     nextButton.title = 'Næste dag';
     dateNav.appendChild(nextButton);
     
+    console.log('Diary: Date navigation buttons created:', { prevButton, nextButton, dateDisplay });
+    
     stickyContainer.appendChild(dateNav);
+    console.log('Diary: Date navigation added to sticky container');
+    
+    // Date navigation functionality - define currentDate before event listeners
+    let currentDate = new Date();
+    
+    // Add event listeners immediately after creating buttons
+    console.log('Diary: Adding date navigation event listeners...');
+    
+    if (prevButton) {
+        console.log('Diary: Adding previous button event listener');
+        prevButton.addEventListener('click', () => {
+            console.log('Diary: Previous date clicked, current date:', currentDate);
+            currentDate.setDate(currentDate.getDate() - 1);
+            dateDisplay.textContent = formatDate(currentDate);
+            console.log('Diary: New date:', currentDate);
+            loadDiaryForDate(currentDate);
+        });
+    } else {
+        console.error('Diary: Previous button not found');
+    }
+    
+    if (nextButton) {
+        console.log('Diary: Adding next button event listener');
+        nextButton.addEventListener('click', () => {
+            console.log('Diary: Next date clicked, current date:', currentDate);
+            currentDate.setDate(currentDate.getDate() + 1);
+            dateDisplay.textContent = formatDate(currentDate);
+            console.log('Diary: New date:', currentDate);
+            console.log('Diary: Calling loadDiaryForDate with:', currentDate);
+            loadDiaryForDate(currentDate);
+        });
+    } else {
+        console.error('Diary: Next button not found');
+    }
     
     // Summary Section
     const summarySection = document.createElement('div');
     summarySection.className = 'summary-section';
+    console.log('Diary: Summary section created');
     
     const summaryHeader = document.createElement('div');
     summaryHeader.className = 'summary-header';
@@ -180,6 +221,7 @@ export function Diary(container) {
     
     stickyContainer.appendChild(summarySection);
     diary.appendChild(stickyContainer);
+    console.log('Diary: Summary section added to sticky container');
     
     // Meal Sections
     const mealsContainer = document.createElement('div');
@@ -200,17 +242,55 @@ export function Diary(container) {
     mealsContainer.appendChild(waterSection);
     
     diary.appendChild(mealsContainer);
+    console.log('Diary: Meal sections added to diary');
     
     // Add to container
     container.appendChild(diary);
+    console.log('Diary: Diary added to container');
     
     // Create custom scrollbar for the diary container
     createCustomScrollbar(diary);
+    
+    // Add scroll detection for sticky container
+    let isStickyActive = false;
+    let scrollTimeout = null;
+    
+    function handleDiaryScroll() {
+        // Throttle scroll events for performance
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        
+        scrollTimeout = setTimeout(() => {
+            const stickyContainer = diary.querySelector('.sticky-container');
+            if (!stickyContainer) return;
+            
+            const rect = stickyContainer.getBoundingClientRect();
+            const wasSticky = isStickyActive;
+            
+            // Check if sticky container is actually stuck (top <= 0)
+            isStickyActive = rect.top <= 0;
+            
+            // Only dispatch event if state changed
+            if (wasSticky !== isStickyActive) {
+                const customEvent = new CustomEvent('onStickyStateChange', {
+                    detail: { isSticky: isStickyActive },
+                    bubbles: true
+                });
+                container.dispatchEvent(customEvent);
+            }
+        }, 16); // ~60fps throttling
+    }
+    
+    // Add scroll listener to diary container
+    diary.addEventListener('scroll', handleDiaryScroll);
+    console.log('Diary: Scroll listener added');
     
     // Subscribe to state changes for meal sections
     AppState.subscribe('diary', updateMealSections);
     AppState.subscribe('foods', updateMealSections);
     AppState.subscribe('goals', updateSummarySection);
+    console.log('Diary: AppState subscriptions added');
     
     // Listen for goals committed event to refresh data
     const handleGoalsCommitted = async () => {
@@ -225,21 +305,29 @@ export function Diary(container) {
     
     // Initial update
     updateMealSections();
+    console.log('Diary: Initial meal sections update completed');
     
     // Force complete refresh on load to ensure clean state
     setTimeout(async () => {
+        console.log('Diary: Starting setTimeout refresh...');
         const currentDate = new Date();
         const dateString = currentDate.toISOString().split('T')[0];
+        console.log('Diary: Date string:', dateString);
         
         // Clear any existing state and reload from backend
         AppState.setDiary({ date: dateString, entries: [] });
+        console.log('Diary: State cleared, loading diary...');
         await AppState.loadDiary(dateString);
+        console.log('Diary: Diary loaded');
         
-        
+        console.log('Diary: Getting current state...');
         // Check for any UI elements that don't match current state
         const currentState = AppState.getState();
+        console.log('Diary: Current state:', currentState);
         const stateEntryIds = new Set(currentState.diary.entries.map(e => e.id));
+        console.log('Diary: State entry IDs:', stateEntryIds);
         const uiElements = document.querySelectorAll('[data-entry-id]');
+        console.log('Diary: UI elements found:', uiElements.length);
         
         uiElements.forEach(element => {
             const elementEntryId = parseInt(element.getAttribute('data-entry-id'));
@@ -247,10 +335,16 @@ export function Diary(container) {
                 element.remove();
             }
         });
-    }, 500);
+        console.log('Diary: UI cleanup completed');
+        }, 500);
+        console.log('Diary: setTimeout scheduled');
+        
+        console.log('Diary: About to define forceRefreshDiary function');
+        console.log('Diary: About to reach function definitions after setTimeout');
     
     // Force refresh diary data to sync with backend
     async function forceRefreshDiary() {
+        console.log('Diary: forceRefreshDiary function defined');
         try {
             const currentDate = new Date();
             const dateString = currentDate.toISOString().split('T')[0];
@@ -259,9 +353,11 @@ export function Diary(container) {
             console.error('Error force refreshing diary:', error);
         }
     }
+    console.log('Diary: forceRefreshDiary function created successfully');
     
     // Expose force refresh function for external use
     diary.forceRefresh = forceRefreshDiary;
+    console.log('Diary: forceRefresh assigned to diary');
     
     // Return cleanup function
     return () => {
@@ -307,7 +403,9 @@ export function Diary(container) {
     diary.checkAndSyncState = checkAndSyncState;
     
     // Force complete UI cleanup and state sync
+    console.log('Diary: About to define forceCompleteSync function');
     async function forceCompleteSync() {
+        console.log('Diary: forceCompleteSync function defined');
         try {
             const currentDate = new Date();
             const dateString = currentDate.toISOString().split('T')[0];
@@ -329,13 +427,25 @@ export function Diary(container) {
             console.error('Error in force complete sync:', error);
         }
     }
+    console.log('Diary: forceCompleteSync function created successfully');
     
     // Expose force complete sync function
-    diary.forceCompleteSync = forceCompleteSync;
+    try {
+        diary.forceCompleteSync = forceCompleteSync;
+        console.log('Diary: forceCompleteSync assigned to diary');
+    } catch (error) {
+        console.error('Diary: Error assigning forceCompleteSync:', error);
+    }
+    console.log('Diary: All functions defined, about to add event listeners');
+    console.log('Diary: About to call updateMealSections function');
+    console.log('Diary: About to reach event listener section');
+    console.log('Diary: About to define updateMealSections function');
     
     function updateMealSections(state = null) {
+        console.log('Diary: updateMealSections called');
         const currentState = state || AppState.getState();
         const entries = currentState.diary.entries || [];
+        console.log('Diary: updateMealSections - entries:', entries.length);
         
         // Update meal calories for each meal type
         const mealTypes = EXTENDED_MEAL_TYPES;
@@ -370,6 +480,7 @@ export function Diary(container) {
         
         // Update meal section content with actual entries
         updateMealSectionsFromEntries(currentState);
+        console.log('Diary: updateMealSections completed');
     }
     
     function updateSummarySection(state) {
@@ -396,23 +507,7 @@ export function Diary(container) {
         if (remainingElement) remainingElement.textContent = Math.round(remainingCalories).toLocaleString();
     }
     
-    // Date navigation functionality
-    let currentDate = new Date();
-    
-    // Load initial data for today
-    loadDiaryForDate(currentDate);
-    
-    prevButton.addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() - 1);
-        dateDisplay.textContent = formatDate(currentDate);
-        loadDiaryForDate(currentDate);
-    });
-    
-    nextButton.addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() + 1);
-        dateDisplay.textContent = formatDate(currentDate);
-        loadDiaryForDate(currentDate);
-    });
+    // Date navigation functionality (currentDate already defined above)
     
     function formatDate(date) {
         const options = { 
@@ -426,23 +521,31 @@ export function Diary(container) {
     async function loadDiaryForDate(date) {
         try {
             const dateString = date.toISOString().split('T')[0];
+            console.log('Loading diary data for date:', dateString);
             
             // Load diary entries for the selected date
             await AppState.loadDiary(dateString);
+            console.log('Diary entries loaded');
             
             // Load exercises for the selected date
             await AppState.loadExercises(dateString);
+            console.log('Exercises loaded');
             
             // Get updated state
             const state = AppState.getState();
+            console.log('Updated state:', state);
             
             // Update the diary display with new data
             updateDiaryDisplay(dateString);
+            console.log('Diary display updated');
             
         } catch (error) {
-            console.error('Error loading diary data:', error);
+            console.error('Error loading diary data for date:', date, error);
         }
     }
+    
+    // Load initial data for today
+    loadDiaryForDate(currentDate);
     
     function updateDiaryDisplay(dateString) {
         const state = AppState.getState();
@@ -600,7 +703,21 @@ export function Diary(container) {
             const entryId = item.getAttribute('data-entry-id');
             const foodId = item.getAttribute('data-food-id');
             
+            console.log('Diary: Food item clicked - entryId:', entryId, 'foodId:', foodId, 'mealType:', entry.meal_type);
+            console.log('Diary: Original entry data:', entry);
+            console.log('Diary: entry.id type:', typeof entry.id, 'value:', entry.id);
+            
             if (entryId && foodId) {
+                const parsedEntryId = parseInt(entryId);
+                const parsedFoodId = parseInt(foodId);
+                
+                console.log('Diary: Dispatching onEditFood event with data:', {
+                    entryId: parsedEntryId,
+                    foodId: parsedFoodId,
+                    mealType: entry.meal_type
+                });
+                console.log('Diary: Parsed entryId type:', typeof parsedEntryId, 'value:', parsedEntryId);
+                
                 // Dispatch edit event with entry data
                 const customEvent = new CustomEvent('onEditFood', {
                     detail: { 
@@ -611,6 +728,8 @@ export function Diary(container) {
                     bubbles: true
                 });
                 container.dispatchEvent(customEvent);
+            } else {
+                console.error('Diary: Missing entryId or foodId for edit:', { entryId, foodId });
             }
         });
         
@@ -1216,4 +1335,9 @@ export function Diary(container) {
     
     // Return the diary element for external access
     return diary;
+    
+    } catch (error) {
+        console.error('Diary component error:', error);
+        throw error;
+    }
 }

@@ -1,7 +1,6 @@
 // Dashboard UI component
 import { AppState } from '../state/app_state.js';
-import { ApiClient } from '../data/api.js';
-const api = new ApiClient();
+import { debounce } from '../utils/debounce.js';
 
 
 export function Dashboard(container) {
@@ -11,8 +10,12 @@ export function Dashboard(container) {
         throw new Error('Dashboard requires a container element');
     }
     
-    // Clear container
+    // Clear only dashboard content, preserve header
+    const existingHeader = container.querySelector('.dashboard-header');
     container.innerHTML = '';
+    if (existingHeader) {
+        container.appendChild(existingHeader);
+    }
     
     // Create dashboard structure
     const dashboard = document.createElement('div');
@@ -42,8 +45,8 @@ export function Dashboard(container) {
     // Create custom scrollbar for the dashboard container
     createCustomScrollbar(dashboard);
     
-    // Dashboard loads its own data independently to always show today's data
-    console.log('Dashboard will load today\'s data independently');
+    // Dashboard uses AppState data only - no separate API calls
+    console.log('Dashboard will use AppState data only');
     
     // Initial update - kald efter DOM elementer er tilføjet
     setTimeout(() => {
@@ -51,10 +54,19 @@ export function Dashboard(container) {
         console.log('Dashboard initial update completed');
     }, 0);
     
+    // Create debounced update function to prevent excessive updates
+    const debouncedUpdate = debounce(updateDashboard, 100);
+    
     // Listen for goals changes to update dashboard automatically
     const handleGoalsChange = () => {
         console.log('Goals changed, updating dashboard');
-        updateDashboard();
+        debouncedUpdate();
+    };
+    
+    // Listen for diary changes to update dashboard automatically
+    const handleDiaryChange = () => {
+        console.log('Diary changed, updating dashboard');
+        debouncedUpdate();
     };
     
     // Listen for goals committed event to refresh data
@@ -62,63 +74,62 @@ export function Dashboard(container) {
         console.log('Goals committed, refreshing dashboard data...');
         // Reload goals to ensure we have the latest data
         await AppState.loadGoals();
-        // Update dashboard with fresh data
+        // Update dashboard with fresh data (no debounce for immediate update)
         updateDashboard();
     };
     
-    // Subscribe to goals changes in AppState
-    AppState.subscribe('goals', handleGoalsChange);
+    // Listen for navigation to dashboard to refresh data
+    const handleDashboardNavigation = () => {
+        console.log('Navigated to dashboard, refreshing data...');
+        // No debounce for navigation - immediate update
+        updateDashboard();
+    };
     
-    // Add event listener for goals committed
+    // Subscribe to goals and diary changes in AppState
+    AppState.subscribe('goals', handleGoalsChange);
+    AppState.subscribe('diary', handleDiaryChange);
+    
+    // Handle sticky state changes from diary
+    const handleStickyStateChange = (event) => {
+        const { isSticky } = event.detail;
+        const summarySection = document.querySelector('.summary-section');
+        
+        if (summarySection) {
+            if (isSticky) {
+                summarySection.classList.add('sticky-mode');
+            } else {
+                summarySection.classList.remove('sticky-mode');
+            }
+        }
+    };
+    
+    // Add event listeners
     window.addEventListener('goalsCommitted', handleGoalsCommitted);
+    window.addEventListener('dashboardNavigation', handleDashboardNavigation);
+    window.addEventListener('onStickyStateChange', handleStickyStateChange);
     
     // Return cleanup function
     return () => {
         AppState.unsubscribe('goals', handleGoalsChange);
+        AppState.unsubscribe('diary', handleDiaryChange);
         window.removeEventListener('goalsCommitted', handleGoalsCommitted);
+        window.removeEventListener('dashboardNavigation', handleDashboardNavigation);
+        window.removeEventListener('onStickyStateChange', handleStickyStateChange);
     };
     
     function updateDashboard() {
-        // Dashboard should always show today's data, not the selected date from diary
-        const today = new Date().toISOString().split('T')[0];
-        console.log('Dashboard updating with today\'s data:', today);
+        // Dashboard uses AppState data directly - no separate API calls
+        const state = AppState.getState();
+        console.log('Dashboard updating with AppState data:', state);
         
-        // Load today's data specifically for dashboard
-        loadTodaysDataForDashboard(today);
-    }
-    
-    async function loadTodaysDataForDashboard(today) {
-        try {
-            // Load today's diary entries
-            const diaryData = await api.getDiaryEntries(today);
-            
-            // Load today's exercises
-            const exerciseData = await api.getExercises(today);
-            
-            // Get goals (these don't change by date)
-            const state = AppState.getState();
-            
-            // Create today's state for dashboard
-            const todaysState = {
-                diary: { date: today, entries: Array.isArray(diaryData) ? diaryData : [] },
-                exercises: Array.isArray(exerciseData) ? exerciseData : [],
-                goals: state.goals,
-                weights: state.weights
-            };
-            
-            console.log('Dashboard updating with today\'s state:', todaysState);
-            updateCaloriesGauge(todaysState);
-            updateMacrosGauges(todaysState);
-            updateExerciseDisplay(todaysState);
-            updateWeightDisplay(todaysState);
-        } catch (error) {
-            console.error('Error loading today\'s data for dashboard:', error);
-            // Fallback to current state
-            const state = AppState.getState();
+        // Only update if we have valid data
+        if (state && state.goals && state.diary) {
             updateCaloriesGauge(state);
             updateMacrosGauges(state);
             updateExerciseDisplay(state);
             updateWeightDisplay(state);
+        } else {
+            console.warn('Dashboard: Invalid state data, skipping update');
         }
     }
     
@@ -131,6 +142,17 @@ export function Dashboard(container) {
         // Beregn faktisk brugte kalorier (mad minus motion)
         const netCalories = Math.max(0, current - exerciseCalories);
         const usedPercentage = Math.min((netCalories / target) * 100, 100);
+        
+        // Shallow comparison to prevent unnecessary updates
+        const currentData = { current, target, exerciseCalories, netCalories, remaining, usedPercentage };
+        if (updateCaloriesGauge._lastData && 
+            updateCaloriesGauge._lastData.current === currentData.current &&
+            updateCaloriesGauge._lastData.target === currentData.target &&
+            updateCaloriesGauge._lastData.exerciseCalories === currentData.exerciseCalories) {
+            console.log('updateCaloriesGauge: Data unchanged, skipping DOM update');
+            return;
+        }
+        updateCaloriesGauge._lastData = currentData;
         
         console.log('updateCaloriesGauge - current:', current, 'target:', target, 'exerciseCalories:', exerciseCalories, 'netCalories:', netCalories, 'remaining:', remaining, 'usedPercentage:', usedPercentage);
         
@@ -202,7 +224,14 @@ export function Dashboard(container) {
         
         
         if (remainingText) {
-            remainingText.textContent = Math.max(0, Math.round(remaining));
+            remainingText.textContent = Math.round(remaining);
+            
+            // Style text based on remaining calories
+            if (remaining < 0) {
+                remainingText.classList.add('negative-calories');
+            } else {
+                remainingText.classList.remove('negative-calories');
+            }
         }
         
         // Update stats

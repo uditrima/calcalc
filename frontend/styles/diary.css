@@ -29,8 +29,9 @@
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     margin: var(--space-lg) var(--space-lg) 0 var(--space-lg);
     box-shadow: var(--shadow-glass);
-    position: relative;
-    z-index: var(--z-base);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
 }
 
 .diary-header h2 {
@@ -110,6 +111,14 @@
     top: 0;
     z-index: var(--z-sticky);
     margin: 0 var(--space-lg) 0 var(--space-lg);
+    transition: all 0.3s ease;
+}
+
+/* Sticky active state - when container is actually stuck */
+.sticky-container.sticky-active {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 /* Date Navigation Styling */
@@ -172,6 +181,22 @@
     box-shadow: var(--shadow-glass);
     position: relative;
     z-index: var(--z-base);
+    transition: all 0.3s ease;
+}
+
+/* Sticky mode - when summary is in sticky container */
+.summary-section.sticky-mode {
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 0;
+    margin: 0;
+}
+
+.summary-section.sticky-mode .summary-header {
+    display: none; /* Skjul header når sticky */
+}
+
+.summary-section.sticky-mode .summary-number {
+    font-size: var(--font-size-sm);
 }
 
 .summary-header {

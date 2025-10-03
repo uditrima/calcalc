@@ -5,7 +5,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
-    padding: var(--space-lg);
+    padding: 0 var(--space-lg) var(--space-lg) var(--space-lg);
+    margin-top: var(--space-sm);
     /* margin-bottom: var(--space-2xl); */
     background: var(--color-bg);
     height: 100%; /* Same height as diary section */
@@ -306,5 +307,37 @@
     color: var(--color-text-muted);
     font-size: 12px;
     margin-top: var(--space-sm);
+}
+
+/* Negative calories styling */
+.calories-remaining-text.negative-calories {
+    color: #ff6b6b !important;
+    fill: #ff6b6b !important;
+}
+
+/* Summary section responsive states */
+.summary-section.sticky-mode {
+    padding: var(--space-sm) var(--space-lg) !important;
+    border-radius: 0;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.summary-section.sticky-mode .summary-header {
+    display: none; /* Skjul header når sticky */
+}
+
+.summary-section.sticky-mode .summary-details {
+    gap: var(--space-xs);
+}
+
+.summary-section.sticky-mode .summary-number {
+    font-size: var(--font-size-sm);
+}
+
+.summary-section.sticky-mode .summary-label {
+    font-size: 11px;
 }
 

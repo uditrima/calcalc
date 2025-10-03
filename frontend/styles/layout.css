@@ -58,6 +58,43 @@ body {
     margin: 0;
 }
 
+.dashboard-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    background: var(--color-surface);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border-bottom: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 0 var(--space-md); /* Only left and right padding */
+    margin: var(--space-lg) var(--space-lg) 0 var(--space-lg); /* No bottom margin */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-header h1 {
+    color: var(--color-text);
+    font-size: 24px;
+    margin: 0;
+}
+
+.dashboard-header .settings-btn {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 20px;
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s ease;
+}
+
+.dashboard-header .settings-btn:hover {
+    background-color: var(--color-surface-hover);
+}
+
 .app-main {
     height: calc(100vh - 160px); /* Subtract header and navigation height */
     position: relative;

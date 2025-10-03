@@ -11,6 +11,9 @@ export function FoodForm(container) {
     // Clear container
     container.innerHTML = '';
     
+    // State for current sort option
+    let currentSortBy = 'frequent';
+    
     // Create main food section structure
     const foodSection = document.createElement('div');
     foodSection.className = 'food-section';
@@ -31,6 +34,70 @@ export function FoodForm(container) {
     const sortBySection = createSortBySection();
     foodSection.appendChild(sortBySection);
     
+    function createSortBySection() {
+        const section = document.createElement('div');
+        section.className = 'sort-by-section';
+        
+        const title = document.createElement('h3');
+        title.textContent = 'History';
+        section.appendChild(title);
+        
+        const dropdown = document.createElement('div');
+        dropdown.className = 'sort-dropdown';
+        
+        const dropdownBtn = document.createElement('button');
+        dropdownBtn.className = 'sort-dropdown-btn';
+        dropdownBtn.innerHTML = 'Most Used <span class="dropdown-arrow">⋮</span>';
+        dropdownBtn.addEventListener('click', toggleSortDropdown);
+        dropdown.appendChild(dropdownBtn);
+        
+        const dropdownContent = document.createElement('div');
+        dropdownContent.className = 'sort-dropdown-content';
+        dropdownContent.innerHTML = `
+            <a href="#" class="sort-option" data-sort="recent">Most Recent</a>
+            <a href="#" class="sort-option" data-sort="name">Name A-Z</a>
+            <a href="#" class="sort-option" data-sort="calories">Calories</a>
+            <a href="#" class="sort-option" data-sort="protein">Protein</a>
+            <a href="#" class="sort-option" data-sort="carbohydrates">Kulhydrater</a>
+            <a href="#" class="sort-option" data-sort="fat">Fedt</a>
+            <a href="#" class="sort-option" data-sort="frequent">Most Used</a>
+        `;
+        dropdown.appendChild(dropdownContent);
+        
+        section.appendChild(dropdown);
+        
+        function toggleSortDropdown() {
+            dropdownContent.classList.toggle('show');
+        }
+        
+        // Handle sort option selection
+        dropdownContent.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sortOption = e.target.closest('.sort-option');
+            if (sortOption) {
+                const sortBy = sortOption.dataset.sort;
+                dropdownBtn.innerHTML = `${sortOption.textContent} <span class="dropdown-arrow">⋮</span>`;
+                dropdownContent.classList.remove('show');
+                
+                // Update current sort state
+                currentSortBy = sortBy;
+                
+                // Re-render food items with new sort order
+                const foods = AppState.getFoods();
+                renderFoodItems(foods, sortBy);
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdownContent.classList.remove('show');
+            }
+        });
+        
+        return section;
+    }
+    
     // 5. Food Items Section
     const foodItemsSection = createFoodItemsSection();
     foodSection.appendChild(foodItemsSection);
@@ -38,9 +105,23 @@ export function FoodForm(container) {
     // Load foods from database
     loadFoodsFromDatabase();
     
+    async function loadFoodsFromDatabase() {
+        try {
+            await AppState.loadFoods();
+            const foods = AppState.getFoods();
+            renderFoodItems(foods, currentSortBy);
+        } catch (error) {
+            console.error('Failed to load foods:', error);
+            // Show error message or fallback
+            if (window.foodItemsSection) {
+                window.foodItemsSection.innerHTML = '<div class="error-message">Kunne ikke indlæse fødevare</div>';
+            }
+        }
+    }
+    
     // Subscribe to foods state changes
     AppState.subscribe('foods', (state) => {
-        renderFoodItems(state.foods, 'frequent');
+        renderFoodItems(state.foods, currentSortBy);
     });
     
     // Add to container
@@ -462,63 +543,6 @@ function createMenuSection() {
 }
 
 
-function createSortBySection() {
-    const section = document.createElement('div');
-    section.className = 'sort-by-section';
-    
-    const title = document.createElement('h3');
-    title.textContent = 'History';
-    section.appendChild(title);
-    
-    const dropdown = document.createElement('div');
-    dropdown.className = 'sort-dropdown';
-    
-    const dropdownBtn = document.createElement('button');
-    dropdownBtn.className = 'sort-dropdown-btn';
-    dropdownBtn.innerHTML = 'Most Used <span class="dropdown-arrow">⋮</span>';
-    dropdownBtn.addEventListener('click', toggleSortDropdown);
-    dropdown.appendChild(dropdownBtn);
-    
-    const dropdownContent = document.createElement('div');
-    dropdownContent.className = 'sort-dropdown-content';
-    dropdownContent.innerHTML = `
-        <a href="#" class="sort-option" data-sort="recent">Most Recent</a>
-        <a href="#" class="sort-option" data-sort="name">Name A-Z</a>
-        <a href="#" class="sort-option" data-sort="calories">Calories</a>
-        <a href="#" class="sort-option" data-sort="frequent">Most Used</a>
-    `;
-    dropdown.appendChild(dropdownContent);
-    
-    section.appendChild(dropdown);
-    
-    function toggleSortDropdown() {
-        dropdownContent.classList.toggle('show');
-    }
-    
-    // Handle sort option selection
-    dropdownContent.addEventListener('click', (e) => {
-        e.preventDefault();
-        const sortOption = e.target.closest('.sort-option');
-        if (sortOption) {
-            const sortBy = sortOption.dataset.sort;
-            dropdownBtn.innerHTML = `${sortOption.textContent} <span class="dropdown-arrow">⋮</span>`;
-            dropdownContent.classList.remove('show');
-            
-            // Re-render food items with new sort order
-            const foods = AppState.getFoods();
-            renderFoodItems(foods, sortBy);
-        }
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target)) {
-            dropdownContent.classList.remove('show');
-        }
-    });
-    
-    return section;
-}
 
 function createFoodItemsSection() {
     const section = document.createElement('div');
@@ -533,20 +557,6 @@ function createFoodItemsSection() {
     return section;
 }
 
-// Function to load foods from database
-async function loadFoodsFromDatabase() {
-    try {
-        await AppState.loadFoods();
-        const foods = AppState.getFoods();
-        renderFoodItems(foods, 'frequent');
-    } catch (error) {
-        console.error('Failed to load foods:', error);
-        // Show error message or fallback
-        if (window.foodItemsSection) {
-            window.foodItemsSection.innerHTML = '<div class="error-message">Kunne ikke indlæse fødevare</div>';
-        }
-    }
-}
 
 // Function to render food items
 function renderFoodItems(foods, sortBy = 'frequent') {
@@ -606,6 +616,12 @@ function sortFoods(foods, sortBy) {
             return sorted.sort((a, b) => a.name.localeCompare(b.name, 'da-DK'));
         case 'calories':
             return sorted.sort((a, b) => b.calories - a.calories);
+        case 'protein':
+            return sorted.sort((a, b) => (b.protein || 0) - (a.protein || 0));
+        case 'carbohydrates':
+            return sorted.sort((a, b) => (b.carbohydrates || 0) - (a.carbohydrates || 0));
+        case 'fat':
+            return sorted.sort((a, b) => (b.fat || 0) - (a.fat || 0));
         case 'frequent':
             return sorted.sort((a, b) => (b.used || 0) - (a.used || 0));
         default:

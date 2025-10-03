@@ -283,9 +283,18 @@ class CalorieTrackerApp {
         const layout = document.createElement('div');
         layout.className = 'app-layout';
         
-        // Header
+        // Main content area
+        const main = document.createElement('main');
+        main.className = 'app-main';
+        
+        // Dashboard section (main view)
+        const dashboardSection = document.createElement('section');
+        dashboardSection.id = 'dashboard-section';
+        dashboardSection.className = 'main-view';
+        
+        // Dashboard header (inside dashboard-section at the top)
         const header = document.createElement('header');
-        header.className = 'app-header';
+        header.className = 'dashboard-header';
         
         // Create h1 with current date
         const h1 = document.createElement('h1');
@@ -302,16 +311,10 @@ class CalorieTrackerApp {
         });
         header.appendChild(settingsBtn);
         
-        layout.appendChild(header);
+        // Add header to dashboard-section first (at the top)
+        dashboardSection.appendChild(header);
         
-        // Main content area
-        const main = document.createElement('main');
-        main.className = 'app-main';
-        
-        // Dashboard section (main view)
-        const dashboardSection = document.createElement('section');
-        dashboardSection.id = 'dashboard-section';
-        dashboardSection.className = 'main-view';
+        // Add dashboard-section to main
         main.appendChild(dashboardSection);
         
         // Food form section (slide-in)
@@ -574,26 +577,59 @@ class CalorieTrackerApp {
             const { entryId, foodId, mealType } = event.detail;
             
             try {
+                console.log('Loading food data for edit - entryId:', entryId, 'foodId:', foodId, 'mealType:', mealType);
+                
                 // Load food data from database
                 const food = await this.api.getFoodById(foodId);
                 console.log('Loaded food for edit:', food);
                 
-                // Get current diary entry to get servings
-                const currentDate = new Date().toISOString().split('T')[0];
-                const diaryEntries = await this.api.getDiaryEntries(currentDate);
+                // Get current diary entry to get servings - use the selected date from AppState
+                const state = AppState.getState();
+                const selectedDate = state.diary.date || new Date().toISOString().split('T')[0];
+                console.log('Loading diary entries for selected date:', selectedDate);
+                const diaryEntries = await this.api.getDiaryEntries(selectedDate);
+                console.log('Loaded diary entries:', diaryEntries);
+                console.log('Looking for entry with ID:', entryId, 'Type:', typeof entryId);
+                
+                // Log all entry IDs for debugging
+                const entryIds = diaryEntries.map(e => ({ id: e.id, type: typeof e.id }));
+                console.log('Available entry IDs:', entryIds);
+                
                 const entry = diaryEntries.find(e => e.id === entryId);
+                console.log('Found entry for edit:', entry);
+                
+                // Try alternative lookup methods
+                if (!entry) {
+                    console.log('Trying alternative lookup methods...');
+                    const entryByStringId = diaryEntries.find(e => e.id === String(entryId));
+                    console.log('Entry by string ID:', entryByStringId);
+                    
+                    const entryByNumberId = diaryEntries.find(e => e.id === Number(entryId));
+                    console.log('Entry by number ID:', entryByNumberId);
+                    
+                    const entryByLooseId = diaryEntries.find(e => e.id == entryId);
+                    console.log('Entry by loose comparison:', entryByLooseId);
+                }
                 
                 if (entry && food) {
+                    console.log('Both entry and food found, proceeding with edit');
                     // Convert grams to portions for display
                     const servings = entry.amount_grams / 100.0; // Assuming 100g = 1 portion
+                    console.log('Calculated servings:', servings);
                     
                     // Set edit mode in add-food component
                     if (this.components.addFood) {
+                        console.log('Setting edit mode in add-food component');
                         this.components.addFood.setEditMode(entryId, food, mealType, servings);
                         this.showView('add-food', 'diary');
+                    } else {
+                        console.error('addFood component not available');
                     }
                 } else {
                     console.error('Could not find entry or food data for edit');
+                    console.error('Entry found:', !!entry, 'Food found:', !!food);
+                    if (!entry) console.error('Entry not found for entryId:', entryId);
+                    if (!food) console.error('Food not found for foodId:', foodId);
                     alert('Kunne ikke indlæse fødevare data til redigering');
                 }
             } catch (error) {
@@ -684,6 +720,13 @@ class CalorieTrackerApp {
             // TODO: Handle delete weight
         });
         
+        // Sticky state change events (from diary to dashboard)
+        this.appContainer.addEventListener('onStickyStateChange', (event) => {
+            console.log('Sticky state changed:', event.detail);
+            // Event is handled by dashboard component directly
+            // This is just for logging and potential global handling
+        });
+        
     }
     
     showView(viewName, fromView = null) {
@@ -710,6 +753,13 @@ class CalorieTrackerApp {
             dashboardView.classList.add('active');
             const navItem = this.appContainer.querySelector('[data-view="dashboard"]');
             navItem.classList.add('active');
+            
+            // Dispatch dashboard navigation event to refresh data
+            const dashboardEvent = new CustomEvent('dashboardNavigation', {
+                bubbles: true,
+                detail: { view: 'dashboard' }
+            });
+            this.appContainer.dispatchEvent(dashboardEvent);
         } else if (viewName === 'add-menu') {
             const slideUpView = this.appContainer.querySelector('.slide-up-view');
             if (slideUpView) {

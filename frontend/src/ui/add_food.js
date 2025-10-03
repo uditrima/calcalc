@@ -677,8 +677,10 @@ export function AddFood(container) {
         // Convert currentServings (portions) to grams for backend
         const portionInGrams = PortionConverter.portionToGrams(currentServings);
         
-        // Get current date
-        const today = new Date().toISOString().split('T')[0];
+        // Get selected date from AppState (not today's date)
+        const state = AppState.getState();
+        const selectedDate = state.diary.date || new Date().toISOString().split('T')[0];
+        console.log('Using selected date for food operation:', selectedDate);
         
         try {
             let response;
@@ -699,7 +701,7 @@ export function AddFood(container) {
                     food_id: currentFood.id,
                     amount_grams: portionInGrams,
                     meal_type: currentMealType,
-                    date: today
+                    date: selectedDate
                 };
                 
                 console.log('Saving new diary entry:', diaryEntryData);
@@ -711,8 +713,8 @@ export function AddFood(container) {
             if (response && response.success) {
                 console.log('Diary entry saved/updated successfully:', response);
                 
-                // Reload diary data to show updated entries
-                await AppState.loadDiary(today);
+                // Reload diary data to show updated entries for the selected date
+                await AppState.loadDiary(selectedDate);
                 
                 // Update last_used timestamp, last_portion, and used counter for the food
                 if (currentFood.id) {
