@@ -1,0 +1,31 @@
+REFAKTORERING PROMPT - SIKKER MODULÆR OPDELING
+MISSION: Refaktorer store filer (>200 linjer) til modulær arkitektur uden at bryde eksisterende funktionalitet.
+PRINCIPER:
+PUBLIC API STABILITET - Bevar nøjagtig samme funktionssignatur og returneret objekt
+BACKWARD COMPATIBILITY - Ingen breaking changes i public interface
+ENCAPSULATION - Kun public API er synligt udefra, intern implementering er skjult
+SINGLE RESPONSIBILITY - Hver modul har ét ansvarsområde
+CLEAN INTERFACES - Moduler kommunikerer via veldefinerede callbacks/events
+ARBEJDSGANG:
+ANALYSER - Identificer logiske moduler i den store fil
+OPRET MODULER - Hver modul <200 linjer med klare ansvarsområder
+BEVAR PUBLIC API - Hovedfilen eksporterer samme funktion/klasse
+DEPENDENCY INJECTION - Moduler får dependencies via constructor/parameters
+CALLBACK SYSTEM - Kommunikation mellem moduler via callbacks
+TEST KOMPATIBILITET - Verificer at alle imports og method calls virker
+MODUL STRUKTUR:
+SIKKERHEDSKRAV:
+Samme export statement: export function/class Name()
+Samme returneret objekt med identiske metoder
+Samme parameter signaturer
+Samme CustomEvent system
+Ingen ændringer i import statements andre steder
+Alle dependencies importeres korrekt i modulerne
+ACCEPTKRITERIER:
+Alle filer <200 linjer
+Ingen linter fejl
+Eksisterende kode virker uændret
+Modulær arkitektur med klare interfaces
+Clean separation of concerns
+EKSEMPEL REFAKTORERING:
+VIGTIGT: Fokuser på at bevare funktionalitet først, arkitektur forbedring andet. Sikkerhed over perfektion.

@@ -6,13 +6,13 @@ FROM python:3.12.5-slim
 WORKDIR /app
 
 # Kopiér requirements først (så Docker kan cache dem)
-COPY backend/requirements.txt .
+COPY requirements.txt .
 
 # Installer dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Kopiér resten af backend projektet
-COPY backend/ .
+COPY . .
 
 # SSL certifikater vil blive monteret via volumes i docker-compose
 

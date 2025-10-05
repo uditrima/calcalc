@@ -35,6 +35,35 @@ function activateCommitButton() {
     window.dispatchEvent(new CustomEvent('activateCommitButton'));
 }
 
+export function createNutritionGoalsHeader() {
+    const header = document.createElement('div');
+    header.className = 'nutrition-goals-header';
+    
+    // Go back button
+    const goBackBtn = document.createElement('button');
+    goBackBtn.className = 'go-back-btn';
+    goBackBtn.innerHTML = '←';
+    goBackBtn.addEventListener('click', () => {
+        const customEvent = new CustomEvent('onGoBack', {
+            bubbles: true
+        });
+        const appContainer = document.querySelector('#app');
+        if (appContainer) {
+            appContainer.dispatchEvent(customEvent);
+        } else {
+            document.dispatchEvent(customEvent);
+        }
+    });
+    header.appendChild(goBackBtn);
+    
+    // Title
+    const title = document.createElement('h1');
+    title.textContent = 'Næringsstoffer Mål';
+    header.appendChild(title);
+    
+    return header;
+}
+
 export function createLoadingSection() {
     const section = document.createElement('div');
     section.className = 'loading-section';

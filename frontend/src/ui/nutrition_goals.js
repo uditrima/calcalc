@@ -1,6 +1,6 @@
 // Nutrition Goals UI component
 import { AppState } from '../state/app_state.js';
-import { createLoadingSection, createErrorSection, createGoalsSection } from './nutrition_goals_view.js';
+import { createLoadingSection, createErrorSection, createGoalsSection, createNutritionGoalsHeader } from './nutrition_goals_view.js';
 import { commitChanges } from './nutrition_goals_controllers.js';
 
 export function NutritionGoals(container) {
@@ -61,6 +61,10 @@ export function NutritionGoals(container) {
 function render(container, goals, isLoading, error) {
     // Clear container
     container.innerHTML = '';
+    
+    // Always add header first
+    const header = createNutritionGoalsHeader();
+    container.appendChild(header);
     
     if (isLoading) {
         console.log('Showing loading section');
