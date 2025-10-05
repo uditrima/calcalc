@@ -17,6 +17,7 @@ export function setupStateManager(diary) {
     AppState.subscribe('diary', updateMealSections);
     AppState.subscribe('foods', updateMealSections);
     AppState.subscribe('goals', updateSummarySection);
+    AppState.subscribe('diary', updateSummarySection);
     console.log('Diary: AppState subscriptions added');
     
     // Listen for goals committed event to refresh data
@@ -120,6 +121,7 @@ export function setupStateManager(diary) {
             AppState.unsubscribe('diary', updateMealSections);
             AppState.unsubscribe('foods', updateMealSections);
             AppState.unsubscribe('goals', updateSummarySection);
+            AppState.unsubscribe('diary', updateSummarySection);
             window.removeEventListener('goalsCommitted', handleGoalsCommitted);
         }
     };

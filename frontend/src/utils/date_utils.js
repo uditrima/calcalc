@@ -22,23 +22,34 @@ export function getCurrentISODate() {
 export function formatDateForDisplay(date) {
     if (!date) return '';
     
+    let dateObj;
+    
     // If it's already a Date object
     if (date instanceof Date) {
-        return getCurrentDateInDanish();
+        dateObj = date;
     }
-    
     // If it's an ISO string
-    if (typeof date === 'string' && date.includes('T')) {
-        const dateObj = new Date(date);
-        return getCurrentDateInDanish();
+    else if (typeof date === 'string' && date.includes('T')) {
+        dateObj = new Date(date);
     }
-    
     // If it's already in YYYY-MM-DD format
-    if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    else if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
         const [year, month, day] = date.split('-');
-        const dateObj = new Date(year, month - 1, day);
-        return getCurrentDateInDanish();
+        dateObj = new Date(year, month - 1, day);
+    }
+    else {
+        return date;
     }
     
-    return date;
+    // Format the date object to Danish format
+    const day = dateObj.getDate();
+    const month = dateObj.getMonth();
+    const year = dateObj.getFullYear();
+    
+    const danishMonths = [
+        'januar', 'februar', 'marts', 'april', 'maj', 'juni',
+        'juli', 'august', 'september', 'oktober', 'november', 'december'
+    ];
+    
+    return `${day}. ${danishMonths[month]} ${year}`;
 }
