@@ -1,6 +1,12 @@
 // Application state management
 import { ApiClient } from '../data/api.js';
-import { MACRO_CALORIES_PER_GRAM } from '../ui/nutrition_goals_constants.js';
+import { 
+    formatGoalsForDisplay, 
+    calculateMacrosFromCalories, 
+    handleGoalsApiResponse, 
+    handleGoalsApiError,
+    DEFAULT_GOALS 
+} from '../utils/goals_utils.js';
 
 // Initialize API client
 const api = new ApiClient();
@@ -15,12 +21,7 @@ export const AppState = {
         },
         exercises: [],
         weights: [],
-        goals: {
-            daily_calories: 2000,
-            protein_target: 150,
-            carbs_target: 250,
-            fat_target: 70
-        }
+        goals: { ...DEFAULT_GOALS }
     },
     
     // Event system
@@ -172,30 +173,9 @@ export const AppState = {
         
         try {
             const response = await api.getGoals();
-            if (response && response.success && response.data) {
-                this.setGoals(response.data);
-                console.log('Goals loaded:', response.data);
-            } else {
-                console.log('API response invalid, using fallback goals');
-                // Fallback to default goals if API fails
-                const fallbackGoals = {
-                    daily_calories: 2000,
-                    protein_target: 150,
-                    carbs_target: 250,
-                    fat_target: 70
-                };
-                this.setGoals(fallbackGoals);
-            }
+            handleGoalsApiResponse(response, (goals) => this.setGoals(goals), () => {});
         } catch (error) {
-            console.error('Failed to load goals:', error);
-            // Fallback to default goals if API fails
-            const fallbackGoals = {
-                daily_calories: 2000,
-                protein_target: 150,
-                carbs_target: 250,
-                fat_target: 70
-            };
-            this.setGoals(fallbackGoals);
+            handleGoalsApiError(error, (goals) => this.setGoals(goals), () => {});
         } finally {
             this._loadingGoals = false;
         }
@@ -229,82 +209,11 @@ export const AppState = {
     
     // Get formatted goals for display
     getFormattedGoals() {
-        if (!this.state.goals || Object.keys(this.state.goals).length === 0) {
-            console.warn('getFormattedGoals: No goals data available, returning null');
-            return null;
-        }
-
-        // Keep original values as floats, only round for display formatting
-        const calories = this.state.goals.daily_calories;
-        const protein = this.state.goals.protein_target;
-        const carbs = this.state.goals.carbs_target;
-        const fat = this.state.goals.fat_target;
-
-        // Validate that all required properties exist
-        if (calories === undefined || protein === undefined || carbs === undefined || fat === undefined) {
-            console.warn('getFormattedGoals: Incomplete goals data, returning null');
-            return null;
-        }
-
-        // Calculate macro percentages using total calories
-        const proteinCalories = protein * MACRO_CALORIES_PER_GRAM.protein;
-        const carbsCalories = carbs * MACRO_CALORIES_PER_GRAM.carbs;
-        const fatCalories = fat * MACRO_CALORIES_PER_GRAM.fat;
-
-        const proteinPercentage = (proteinCalories / calories) * 100;
-        const carbsPercentage = (carbsCalories / calories) * 100;
-        const fatPercentage = (fatCalories / calories) * 100;
-
-        return {
-            calories: {
-                value: calories,
-                formatted: calories % 1 === 0 ? calories.toLocaleString() : calories.toFixed(1)
-            },
-            protein: {
-                value: protein,
-                formatted: protein % 1 === 0 ? `${protein}g` : `${protein.toFixed(1)}g`,
-                percentage: `${proteinPercentage}%`
-            },
-            carbs: {
-                value: carbs,
-                formatted: carbs % 1 === 0 ? `${carbs}g` : `${carbs.toFixed(1)}g`,
-                percentage: `${carbsPercentage}%`
-            },
-            fat: {
-                value: fat,
-                formatted: fat % 1 === 0 ? `${fat}g` : `${fat.toFixed(1)}g`,
-                percentage: `${fatPercentage}%`
-            }
-        };
+        return formatGoalsForDisplay(this.state.goals);
     },
     
     // Calculate macros from calories
     calculateMacrosFromCalories(calories, currentProtein, currentCarbs, currentFat) {
-        
-        // Calculate current macro calories
-        const currentProteinCalories = currentProtein * MACRO_CALORIES_PER_GRAM.protein;
-        const currentCarbsCalories = currentCarbs * MACRO_CALORIES_PER_GRAM.carbs;
-        const currentFatCalories = currentFat * MACRO_CALORIES_PER_GRAM.fat;
-        const totalCurrentMacroCalories = currentProteinCalories + currentCarbsCalories + currentFatCalories;
-
-        // If no current macros, use default distribution
-        if (totalCurrentMacroCalories === 0) {
-            return {
-                protein: calories * 0.25 / MACRO_CALORIES_PER_GRAM.protein, // 25% protein
-                carbs: calories * 0.50 / MACRO_CALORIES_PER_GRAM.carbs,      // 50% carbs
-                fat: calories * 0.25 / MACRO_CALORIES_PER_GRAM.fat           // 25% fat
-            };
-        }
-
-        // Calculate new macros maintaining current proportions
-        const proteinRatio = currentProteinCalories / totalCurrentMacroCalories;
-        const carbsRatio = currentCarbsCalories / totalCurrentMacroCalories;
-        const fatRatio = currentFatCalories / totalCurrentMacroCalories;
-
-        return {
-            protein: (calories * proteinRatio) / MACRO_CALORIES_PER_GRAM.protein,
-            carbs: (calories * carbsRatio) / MACRO_CALORIES_PER_GRAM.carbs,
-            fat: (calories * fatRatio) / MACRO_CALORIES_PER_GRAM.fat
-        };
+        return calculateMacrosFromCalories(calories, currentProtein, currentCarbs, currentFat);
     }
 };
