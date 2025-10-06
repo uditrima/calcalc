@@ -651,3 +651,14 @@
 .add-water-btn:hover {
     color: var(--color-text);
 }
+
+/* Sentinel Element Styling */
+.diary-sentinel {
+    height: 1px;
+    width: 100%;
+    background: transparent;
+    position: relative;
+    z-index: var(--z-base);
+    pointer-events: none;
+    /* Invisible but detectable by Intersection Observer */
+}
